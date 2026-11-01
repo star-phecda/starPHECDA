@@ -1,8 +1,8 @@
 package my.noveldokusha.coreui.components
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.selectable
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -27,12 +26,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import my.noveldokusha.coreui.theme.ExpressiveShapes
 import my.noveldokusha.coreui.theme.ExpressiveTokens
 
 data class ExpressiveNavigationItem(
@@ -61,7 +61,7 @@ fun ExpressiveNavigationBar(
 
     Surface(
         modifier = modifier,
-        shape = RoundedCornerShape(ExpressiveTokens.pillCorner),
+        shape = ExpressiveShapes.pill,
         color = colors.surfaceContainerHigh.copy(alpha = 0.96f),
         shadowElevation = 6.dp,
         tonalElevation = 3.dp
@@ -141,7 +141,7 @@ fun ExpressiveNavigationBar(
                                     scaleX = indicatorScale
                                     scaleY = indicatorScale
                                 },
-                            shape = RoundedCornerShape(16.dp),
+                            shape = ExpressiveShapes.pill,
                             color = colors.secondaryContainer
                         ) {}
 

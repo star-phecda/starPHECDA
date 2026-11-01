@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Icon
@@ -32,20 +31,21 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.Hyphens
 import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.text.style.LineHeightStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import my.noveldokusha.core.appPreferences.SourceStripPosition
 import my.noveldokusha.coreui.AppTestTags
 import my.noveldokusha.coreui.R
+import my.noveldokusha.coreui.theme.ExpressiveShapes
 import my.noveldokusha.coreui.theme.ImageBorderShape
 import my.noveldokusha.coreui.theme.InternalTheme
 import my.noveldokusha.coreui.theme.PreviewThemes
@@ -182,7 +182,7 @@ fun BookImageButtonView(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 2.dp)
-                    .clip(RoundedCornerShape(6.dp))
+                    .clip(ExpressiveShapes.compactContainer)
             )
         }
 
@@ -193,7 +193,7 @@ fun BookImageButtonView(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 2.dp)
-                    .clip(RoundedCornerShape(6.dp))
+                    .clip(ExpressiveShapes.compactContainer)
                     .background(MaterialTheme.colorScheme.surfaceContainerLow)
                     .padding(horizontal = 6.dp, vertical = 4.dp)
             ) {

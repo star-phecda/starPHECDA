@@ -20,7 +20,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.BrightnessMedium
 import androidx.compose.material.icons.outlined.DarkMode
@@ -41,6 +40,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import my.noveldokusha.coreui.theme.AppTheme
 import my.noveldokusha.coreui.theme.DarkMode
+import my.noveldokusha.coreui.theme.ExpressiveShapes
 import my.noveldokusha.coreui.theme.colorAccent
 import my.noveldokusha.coreui.theme.rememberAppThemePalettePreview
 import my.noveldokusha.coreui.theme.textPadding
@@ -70,6 +70,7 @@ internal fun SettingsTheme(
         ) {
             DarkMode.entries.forEach { mode ->
                 FilterChip(
+                    shape = ExpressiveShapes.pill,
                     selected = mode == currentDarkMode,
                     onClick = { onDarkModeChange(mode) },
                     label = { Text(text = stringResource(id = mode.titleRes)) },
@@ -126,7 +127,7 @@ private fun ThemePreviewChip(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
-            .clip(RoundedCornerShape(18.dp))
+            .clip(ExpressiveShapes.pill)
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = ripple(bounded = true),
@@ -139,13 +140,13 @@ private fun ThemePreviewChip(
             modifier = Modifier
                 .width(66.dp)
                 .height(34.dp)
-                .clip(RoundedCornerShape(17.dp))
+                .clip(ExpressiveShapes.pill)
                 .background(palette.surfaceContainer)
                 .border(
                     width = if (isSelected) 2.dp else 1.dp,
                     color = if (isSelected) MaterialTheme.colorScheme.primary
                     else MaterialTheme.colorScheme.outlineVariant,
-                    shape = RoundedCornerShape(17.dp),
+                    shape = ExpressiveShapes.pill,
                 )
                 .padding(horizontal = 7.dp, vertical = 9.dp),
             horizontalArrangement = Arrangement.spacedBy(4.dp),

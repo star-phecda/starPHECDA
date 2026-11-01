@@ -4,14 +4,18 @@ import androidx.compose.ui.unit.dp
 
 /**
  * Shared dimensions for the app's expressive component language.
- * Keep these values centralized so screens do not invent their own corner scale.
+ * Keep corner values centralized so screens do not invent local shape scales.
  */
 object ExpressiveTokens {
+    val cornerExtraSmall = 4.dp
     val cornerSmall = 8.dp
-    val cornerMedium = 16.dp
-    val cornerLarge = 24.dp
-    val cornerExtraLarge = 32.dp
-    val pillCorner = 36.dp
+    val cornerMedium = 12.dp
+    val cornerLarge = 20.dp
+    val cornerExtraLarge = 28.dp
+    val cornerExtraLargeIncreased = 36.dp
+
+    // Kept as a compatibility alias. Capsule components use CircleShape instead.
+    val pillCorner = cornerExtraLargeIncreased
 
     val navigationHeight = 76.dp
     val compactNavigationHeight = 64.dp

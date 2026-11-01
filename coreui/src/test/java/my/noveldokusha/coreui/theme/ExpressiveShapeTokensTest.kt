@@ -36,7 +36,10 @@ class ExpressiveShapeTokensTest {
         assertRoundedCorner(ExpressiveShapes.container, 20.dp)
         assertRoundedCorner(ExpressiveShapes.compactContainer, 8.dp)
         assertRoundedCorner(ExpressiveShapes.option, 12.dp)
-        assertRoundedCorner(ExpressiveShapes.dropdown, 12.dp)
+        assertEquals(
+            RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp),
+            ExpressiveShapes.dropdown,
+        )
         assertRoundedCorner(ExpressiveShapes.button, 20.dp)
         assertRoundedCorner(ExpressiveShapes.featuredCard, 28.dp)
         assertRoundedCorner(ExpressiveShapes.dialog, 28.dp)

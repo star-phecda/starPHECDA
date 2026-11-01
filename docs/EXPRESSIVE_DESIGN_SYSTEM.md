@@ -20,6 +20,8 @@ Literata is reserved for Material 3 display roles. Its weight and optical-size a
 
 The official font assets and their SIL Open Font License notices are included in the repository at `coreui/src/main/res/font/` and `docs/licenses/` respectively. Chapter text continues through the reader's existing font resolver and user preferences.
 
+The next application build is version 1.6.2 (versionCode 40). The application ID remains `my.novela`; the debug build retains its existing `.debug` application ID suffix.
+
 ## Navigation
 
 `ExpressiveNavigationBar` is the app-shell floating navigation component. It uses a tonal selection pill, always-visible labels, animated colour and a medium-bouncy icon scale. A compact mode is available for constrained layouts.

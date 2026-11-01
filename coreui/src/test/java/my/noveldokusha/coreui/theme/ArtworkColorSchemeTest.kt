@@ -1,0 +1,39 @@
+package my.noveldokusha.coreui.theme
+
+import androidx.compose.material3.lightColorScheme
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import com.google.android.material.color.utilities.Hct
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotEquals
+import org.junit.Assert.assertTrue
+import org.junit.Test
+
+class ArtworkColorSchemeTest {
+
+    @Test
+    fun expressiveArtworkPaletteUsesTheCoverAsItsAccentSeed() {
+        val base = lightColorScheme()
+        val result = createArtworkColorScheme(
+            seedColor = Color(0xFFDE573A),
+            isDark = false,
+            baseScheme = base
+        )
+
+        assertNotEquals(base.primary, result.primary)
+        assertEquals(base.error, result.error)
+        assertEquals(base.onError, result.onError)
+    }
+
+    @Test
+    fun neutralArtworkProducesAChromaticallyNeutralPalette() {
+        val result = createArtworkColorScheme(
+            seedColor = Color(0xFF888888),
+            isDark = true,
+            baseScheme = androidx.compose.material3.darkColorScheme()
+        )
+
+        val primaryChroma = Hct.fromInt(result.primary.toArgb()).chroma
+        assertTrue("Neutral artwork should not introduce a saturated primary", primaryChroma < 2.0)
+    }
+}

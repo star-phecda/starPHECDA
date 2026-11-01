@@ -1,6 +1,6 @@
 # Expressive Shape System Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Establish a centralized, role-based Material 3 Expressive shape system across starPHECDA's shared controls, library UI, sheets and dialogs.
 
@@ -40,11 +40,11 @@
 - Produces `ExpressiveShapes.card`, `featuredCard`, `container`, `button`, `selectedButton`, `pill`, `input`, `sheet`, and `dialog`.
 - Keeps `shapes`, `ImageBorderShape`, and `selectableMinHeight` as public theme values.
 
-- [ ] **Step 1: Add failing tests** for all six dp tokens, the five MaterialTheme shape role mappings, and the named component shape mappings.
-- [ ] **Step 2: Run the focused test** and confirm it fails because the new token/shape API is not yet present.
-- [ ] **Step 3: Implement the canonical tokens and shape objects** in the two theme files; preserve existing navigation and motion dimensions.
-- [ ] **Step 4: Run the focused test** and confirm all expected dimensions and mappings pass.
-- [ ] **Step 5: Run the coreui unit suite** and commit the foundation.
+- [x] **Step 1: Add failing tests** for all six dp tokens, the five MaterialTheme shape role mappings, and the named component shape mappings.
+- [x] **Step 2: Run the focused test** and confirm it fails because the new token/shape API is not yet present.
+- [x] **Step 3: Implement the canonical tokens and shape objects** in the two theme files; preserve existing navigation and motion dimensions.
+- [x] **Step 4: Run the focused test** and confirm all expected dimensions and mappings pass.
+- [x] **Step 5: Run the coreui unit suite** and commit the foundation.
 
 ### Task 2: Apply shapes to shared controls and library surfaces
 
@@ -60,9 +60,9 @@
 - Consume only the public shape API from Task 1.
 - `MyButton.shape` remains overrideable; only the default shape uses the selected-state morph.
 
-- [ ] **Step 1: Update the shared controls** to use the named button, container and pill roles.
-- [ ] **Step 2: Run coreui tests and the app compile task** to catch API/import errors.
-- [ ] **Step 3: Commit the shared control migration.**
+- [x] **Step 1: Update the shared controls** to use the named button, container and pill roles.
+- [x] **Step 2: Run coreui tests and the app compile task** to catch API/import errors.
+- [x] **Step 3: Commit the shared control migration.**
 
 ### Task 3: Apply shapes to sheets, dialogs and source filters
 
@@ -75,9 +75,9 @@
 - Modify: `features/sourceExplorer/src/main/java/my/noveldokusha/sourceexplorer/FilterBottomSheet.kt`
 - Modify: `features/settings/src/main/java/my/noveldokusha/settings/views/NewAppUpdateDialog.kt`
 
-- [ ] **Step 1: Replace local sheet, dialog, button and field corner literals** with the component shape roles.
-- [ ] **Step 2: Run coreui tests and the app compile task** to verify all feature modules compile against the shared API.
-- [ ] **Step 3: Commit the surface migration.**
+- [x] **Step 1: Replace local sheet, dialog, button and field corner literals** with the component shape roles.
+- [x] **Step 2: Run coreui tests and the app compile task** to verify all feature modules compile against the shared API.
+- [x] **Step 3: Commit the surface migration.**
 
 ### Task 4: Update the system documentation and verify the final build
 
@@ -85,7 +85,16 @@
 - Modify: `docs/EXPRESSIVE_DESIGN_SYSTEM.md`
 - Modify: `docs/superpowers/plans/2026-11-01-expressive-shape-system.md` (check off completed tasks and note verification)
 
-- [ ] **Step 1: Document** the final scale, component roles and fixed-house-style decision.
-- [ ] **Step 2: Run the full CI command** `./gradlew --no-daemon :coreui:testDebugUnitTest :app:assembleDebug`.
-- [ ] **Step 3: Confirm** the exact branch-head workflow succeeds and uploads `starPHECDA-debug-apk`.
-- [ ] **Step 4: Commit the documentation and verification record.**
+- [x] **Step 1: Document** the final scale, component roles and fixed-house-style decision.
+- [x] **Step 2: Run the full CI command** `./gradlew --no-daemon :coreui:testDebugUnitTest :app:assembleDebug`.
+- [x] **Step 3: Confirm** the exact branch-head workflow succeeds and uploads `starPHECDA-debug-apk`.
+- [x] **Step 4: Commit the documentation and verification record.**
+
+
+## Verification record
+
+- Implementation commit: `f128401094b0b3a96ae8212705a9613f061a466b`.
+- Push workflow run: [41351243994](https://github.com/star-phecda/starPHECDA/actions/runs/41351243994), successful. The core UI unit-test task and app debug assembly both passed.
+- Pull-request workflow run: [41351248009](https://github.com/star-phecda/starPHECDA/actions/runs/41351248009), successful.
+- Uploaded artifact: `starPHECDA-debug-apk`, artifact ID `13100893162`, containing `NoveLA_v1.6.2-debug.apk`.
+- The downloaded APK archive contains a 40,960,620-byte APK. The artifact expires on 2026-11-15.

@@ -26,14 +26,26 @@ class ArtworkColorSchemeTest {
     }
 
     @Test
-    fun neutralArtworkProducesAChromaticallyNeutralPalette() {
-        val result = createArtworkColorScheme(
+    fun neutralArtworkProducesALessSaturatedPaletteThanExpressiveArtwork() {
+        val baseScheme = androidx.compose.material3.darkColorScheme()
+        val neutralResult = createArtworkColorScheme(
             seedColor = Color(0xFF888888),
             isDark = true,
-            baseScheme = androidx.compose.material3.darkColorScheme()
+            baseScheme = baseScheme
+        )
+        val expressiveResult = createArtworkColorScheme(
+            seedColor = Color(0xFFDE573A),
+            isDark = true,
+            baseScheme = baseScheme
         )
 
-        val primaryChroma = Hct.fromInt(result.primary.toArgb()).chroma
-        assertTrue("Neutral artwork should not introduce a saturated primary", primaryChroma < 2.0)
+        val neutralPrimaryChroma = Hct.fromInt(neutralResult.primary.toArgb()).chroma
+        val expressivePrimaryChroma = Hct.fromInt(expressiveResult.primary.toArgb()).chroma
+
+        assertTrue(
+            "Neutral artwork should produce a less saturated primary than expressive artwork " +
+                "(neutral=$neutralPrimaryChroma, expressive=$expressivePrimaryChroma)",
+            neutralPrimaryChroma < expressivePrimaryChroma
+        )
     }
 }

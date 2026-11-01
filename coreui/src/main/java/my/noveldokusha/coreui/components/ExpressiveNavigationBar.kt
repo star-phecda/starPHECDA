@@ -1,15 +1,10 @@
 package my.noveldokusha.coreui.components
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.animateFloatAsState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -105,6 +100,14 @@ fun ExpressiveNavigationBar(
                     ),
                     label = "navigation-icon-scale"
                 )
+                val indicatorScale by animateFloatAsState(
+                    targetValue = if (selected) 1f else 0f,
+                    animationSpec = spring(
+                        dampingRatio = Spring.DampingRatioMediumBouncy,
+                        stiffness = Spring.StiffnessLow
+                    ),
+                    label = "navigation-indicator-scale"
+                )
                 val interactionSource = remember { MutableInteractionSource() }
 
                 Column(
@@ -127,27 +130,20 @@ fun ExpressiveNavigationBar(
                             .height(36.dp),
                         contentAlignment = Alignment.Center
                     ) {
-                        AnimatedVisibility(
-                            visible = selected,
-                            enter = fadeIn(tween(100)) + scaleIn(
-                                animationSpec = spring(
-                                    dampingRatio = Spring.DampingRatioMediumBouncy,
-                                    stiffness = Spring.StiffnessLow
-                                )
-                            ),
-                            exit = fadeOut(tween(100)) + scaleOut(
-                                animationSpec = tween(100)
-                            )
-                        ) {
-                            Surface(
-                                modifier = Modifier.size(
+                        Surface(
+                            modifier = Modifier
+                                .size(
                                     ExpressiveTokens.navigationIndicatorWidth,
                                     ExpressiveTokens.navigationIndicatorHeight
-                                ),
-                                shape = RoundedCornerShape(16.dp),
-                                color = colors.secondaryContainer
-                            ) {}
-                        }
+                                )
+                                .graphicsLayer {
+                                    alpha = indicatorScale
+                                    scaleX = indicatorScale
+                                    scaleY = indicatorScale
+                                },
+                            shape = RoundedCornerShape(16.dp),
+                            color = colors.secondaryContainer
+                        ) {}
 
                         Box(
                             modifier = Modifier

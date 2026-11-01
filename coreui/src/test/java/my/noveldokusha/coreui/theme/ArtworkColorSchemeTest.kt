@@ -48,4 +48,25 @@ class ArtworkColorSchemeTest {
             neutralPrimaryChroma < expressivePrimaryChroma
         )
     }
+
+    @Test
+    fun artworkPalettesKeepAccessibleForegroundRolesInBothModes() {
+        listOf(false, true).forEach { isDark ->
+            val base = if (isDark) androidx.compose.material3.darkColorScheme()
+            else androidx.compose.material3.lightColorScheme()
+            val result = createArtworkColorScheme(
+                seedColor = Color(0xFFDE573A),
+                isDark = isDark,
+                baseScheme = base,
+            )
+
+            assertTrue(result.onPrimary.contrastRatioAgainst(result.primary) >= 4.49f)
+            assertTrue(
+                result.onPrimaryContainer.contrastRatioAgainst(
+                    result.primaryContainer.compositeOver(result.surface)
+                ) >= 4.49f
+            )
+            assertTrue(result.onSurface.contrastRatioAgainst(result.surface) >= 4.49f)
+        }
+    }
 }

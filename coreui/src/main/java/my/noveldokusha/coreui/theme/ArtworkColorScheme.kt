@@ -14,6 +14,7 @@ import com.google.android.material.color.utilities.Hct
 import com.google.android.material.color.utilities.QuantizerCelebi
 import com.google.android.material.color.utilities.SchemeExpressive
 import com.google.android.material.color.utilities.SchemeMonochrome
+import java.util.LinkedHashMap
 
 /**
  * Extracts a representative seed from a cover image.
@@ -66,6 +67,39 @@ fun extractArtworkSeedColor(
     }
 }
 
+private object ArtworkSeedMemoryCache {
+    private const val MAX_ENTRIES = 96
+    private val entries = LinkedHashMap<String, Color>(MAX_ENTRIES, 0.75f, true)
+
+    @Synchronized
+    fun get(cacheKey: String): Color? = entries[cacheKey]
+
+    @Synchronized
+    fun putIfAbsent(cacheKey: String, color: Color): Color {
+        entries[cacheKey]?.let { return it }
+        entries[cacheKey] = color
+        if (entries.size > MAX_ENTRIES) {
+            val oldest = entries.entries.iterator()
+            if (oldest.hasNext()) {
+                oldest.next()
+                oldest.remove()
+            }
+        }
+        return color
+    }
+}
+
+/** Reads the in-memory artwork seed cache without decoding an image. */
+fun cachedArtworkSeedColor(cacheKey: String): Color? =
+    cacheKey.takeIf { it.isNotBlank() }?.let(ArtworkSeedMemoryCache::get)
+
+/** Extracts and caches one cover seed. Call from a background dispatcher. */
+fun extractAndCacheArtworkSeedColor(cacheKey: String, bitmap: Bitmap): Color {
+    if (cacheKey.isBlank()) return extractArtworkSeedColor(bitmap)
+    cachedArtworkSeedColor(cacheKey)?.let { return it }
+    return ArtworkSeedMemoryCache.putIfAbsent(cacheKey, extractArtworkSeedColor(bitmap))
+}
+
 /**
  * Builds an artwork-derived Material 3 palette. Neutral covers stay neutral instead of
  * introducing an unrelated saturated accent.
@@ -82,6 +116,8 @@ internal fun createArtworkColorScheme(
         SchemeExpressive(sourceHct, isDark, 0.0)
     }
     return dynamicScheme.toComposeColorScheme(baseScheme)
+        .withExpressiveSurfaceHierarchy(isDark)
+        .withAccessibleContentRoles()
 }
 
 private fun DynamicScheme.toComposeColorScheme(base: ColorScheme): ColorScheme = base.copy(

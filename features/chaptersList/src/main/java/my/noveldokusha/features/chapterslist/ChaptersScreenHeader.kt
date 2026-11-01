@@ -1,5 +1,6 @@
 package my.noveldokusha.features.chapterslist
 
+import android.graphics.Bitmap
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.animation.animateContentSize
@@ -51,6 +52,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -71,10 +73,16 @@ import my.noveldokusha.coreui.components.BookRatingChip
 import my.noveldokusha.core.appPreferences.SourceStripPosition
 import my.noveldokusha.coreui.components.ExpandableText
 import my.noveldokusha.coreui.components.ImageView
+import my.noveldokusha.coreui.theme.ArtworkTheme
 import my.noveldokusha.coreui.theme.ImageBorderShape
+import my.noveldokusha.coreui.theme.cachedArtworkSeedColor
+import my.noveldokusha.coreui.theme.extractAndCacheArtworkSeedColor
 import my.noveldokusha.coreui.theme.clickableNoIndicator
 import my.noveldokusha.chapterslist.R
 import my.noveldokusha.core.rememberResolvedBookImagePath
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -111,11 +119,44 @@ internal fun ChaptersScreenHeader(
         )
     } ?: R.drawable.ic_baseline_empty_24
 
-    Box(modifier = modifier) {
+    val artworkCacheKey = bookState.coverImageUrl
+        ?.takeIf { it.isNotBlank() }
+        ?.let { bookState.url + "::" + it }
+    val artworkSeedState = remember(artworkCacheKey) {
+        mutableStateOf(artworkCacheKey?.let(::cachedArtworkSeedColor))
+    }
+    val artworkExtractionInProgress = remember(artworkCacheKey) {
+        mutableStateOf(false)
+    }
+    val artworkScope = rememberCoroutineScope()
+    val onArtworkImageSuccess: ((Bitmap) -> Unit)? =
+        remember(artworkCacheKey, artworkScope) {
+            artworkCacheKey?.let { cacheKey ->
+                { bitmap: Bitmap ->
+                    if (artworkSeedState.value == null && !artworkExtractionInProgress.value) {
+                        artworkExtractionInProgress.value = true
+                        artworkScope.launch {
+                            try {
+                                val seed = withContext(Dispatchers.Default) {
+                                    extractAndCacheArtworkSeedColor(cacheKey, bitmap)
+                                }
+                                artworkSeedState.value = seed
+                            } finally {
+                                artworkExtractionInProgress.value = false
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+    ArtworkTheme(seedColor = artworkSeedState.value) {
+        Box(modifier = modifier) {
         Box(Modifier.matchParentSize()) {
             ImageView(
                 imageModel = coverImageModel,
                 referer = coverReferer,
+                onImageSuccess = onArtworkImageSuccess,
                 contentScale = ContentScale.FillWidth,
                 modifier = Modifier
                     .alpha(0.2f)
@@ -500,5 +541,6 @@ internal fun ChaptersScreenHeader(
                 }
             }
         }
+    }
     }
 }

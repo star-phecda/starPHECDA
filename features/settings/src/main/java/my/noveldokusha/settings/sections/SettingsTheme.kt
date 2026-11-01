@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -29,19 +30,19 @@ import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.material3.ripple
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import my.noveldokusha.coreui.theme.AppTheme
-import my.noveldokusha.coreui.theme.colorAccent
 import my.noveldokusha.coreui.theme.DarkMode
-import my.noveldokusha.coreui.theme.HighlightDark
+import my.noveldokusha.coreui.theme.colorAccent
+import my.noveldokusha.coreui.theme.rememberAppThemePalettePreview
 import my.noveldokusha.coreui.theme.textPadding
 import my.noveldokusha.settings.R
 
@@ -61,7 +62,6 @@ internal fun SettingsTheme(
             color = colorAccent()
         )
 
-        // Mode chips (System/Light/Dark/Black)
         FlowRow(
             modifier = Modifier
                 .fillMaxWidth()
@@ -91,7 +91,6 @@ internal fun SettingsTheme(
 
         Spacer(Modifier.height(8.dp))
 
-        // Color schemes section
         Text(
             text = stringResource(id = R.string.color_scheme),
             style = MaterialTheme.typography.titleSmall,
@@ -99,7 +98,6 @@ internal fun SettingsTheme(
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
-        // Compact horizontal scrollable theme picker
         LazyRow(
             modifier = Modifier.fillMaxWidth(),
             contentPadding = PaddingValues(horizontal = 16.dp),
@@ -123,51 +121,45 @@ private fun ThemePreviewChip(
     isSelected: Boolean,
     onClick: () -> Unit,
 ) {
-    val accentColor = when (theme) {
-        AppTheme.DEFAULT -> MaterialTheme.colorScheme.primary
-        AppTheme.TACHIYOMI -> HighlightDark
-        AppTheme.GREEN_APPLE -> Color(0xFF188140)
-        AppTheme.LAVENDER -> Color(0xFFA177FF)
-        AppTheme.MIDNIGHT_DUSK -> Color(0xFFF02475)
-        AppTheme.STRAWBERRY_DAIQUIRI -> Color(0xFFED4A65)
-        AppTheme.TAKO -> Color(0xFFF3B375)
-        AppTheme.TEALTURQUOISE -> Color(0xFF40E0D0)
-        AppTheme.TIDAL_WAVE -> Color(0xFF5ed4fc)
-        AppTheme.YOTSUBA -> Color(0xFFAE3200)
-        AppTheme.MONOCHROME -> Color(0xFF000000)
-        AppTheme.CATPPUCCIN -> Color(0xFFCBA6F7)
-        AppTheme.NORD -> Color(0xFF88C0D0)
-        AppTheme.YINYANG -> Color(0xFF000000)
-        AppTheme.CLOUDFLARE -> Color(0xFFF38020)
-        AppTheme.COTTONCANDY -> Color(0xFFFFCBCB)
-        AppTheme.DOOM -> Color(0xFFFF0000)
-        AppTheme.MATRIX -> Color(0xFF00FF00)
-        AppTheme.MOCHA -> Color(0xFFBF9270)
-        AppTheme.SAPPHIRE -> Color(0xFF1E88E5)
-    }
+    val palette = rememberAppThemePalettePreview(theme)
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
-            .clip(RoundedCornerShape(8.dp))
+            .clip(RoundedCornerShape(18.dp))
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = ripple(bounded = true),
                 onClick = onClick
             )
-            .width(52.dp)
+            .width(72.dp)
+            .padding(vertical = 4.dp),
     ) {
-        Box(
+        Row(
             modifier = Modifier
-                .size(36.dp)
-                .clip(CircleShape)
-                .background(accentColor)
-                    .border(
-                    width = if (isSelected) 2.dp else 0.dp,
-                    color = if (isSelected) MaterialTheme.colorScheme.onSurface else Color.Transparent,
-                    shape = CircleShape
+                .width(66.dp)
+                .height(34.dp)
+                .clip(RoundedCornerShape(17.dp))
+                .background(palette.surfaceContainer)
+                .border(
+                    width = if (isSelected) 2.dp else 1.dp,
+                    color = if (isSelected) MaterialTheme.colorScheme.primary
+                    else MaterialTheme.colorScheme.outlineVariant,
+                    shape = RoundedCornerShape(17.dp),
                 )
-        )
+                .padding(horizontal = 7.dp, vertical = 9.dp),
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            listOf(palette.primary, palette.secondary, palette.tertiary).forEach { swatch ->
+                Box(
+                    modifier = Modifier
+                        .size(14.dp)
+                        .clip(CircleShape)
+                        .background(swatch)
+                )
+            }
+        }
 
         Spacer(Modifier.height(4.dp))
 
@@ -175,8 +167,9 @@ private fun ThemePreviewChip(
             text = stringResource(id = theme.titleRes),
             style = MaterialTheme.typography.labelSmall,
             color = if (isSelected) MaterialTheme.colorScheme.primary
-                    else MaterialTheme.colorScheme.onSurfaceVariant,
+            else MaterialTheme.colorScheme.onSurfaceVariant,
             maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
         )
     }
 }

@@ -1,5 +1,6 @@
 package my.noveldokusha.coreui.components
 
+import android.graphics.Bitmap
 import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
@@ -32,10 +33,12 @@ import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import coil3.toBitmap
 import coil3.network.NetworkHeaders
 import coil3.network.httpHeaders
 import coil3.request.CachePolicy
 import coil3.request.ImageRequest
+import coil3.request.allowHardware
 import coil3.size.Precision
 import java.io.File
 import kotlinx.coroutines.Job
@@ -61,6 +64,7 @@ fun ImageView(
     forceCache: Boolean = false,
     // Готовый заголовок Referer от вызывающего; null → выводится из хоста самой картинки.
     referer: String? = null,
+    onImageSuccess: ((Bitmap) -> Unit)? = null,
 ) {
     val model by remember(imageModel, error) {
         derivedStateOf {
@@ -104,7 +108,7 @@ fun ImageView(
 
         // ponytail: crossfade, allowHardware, allowRgb565 — задаются глобально в App.kt.
         val placeholderPainter = placeholder?.let { painterResource(it) }
-        val imageRequest by remember(model, forceCache, retryCount.intValue, referer) {
+        val imageRequest by remember(model, forceCache, retryCount.intValue, referer, onImageSuccess != null) {
             derivedStateOf {
                 // Приоритет — referer вызывающего, иначе выводим из хоста картинки.
                 val effectiveReferer = referer?.takeIf { it.isNotBlank() }
@@ -114,6 +118,7 @@ fun ImageView(
                     .data(model)
                     .precision(Precision.INEXACT)
                     .apply {
+                        if (onImageSuccess != null) allowHardware(false)
                         if (!effectiveReferer.isNullOrEmpty()) {
                             httpHeaders(
                                 NetworkHeaders.Builder()
@@ -149,8 +154,9 @@ fun ImageView(
                     colorFilter = colorFilter,
                     placeholder = placeholderPainter,
                     error = painterResource(error),
-                    onSuccess = {
+                    onSuccess = { result ->
                         isError = false
+                        onImageSuccess?.invoke(result.result.image.toBitmap())
                     },
                     onError = {
                         isError = true

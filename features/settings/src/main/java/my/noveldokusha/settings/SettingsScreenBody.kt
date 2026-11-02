@@ -40,6 +40,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.material.icons.Icons
 import my.noveldokusha.coreui.theme.ExpressiveShapes
+import my.noveldokusha.coreui.theme.ExpressiveContentFrame
+import my.noveldokusha.coreui.theme.ExpressiveTokens
 
 import my.noveldokusha.coreui.theme.AppTheme
 import my.noveldokusha.coreui.theme.DarkMode
@@ -123,10 +125,11 @@ internal fun SettingsScreenBody(
 
     val showNovelPromptsDialog = remember { mutableStateOf(false) }
 
-    Column(
-        modifier = modifier.verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-    ) {
+    ExpressiveContentFrame(modifier = modifier) {
+        Column(
+            modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(ExpressiveTokens.space5),
+        ) {
         val currentLanguageObj = remember(state.currentLanguage.value) {
             AppLanguageProvider.fromCode(state.currentLanguage.value)
                 ?: AppLanguageProvider.supportedLanguages.first()
@@ -257,11 +260,11 @@ internal fun SettingsScreenBody(
                 appVersion = state.appVersion,
             )
         }
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(ExpressiveTokens.space4))
         Text(
             text = "(°.°)",
             modifier = Modifier
-                .padding(20.dp)
+                .padding(ExpressiveTokens.space5)
                 .fillMaxWidth(),
             fontFamily = FontFamily.Monospace,
             fontWeight = FontWeight.Bold,
@@ -269,6 +272,7 @@ internal fun SettingsScreenBody(
             textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(120.dp))
+        }
     }
 
     if (showNovelPromptsDialog.value) {
@@ -343,11 +347,11 @@ private fun SettingsGroup(content: @Composable () -> Unit) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 8.dp),
+            .padding(horizontal = ExpressiveTokens.space1),
         shape = ExpressiveShapes.container,
         color = MaterialTheme.colorScheme.surfaceContainerLow,
     ) {
-        Column(modifier = Modifier.padding(vertical = 4.dp)) {
+        Column(modifier = Modifier.padding(vertical = ExpressiveTokens.space2)) {
             content()
         }
     }

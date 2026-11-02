@@ -84,6 +84,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import my.noveldokusha.coreui.theme.ExpressiveShapes
+import my.noveldokusha.coreui.theme.ExpressiveTokens
+import my.noveldokusha.coreui.theme.ExpressiveWindowSizeClass
+import my.noveldokusha.coreui.theme.LocalExpressiveWindowSizeClass
+import my.noveldokusha.coreui.theme.expressiveContentGutter
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -178,10 +182,10 @@ internal fun ChaptersScreenHeader(
         Column(
             modifier = Modifier
                 .padding(top = paddingValues.calculateTopPadding())
-                .padding(horizontal = 14.dp),
+                .padding(horizontal = expressiveContentGutter(LocalExpressiveWindowSizeClass.current)),
         ) {
             Row(
-                horizontalArrangement = Arrangement.spacedBy(14.dp),
+                horizontalArrangement = Arrangement.spacedBy(ExpressiveTokens.space4),
             ) {
                 var showImageFullScreen by rememberSaveable { mutableStateOf(false) }
                 BookImageButtonView(
@@ -191,7 +195,19 @@ internal fun ChaptersScreenHeader(
                     onClick = { showImageFullScreen = true },
                     onLongClick = onCoverLongClick,
                     sourceStripPosition = SourceStripPosition.BelowCover,
-                    modifier = Modifier.weight(1f)
+                    modifier = if (
+                        LocalExpressiveWindowSizeClass.current == ExpressiveWindowSizeClass.COMPACT
+                    ) {
+                        Modifier.weight(0.85f)
+                    } else {
+                        Modifier.width(
+                            if (LocalExpressiveWindowSizeClass.current == ExpressiveWindowSizeClass.MEDIUM) {
+                                184.dp
+                            } else {
+                                208.dp
+                            }
+                        )
+                    }
                 )
                 if (showImageFullScreen) Dialog(
                     onDismissRequest = { showImageFullScreen = false },
@@ -231,7 +247,13 @@ internal fun ChaptersScreenHeader(
                     modifier = Modifier
                         .padding(top = 16.dp)
                         .fillMaxHeight()
-                        .weight(1f),
+                        .weight(
+                            if (LocalExpressiveWindowSizeClass.current == ExpressiveWindowSizeClass.COMPACT) {
+                                1.15f
+                            } else {
+                                1f
+                            }
+                        ),
                 ) {
                     SelectionContainer {
                         // Главное название книги: без ограничения строк,

@@ -6,6 +6,8 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.ColorScheme
@@ -154,22 +156,27 @@ fun InternalTheme(
         )
     }
 
-    Box(Modifier) {
-        CompositionLocalProvider(
-            LocalAppTheme provides appTheme,
-            LocalIsDark provides isDark,
-            LocalIsAmoled provides isAmoled,
-        ) {
-            MaterialTheme(
-                colorScheme = colorScheme,
-                typography = typography,
-                shapes = shapes,
-            ) {
+    BoxWithConstraints(Modifier.fillMaxSize()) {
+        val sizeClass = expressiveWindowSizeClass(maxWidth)
+        CompositionLocalProvider(LocalExpressiveWindowSizeClass provides sizeClass) {
+            Box(Modifier) {
                 CompositionLocalProvider(
-                    LocalContentColor provides MaterialTheme.colorScheme.onSurface,
-                    LocalTextSelectionColors provides textSelectionColors,
-                    content = content
-                )
+                    LocalAppTheme provides appTheme,
+                    LocalIsDark provides isDark,
+                    LocalIsAmoled provides isAmoled,
+                ) {
+                    MaterialTheme(
+                        colorScheme = colorScheme,
+                        typography = typography,
+                        shapes = shapes,
+                    ) {
+                        CompositionLocalProvider(
+                            LocalContentColor provides MaterialTheme.colorScheme.onSurface,
+                            LocalTextSelectionColors provides textSelectionColors,
+                            content = content
+                        )
+                    }
+                }
             }
         }
     }
@@ -229,4 +236,3 @@ private fun getBaseColorScheme(appTheme: AppTheme, context: Context): BaseColorS
         AppTheme.SAPPHIRE -> SapphireColorScheme
     }
 }
-

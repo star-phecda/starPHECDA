@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -33,6 +34,8 @@ import my.noveldokusha.coreui.modifiers.bounceOnPressed
 import my.noveldokusha.coreui.states.IteratorState
 import my.noveldokusha.coreui.theme.InternalTheme
 import my.noveldokusha.coreui.theme.PreviewThemes
+import my.noveldokusha.coreui.theme.ExpressiveContentFrame
+import my.noveldokusha.coreui.theme.ExpressiveTokens
 import my.noveldokusha.data.CatalogItem
 import my.noveldokusha.mappers.mapToBookMetadata
 import my.noveldokusha.core.Response
@@ -52,12 +55,19 @@ internal fun GlobalSourceSearchScreenBody(
     // Reactive dependency: reading libraryBadgeData.value triggers recomposition when library changes.
     libraryBadgeData.value
 
-    LazyColumn(
-        modifier = Modifier.padding(contentPadding),
-        contentPadding = PaddingValues(top = 12.dp, bottom = 240.dp)
-    ) {
+    ExpressiveContentFrame(modifier = Modifier.padding(contentPadding)) {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(
+                top = ExpressiveTokens.space3,
+                bottom = 240.dp,
+            )
+        ) {
         items(items = listSources, key = { it.source.catalog.id }) { entry ->
-            Column(modifier = Modifier.padding(bottom = 16.dp)) {
+            Column(
+                modifier = Modifier.padding(bottom = ExpressiveTokens.space4),
+                verticalArrangement = Arrangement.spacedBy(ExpressiveTokens.space2),
+            ) {
                 Text(
                     text = entry.source.catalog.name
                         ?: if (entry.source.catalog.nameStrId != 0)
@@ -65,7 +75,7 @@ internal fun GlobalSourceSearchScreenBody(
                         else "Unknown",
                     style = MaterialTheme.typography.titleLarge,
                     modifier = Modifier
-                        .padding(start = 16.dp, bottom = 8.dp)
+                        .padding(start = ExpressiveTokens.space4, bottom = ExpressiveTokens.space2)
                 )
                 SourceListView(
                     list = entry.fetchIterator.list,
@@ -77,6 +87,7 @@ internal fun GlobalSourceSearchScreenBody(
                 )
             }
         }
+    }
     }
 }
 
@@ -97,10 +108,10 @@ private fun SourceListView(
     LazyRow(
         state = state,
         contentPadding = PaddingValues(
-            start = 12.dp,
-            end = 30.dp,
+            start = ExpressiveTokens.space3,
+            end = ExpressiveTokens.space7,
         ),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(ExpressiveTokens.space2),
         modifier = modifier
             .animateContentSize()
             .fillMaxWidth(),

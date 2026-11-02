@@ -1,8 +1,11 @@
 package my.noveldokusha.coreui.components
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -31,6 +34,9 @@ import my.noveldokusha.core.appPreferences.SourceStripPosition
 import my.noveldokusha.core.domain.CloudfareVerificationBypassFailedException
 import my.noveldokusha.core.domain.WebViewCookieManagerInitializationFailedException
 import my.noveldokusha.core.rememberResolvedBookImagePath
+import my.noveldokusha.coreui.theme.ExpressiveContentFrame
+import my.noveldokusha.coreui.theme.ExpressiveTokens
+import my.noveldokusha.coreui.theme.adaptiveGridColumnCount
 import my.noveldokusha.feature.local_database.BookMetadata
 
 @Composable
@@ -46,141 +52,144 @@ fun BooksVerticalView(
     onReload: () -> Unit = {},
     onCopyError: (String) -> Unit = {},
     onWebViewOpen: () -> Unit = {},
-    // Количество колонок из общего preference BOOKS_GRID_COLUMNS (2..6, дефолт 3)
+    // Количество колонок из общего preference BOOKS_GRID_COLUMNS (2..6, дефолт 3).
+    // Оно остаётся базовой плотностью на компактных окнах.
     gridColumns: Int = 3,
-    // Позиция полосы источника: кромка обложки / плашка под обложкой / InfoPanel
     sourceStripPosition: SourceStripPosition = SourceStripPosition.BelowCover,
     innerPadding: PaddingValues = PaddingValues(),
-    // Готовый заголовок Referer для загрузки обложек; null → из хоста картинки.
     referer: String? = null,
-
-    // Переводы названий книг (url -> translatedTitle). Читается внутри каждого
-    // item'а: SnapshotStateMap гарантированно триггерит recomposition конкретного
-    // item'а при изменении его названия (list[i] = copy() при key={it.url} этого
-    // не делает).
     translatedTitles: Map<String, String> = emptyMap(),
-    // Дозапрошенные обложки (url -> resolved cover URL) для элементов, у которых
-    // источник пришёл с пустым coverImageUrl. Читается внутри item'а по тому же
-    // принципу, что и translatedTitles.
     coverOverrides: Map<String, String> = emptyMap(),
     topLeftBadge: (@Composable (BookMetadata) -> Unit)? = null,
 ) {
-
-    val columns by remember(layoutMode, gridColumns) {
-        derivedStateOf {
-            when (layoutMode) {
-                ListLayoutMode.VerticalList -> GridCells.Fixed(1)
-                ListLayoutMode.VerticalGrid -> GridCells.Fixed(gridColumns.coerceIn(2, 6))
-            }
-        }
-    }
-
     ListGridLoadWatcher(
         listState = state,
         loadState = loadState,
         onLoadNext = onLoadNext
     )
 
-    LazyVerticalGrid(
-        columns = columns,
-        state = state,
+    ExpressiveContentFrame(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(innerPadding),
-        contentPadding = PaddingValues(start = 4.dp, end = 4.dp, top = 4.dp, bottom = 160.dp)
+            .fillMaxSize()
+            .padding(innerPadding)
     ) {
-        items(
-            items = list,
-            key = { it.url },
-            contentType = { if (layoutMode == ListLayoutMode.VerticalList) 1 else 2 }
-        ) {
-            // Переведённое название приоритетнее исходного title.
-            val title = translatedTitles[it.url] ?: it.title
-            when (layoutMode) {
-                ListLayoutMode.VerticalList -> MyButton(
-                    text = title,
-                    onClick = { onBookClicked(it) },
-                    onLongClick = { onBookLongClicked(it) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                )
-                ListLayoutMode.VerticalGrid -> BookImageButtonView(
-                    title = title,
-                    coverImageModel = rememberResolvedBookImagePath(
-                        bookUrl = it.url,
-                        imagePath = coverOverrides[it.url] ?: it.coverImageUrl
-                    ),
-                    onClick = { onBookClicked(it) },
-                    onLongClick = { onBookLongClicked(it) },
-                    topRightBadge = { BookRatingBadge(rating = it.rating) },
-                    topLeftBadge = topLeftBadge?.let { badge -> { badge(it) } },
-                    sourceStripPosition = sourceStripPosition,
-                    referer = referer,
-                )
+        BoxWithConstraints(Modifier.fillMaxSize()) {
+            val adaptiveColumns = adaptiveGridColumnCount(
+                availableWidth = maxWidth,
+                preferredColumns = gridColumns,
+            )
+            val columns by remember(layoutMode, adaptiveColumns) {
+                derivedStateOf {
+                    when (layoutMode) {
+                        ListLayoutMode.VerticalList -> GridCells.Fixed(1)
+                        ListLayoutMode.VerticalGrid -> GridCells.Fixed(adaptiveColumns)
+                    }
+                }
             }
-        }
 
-        item(span = { GridItemSpan(maxLineSpan) }) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(160.dp),
+            LazyVerticalGrid(
+                columns = columns,
+                state = state,
+                modifier = Modifier.fillMaxSize(),
+                horizontalArrangement = Arrangement.spacedBy(ExpressiveTokens.space3),
+                verticalArrangement = Arrangement.spacedBy(ExpressiveTokens.space3),
+                contentPadding = PaddingValues(
+                    top = ExpressiveTokens.space2,
+                    bottom = 160.dp,
+                )
             ) {
-                when (loadState) {
-                    IteratorState.LOADING -> Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.padding(16.dp)
-                    ) {
-                        CircularProgressIndicator(
-                            color = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.padding(bottom = 8.dp)
+                items(
+                    items = list,
+                    key = { it.url },
+                    contentType = { if (layoutMode == ListLayoutMode.VerticalList) 1 else 2 }
+                ) {
+                    val title = translatedTitles[it.url] ?: it.title
+                    when (layoutMode) {
+                        ListLayoutMode.VerticalList -> MyButton(
+                            text = title,
+                            onClick = { onBookClicked(it) },
+                            onLongClick = { onBookLongClicked(it) },
+                            modifier = Modifier.fillMaxWidth()
                         )
-                        Text(
-                            text = stringResource(R.string.loading),
-                            color = MaterialTheme.colorScheme.onBackground,
-                            style = MaterialTheme.typography.bodyMedium
+                        ListLayoutMode.VerticalGrid -> BookImageButtonView(
+                            title = title,
+                            coverImageModel = rememberResolvedBookImagePath(
+                                bookUrl = it.url,
+                                imagePath = coverOverrides[it.url] ?: it.coverImageUrl
+                            ),
+                            onClick = { onBookClicked(it) },
+                            onLongClick = { onBookLongClicked(it) },
+                            topRightBadge = { BookRatingBadge(rating = it.rating) },
+                            topLeftBadge = topLeftBadge?.let { badge -> { badge(it) } },
+                            sourceStripPosition = sourceStripPosition,
+                            referer = referer,
                         )
                     }
-                    IteratorState.CONSUMED -> Text(
-                        text = when {
-                            list.isEmpty() -> stringResource(R.string.no_results_found)
-                            else -> stringResource(R.string.no_more_results)
-                        },
-                        color = MaterialTheme.colorScheme.onBackground
-                    )
-                    else -> Unit
                 }
-            }
-        }
 
-        when (error?.exception) {
-            is WebViewCookieManagerInitializationFailedException -> {
                 item(span = { GridItemSpan(maxLineSpan) }) {
-                    ClickableOption(
-                        title = stringResource(R.string.cloudfare_firewall_detected),
-                        subtitle = stringResource(R.string.please_open_web_view_and_try_verify_then_reload),
-                        onClick = onWebViewOpen,
-                        modifier = Modifier.padding(12.dp)
-                    )
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(160.dp),
+                    ) {
+                        when (loadState) {
+                            IteratorState.LOADING -> Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                modifier = Modifier.padding(ExpressiveTokens.space4)
+                            ) {
+                                CircularProgressIndicator(
+                                    color = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.padding(bottom = ExpressiveTokens.space2)
+                                )
+                                Text(
+                                    text = stringResource(R.string.loading),
+                                    color = MaterialTheme.colorScheme.onBackground,
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                            }
+                            IteratorState.CONSUMED -> Text(
+                                text = when {
+                                    list.isEmpty() -> stringResource(R.string.no_results_found)
+                                    else -> stringResource(R.string.no_more_results)
+                                },
+                                color = MaterialTheme.colorScheme.onBackground
+                            )
+                            else -> Unit
+                        }
+                    }
                 }
-            }
-            is CloudfareVerificationBypassFailedException -> {
-                item(span = { GridItemSpan(maxLineSpan) }) {
-                    ClickableOption(
-                        title = stringResource(R.string.cloudfare_firewall_failed_bypass),
-                        subtitle = stringResource(R.string.tried_but_failed_to_bypass_cloudfare_firewall),
-                        onClick = onWebViewOpen,
-                        modifier = Modifier.padding(12.dp),
-                        isButton = true
-                    )
-                }
-            }
-            null -> Unit
-        }
 
-        if (error != null) item(span = { GridItemSpan(maxLineSpan) }) {
-            ErrorView(error = error.message, onReload = onReload, onCopyError = onCopyError)
+                when (error?.exception) {
+                    is WebViewCookieManagerInitializationFailedException -> {
+                        item(span = { GridItemSpan(maxLineSpan) }) {
+                            ClickableOption(
+                                title = stringResource(R.string.cloudfare_firewall_detected),
+                                subtitle = stringResource(R.string.please_open_web_view_and_try_verify_then_reload),
+                                onClick = onWebViewOpen,
+                                modifier = Modifier.padding(ExpressiveTokens.space3)
+                            )
+                        }
+                    }
+                    is CloudfareVerificationBypassFailedException -> {
+                        item(span = { GridItemSpan(maxLineSpan) }) {
+                            ClickableOption(
+                                title = stringResource(R.string.cloudfare_firewall_failed_bypass),
+                                subtitle = stringResource(R.string.tried_but_failed_to_bypass_cloudfare_firewall),
+                                onClick = onWebViewOpen,
+                                modifier = Modifier.padding(ExpressiveTokens.space3),
+                                isButton = true
+                            )
+                        }
+                    }
+                    null -> Unit
+                }
+
+                if (error != null) item(span = { GridItemSpan(maxLineSpan) }) {
+                    ErrorView(error = error.message, onReload = onReload, onCopyError = onCopyError)
+                }
+            }
         }
     }
 }

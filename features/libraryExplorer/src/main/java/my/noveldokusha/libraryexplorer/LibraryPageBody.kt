@@ -5,7 +5,9 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -36,7 +38,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import coil3.SingletonImageLoader
 import coil3.network.NetworkHeaders
 import coil3.network.httpHeaders
@@ -49,6 +50,9 @@ import my.noveldokusha.coreui.R
 import my.noveldokusha.coreui.components.BookImageButtonView
 import my.noveldokusha.coreui.components.BookRatingBadge
 import my.noveldokusha.coreui.components.toContentTypeBadgeIcon
+import my.noveldokusha.coreui.theme.ExpressiveContentFrame
+import my.noveldokusha.coreui.theme.ExpressiveTokens
+import my.noveldokusha.coreui.theme.adaptiveGridColumnCount
 import my.noveldokusha.core.rememberResolvedBookImagePath
 import my.noveldokusha.feature.local_database.BookWithContext
 
@@ -58,113 +62,124 @@ internal fun LibraryPageBody(
     onClick: (BookWithContext) -> Unit,
     onLongClick: (BookWithContext) -> Unit,
     getSourceName: (String) -> String,
-    // Количество колонок: от 2 до 6, дефолт 3
     gridColumns: Int = 3,
-    // Позиция полосы источника: кромка обложки (OnCover) или плашка под обложкой (BelowCover)
     sourceStripPosition: SourceStripPosition = SourceStripPosition.BelowCover,
     selectedBooks: Map<String, Boolean> = emptyMap(),
     isSelectionMode: Boolean = false,
     pendingRemoval: Set<String> = emptySet(),
     gridState: LazyGridState = rememberLazyGridState(),
-    // bookUrl → переведённое название новеллы (берётся из BookTranslation).
-    // Пустая/отсутствующая запись = показываем оригинал.
     translatedTitles: Map<String, String> = emptyMap(),
 ) {
     if (list.isEmpty()) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Icon(
-                    imageVector = Icons.Filled.Book,
-                    contentDescription = null,
-                    modifier = Modifier.size(64.dp),
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
-                )
-                Spacer(Modifier.height(16.dp))
-                Text(
-                    text = stringResource(R.string.no_books_in_library),
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+        ExpressiveContentFrame(Modifier.fillMaxSize()) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Icon(
+                        imageVector = Icons.Filled.Book,
+                        contentDescription = null,
+                        modifier = Modifier.size(64.dp),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                    )
+                    Spacer(Modifier.height(ExpressiveTokens.space4))
+                    Text(
+                        text = stringResource(R.string.no_books_in_library),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
             }
         }
     } else {
-        LazyVerticalGrid(
-            state = gridState,
-            columns = GridCells.Fixed(gridColumns.coerceIn(2, 6)),
-            contentPadding = PaddingValues(top = 4.dp, bottom = 100.dp, start = 4.dp, end = 4.dp),
-        ) {
-            items(
-                items = list,
-                key = { it.book.url },
-                contentType = { "book" }
-            ) {
-                val isSelected = selectedBooks[it.book.url] ?: false
-                val isRemoving = it.book.url in pendingRemoval
-                AnimatedVisibility(
-                    visible = !isRemoving,
-                    exit = fadeOut(animationSpec = tween(300)) + scaleOut(animationSpec = tween(300))
+        ExpressiveContentFrame(Modifier.fillMaxSize()) {
+            BoxWithConstraints(Modifier.fillMaxSize()) {
+                val adaptiveColumns = adaptiveGridColumnCount(
+                    availableWidth = maxWidth,
+                    preferredColumns = gridColumns,
+                )
+                LazyVerticalGrid(
+                    state = gridState,
+                    columns = GridCells.Fixed(adaptiveColumns),
+                    horizontalArrangement = Arrangement.spacedBy(ExpressiveTokens.space3),
+                    verticalArrangement = Arrangement.spacedBy(ExpressiveTokens.space4),
+                    contentPadding = PaddingValues(
+                        top = ExpressiveTokens.space2,
+                        bottom = 100.dp,
+                    ),
                 ) {
-                    Box {
-                        val notReadCount = (it.chaptersCount - it.chaptersReadCount).coerceAtLeast(0)
-                        BookImageButtonView(
-                            title = translatedTitles[it.book.url]?.takeIf { t -> t.isNotBlank() } ?: it.book.title,
-                            coverImageModel = rememberResolvedBookImagePath(
-                                bookUrl = it.book.url,
-                                imagePath = it.book.coverImageUrl
-                            ),
-                            onClick = { onClick(it) },
-                            onLongClick = { onLongClick(it) },
-                            sourceStripUnreadCount = notReadCount,
-                            sourceStripSourceName = getSourceName(it.book.url),
-                            sourceStripPosition = sourceStripPosition,
-                            fadeInDurationMillis = 250,
-                            topLeftBadge = {
-                                Box(
-                                    modifier = Modifier
-                                        .padding(4.dp)
-                                        .size(20.dp)
-                                        .clip(CircleShape)
-                                        .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.75f)),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Icon(
-                                        painter = painterResource(it.book.contentType.toContentTypeBadgeIcon()),
-                                        contentDescription = null,
-                                        modifier = Modifier.size(12.dp),
-                                        tint = MaterialTheme.colorScheme.onPrimary
-                                    )
-                                }
-                            },
-                            topRightBadge = { BookRatingBadge(rating = it.book.rating) },
-                            forceCache = true
-                        )
-
-                        // Selection overlay
-                        if (isSelectionMode && isSelected) {
-                            Box(
-                                modifier = Modifier
-                                    .matchParentSize()
-                                    .background(MaterialTheme.colorScheme.scrim.copy(alpha = 0.5f))
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.CheckCircle,
-                                    contentDescription = stringResource(R.string.selected),
-                                    tint = MaterialTheme.colorScheme.primary,
-                                    modifier = Modifier
-                                        .align(Alignment.Center)
-                                        .size(48.dp)
+                    items(
+                        items = list,
+                        key = { it.book.url },
+                        contentType = { "book" }
+                    ) {
+                        val isSelected = selectedBooks[it.book.url] ?: false
+                        val isRemoving = it.book.url in pendingRemoval
+                        AnimatedVisibility(
+                            visible = !isRemoving,
+                            exit = fadeOut(animationSpec = tween(300)) + scaleOut(animationSpec = tween(300))
+                        ) {
+                            Box {
+                                val notReadCount = (it.chaptersCount - it.chaptersReadCount).coerceAtLeast(0)
+                                BookImageButtonView(
+                                    title = translatedTitles[it.book.url]?.takeIf { t -> t.isNotBlank() } ?: it.book.title,
+                                    coverImageModel = rememberResolvedBookImagePath(
+                                        bookUrl = it.book.url,
+                                        imagePath = it.book.coverImageUrl
+                                    ),
+                                    onClick = { onClick(it) },
+                                    onLongClick = { onLongClick(it) },
+                                    sourceStripUnreadCount = notReadCount,
+                                    sourceStripSourceName = getSourceName(it.book.url),
+                                    sourceStripPosition = sourceStripPosition,
+                                    fadeInDurationMillis = 250,
+                                    topLeftBadge = {
+                                        Box(
+                                            modifier = Modifier
+                                                .padding(4.dp)
+                                                .size(20.dp)
+                                                .clip(CircleShape)
+                                                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.75f)),
+                                            contentAlignment = Alignment.Center
+                                        ) {
+                                            Icon(
+                                                painter = painterResource(it.book.contentType.toContentTypeBadgeIcon()),
+                                                contentDescription = null,
+                                                modifier = Modifier.size(12.dp),
+                                                tint = MaterialTheme.colorScheme.onPrimary
+                                            )
+                                        }
+                                    },
+                                    topRightBadge = { BookRatingBadge(rating = it.book.rating) },
+                                    forceCache = true
                                 )
+
+                                if (isSelectionMode && isSelected) {
+                                    Box(
+                                        modifier = Modifier
+                                            .matchParentSize()
+                                            .background(MaterialTheme.colorScheme.scrim.copy(alpha = 0.5f))
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.CheckCircle,
+                                            contentDescription = stringResource(R.string.selected),
+                                            tint = MaterialTheme.colorScheme.primary,
+                                            modifier = Modifier
+                                                .align(Alignment.Center)
+                                                .size(48.dp)
+                                        )
+                                    }
+                                }
                             }
                         }
                     }
                 }
             }
         }
-        // Prefetch next images while scrolling to avoid decode spikes
-        // ponytail: track all disposables — previous code leaked 4 of 5 prefetch requests
+
+        // Prefetch next images while scrolling to avoid decode spikes.
+        // Track all disposables to avoid leaking prefetch requests.
         val context = LocalContext.current
         val imageLoader = SingletonImageLoader.get(context)
         val appFileResolver = remember(context) { AppFileResolver(context) }
@@ -205,5 +220,3 @@ internal fun LibraryPageBody(
         }
     }
 }
-
-

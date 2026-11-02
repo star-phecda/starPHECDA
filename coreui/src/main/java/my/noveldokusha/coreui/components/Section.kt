@@ -9,9 +9,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import my.noveldokusha.coreui.theme.ExpressiveShapes
-
+import my.noveldokusha.coreui.theme.ExpressiveTokens
 
 @Composable
 fun Section(
@@ -26,7 +25,10 @@ fun Section(
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(12.dp),
+                    .padding(
+                        horizontal = ExpressiveTokens.space5,
+                        vertical = ExpressiveTokens.space3,
+                    ),
                 color = MaterialTheme.colorScheme.primary,
                 textAlign = TextAlign.Center,
             )

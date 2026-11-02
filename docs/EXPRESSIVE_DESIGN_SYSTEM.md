@@ -72,3 +72,18 @@ Book covers behave as media surfaces rather than static thumbnails. They have a 
 History entries use a larger cover, a thin tonal outline, compact source/time pills, chapter context, and a capsule progress track. Incomplete or missing chapter metadata is omitted rather than represented by empty decoration, and displayed progress is clamped to a valid range.
 
 Search fields use the full capsule shape and their menus use the shared dropdown role. The shared button's selected geometry uses a spring response, while explicit shape overrides remain respected. These patterns are shared across feature flows rather than recreated independently on every page.
+
+
+## Spacing and responsive layout
+
+`coreui/theme/ExpressiveTokens.kt` owns the app spacing rhythm: 4 / 8 / 12 / 16 / 20 / 24 / 32 / 40 / 48 / 64dp. Page gutters are 16dp on compact windows, 24dp on medium windows, and 32dp on expanded windows. Content widths are constrained to 600 / 840 / 1200dp respectively.
+
+`LocalExpressiveWindowSizeClass` is resolved from the actual Compose window constraints. Compact is below 600dp, medium is 600–839dp, and expanded is 840dp or wider. This supports rotation, split-screen, resizable windows and foldable postures without relying on device model checks.
+
+`ExpressiveContentFrame` centers and gutters content while keeping page composition screen-specific. Shared book grids preserve the user's saved 2–6 column preference on compact layouts and add columns as more width becomes available, up to six. Cover images retain their portrait aspect ratio.
+
+The main app uses the floating bottom navigation on compact windows and an expressive labelled rail on medium and expanded windows. Novel detail headers use shared page gutters and keep the artwork at a deliberate portrait width on wider layouts, giving descriptive metadata the remaining space.
+
+The Settings and History pages, Library category filters, shared catalogue grid, and Library grid now use the common spacing rhythm. Future screens should consume these tokens and width classes instead of introducing local page gutters or device-specific widths.
+
+Reader text layout remains deliberately independent: app-shell gutters do not alter the selected reader font, text size, line height, reading margin, or manga canvas.

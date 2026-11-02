@@ -125,7 +125,7 @@ internal fun SettingsScreenBody(
 
     val showNovelPromptsDialog = remember { mutableStateOf(false) }
 
-    ExpressiveContentFrame(modifier = modifier) {
+    ExpressiveContentFrame(modifier = modifier.fillMaxSize()) {
         Column(
             modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(ExpressiveTokens.space5),

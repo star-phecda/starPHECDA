@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
@@ -39,6 +38,7 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import my.noveldokusha.features.reader.domain.HighlightPosition
 import my.noveldokusha.reader.R
+import my.noveldokusha.coreui.theme.ExpressiveShapes
 
 /**
  * Плавающая кнопка ручной подсветки абзацев. Стартовая позиция — по центру
@@ -134,7 +134,7 @@ internal fun ManualHighlightPill(
         if (highlightedItem != null) {
             Row(
                 modifier = Modifier
-                    .clip(RoundedCornerShape(20.dp))
+                    .clip(ExpressiveShapes.pill)
                     .background(MaterialTheme.colorScheme.surfaceContainer)
                     .padding(horizontal = 4.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -174,7 +174,7 @@ internal fun ManualHighlightPill(
             Box(
                 modifier = Modifier
                     .size(36.dp)
-                    .clip(RoundedCornerShape(10.dp))
+                    .clip(ExpressiveShapes.button)
                     // Цвет и прозрачность как у буббла FloatingTTS (primary + onPrimary,
                     // alpha 0.5) без обводки: рамка secondaryContainer+primary бросалась
                     // в глаза, когда включены обе плавающие фичи.

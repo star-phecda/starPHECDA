@@ -29,7 +29,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.NavigateBefore
 import androidx.compose.material.icons.automirrored.rounded.NavigateNext
@@ -81,6 +80,7 @@ import my.noveldokusha.coreui.composableActions.debouncedAction
 import my.noveldokusha.reader.R
 import kotlinx.coroutines.withTimeoutOrNull
 import my.noveldokusha.features.reader.features.TextToSpeechSettingData
+import my.noveldokusha.coreui.theme.ExpressiveShapes
 
 @Composable
 internal fun TtsMiniPlayer(
@@ -176,7 +176,7 @@ private fun MiniPlayerControls(
         }
         if (chaptersCount > 0) {
             Surface(
-                shape = RoundedCornerShape(16.dp),
+                shape = ExpressiveShapes.card,
                 color = MaterialTheme.colorScheme.surfaceVariant,
             ) {
                 Text(
@@ -194,7 +194,7 @@ private fun MiniPlayerControls(
                 .weight(1f)
                 .padding(horizontal = 4.dp)
                 .height(progressHeight)
-                .clip(RoundedCornerShape(4.dp))
+                .clip(ExpressiveShapes.pill)
                 .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f))
         ) {
             Box(
@@ -601,7 +601,7 @@ private fun FloatingTtsMiniPlayer(
                 }
                 Surface(
                     color = MaterialTheme.colorScheme.surfaceContainerHighest.copy(alpha = opacity),
-                    shape = RoundedCornerShape(8.dp),
+                    shape = ExpressiveShapes.option,
                     modifier = Modifier
                         .fillMaxWidth()
                         .then(

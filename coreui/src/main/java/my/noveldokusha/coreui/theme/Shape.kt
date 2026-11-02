@@ -30,6 +30,10 @@ object ExpressiveShapes {
         topStart = ExpressiveTokens.cornerExtraLargeIncreased,
         topEnd = ExpressiveTokens.cornerExtraLargeIncreased,
     )
+    val sideSheet: Shape = RoundedCornerShape(
+        topStart = ExpressiveTokens.cornerExtraLargeIncreased,
+        bottomStart = ExpressiveTokens.cornerExtraLargeIncreased,
+    )
     val dialog: Shape = RoundedCornerShape(ExpressiveTokens.cornerExtraLarge)
 }
 

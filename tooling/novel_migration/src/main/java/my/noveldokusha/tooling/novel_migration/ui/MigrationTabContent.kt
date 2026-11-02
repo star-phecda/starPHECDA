@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.LinkOff
 import androidx.compose.material3.CircularProgressIndicator
@@ -32,6 +31,7 @@ import my.noveldokusha.coreui.components.SlimListItem
 import my.noveldokusha.scraper.SourceInterface
 import my.noveldokusha.scraper.displayName
 import my.noveldokusha.strings.R
+import my.noveldokusha.coreui.theme.ExpressiveShapes
 
 @Composable
 fun MigrationTabContent(
@@ -98,12 +98,12 @@ fun MigrationTabContent(
                             imageModel = source.iconResId ?: source.iconUrl,
                             modifier = Modifier
                                 .size(28.dp)
-                                .clip(RoundedCornerShape(4.dp)),
+                                .clip(ExpressiveShapes.compactContainer),
                         )
                     },
                     trailingContent = {
                         Surface(
-                            shape = RoundedCornerShape(12.dp),
+                            shape = ExpressiveShapes.pill,
                             color = MaterialTheme.colorScheme.primaryContainer,
                         ) {
                             Text(

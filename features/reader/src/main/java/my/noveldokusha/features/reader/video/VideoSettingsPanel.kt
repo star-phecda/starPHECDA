@@ -32,7 +32,6 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
@@ -59,6 +58,7 @@ import androidx.compose.ui.unit.dp
 import my.noveldokusha.reader.R
 import kotlin.math.min
 import kotlin.math.roundToInt
+import my.noveldokusha.coreui.theme.ExpressiveShapes
 
 // Скорости и шаги — те же значения, что в popup скоростей меди3
 // (его собственная шестерёнка закрыта; список живёт здесь).
@@ -169,10 +169,10 @@ fun VideoSettingsPanel(
             )
 
             val shape = if (isPortrait) {
-                RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
+                ExpressiveShapes.sheet
             } else {
                 // Справа: скругляем только левый (внутренний) край.
-                RoundedCornerShape(topStart = 24.dp, bottomStart = 24.dp)
+                ExpressiveShapes.sideSheet
             }
             // Лист упирается в 70% высоты, боковая панель — в 45% ширины (не больше 400dp).
             val panelSize = if (isPortrait) {
@@ -241,7 +241,7 @@ private fun PanelHeader(isPortrait: Boolean, onClose: () -> Unit) {
                     .size(width = 36.dp, height = 4.dp)
                     .background(
                         color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
-                        shape = RoundedCornerShape(2.dp),
+                        shape = ExpressiveShapes.pill,
                     )
             )
             Row(
@@ -301,6 +301,7 @@ private fun PlaybackSection(
     ChipRow {
         playbackSpeedOptions.forEach { speed ->
             FilterChip(
+                shape = ExpressiveShapes.pill,
                 selected = speed == state.playbackSpeed,
                 onClick = { actions.onPlaybackSpeedChange(speed) },
                 label = { Text(speedLabel(speed)) },
@@ -312,6 +313,7 @@ private fun PlaybackSection(
     ChipRow {
         seekStepOptions.forEach { stepMs ->
             FilterChip(
+                shape = ExpressiveShapes.pill,
                 selected = stepMs == state.seekStepMs,
                 onClick = { actions.onSeekStepChange(stepMs) },
                 label = { Text(stringResource(R.string.video_seconds_value, stepMs / 1000)) },
@@ -323,6 +325,7 @@ private fun PlaybackSection(
     ChipRow {
         autoHideOptions.forEach { hideMs ->
             FilterChip(
+                shape = ExpressiveShapes.pill,
                 selected = hideMs == state.controllerAutoHideMs,
                 onClick = { actions.onControllerAutoHideChange(hideMs) },
                 label = {

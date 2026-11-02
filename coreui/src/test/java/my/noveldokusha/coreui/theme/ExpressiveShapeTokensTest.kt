@@ -50,6 +50,10 @@ class ExpressiveShapeTokensTest {
             ExpressiveShapes.sheet,
         )
         assertRoundedCorner(ExpressiveShapes.input, 12.dp)
+        assertEquals(
+            RoundedCornerShape(topStart = 36.dp, bottomStart = 36.dp),
+            ExpressiveShapes.sideSheet,
+        )
     }
 
     @Test

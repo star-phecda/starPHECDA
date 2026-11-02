@@ -36,6 +36,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -155,7 +156,7 @@ fun ExpressiveNavigationBar(
                             ) {
                                 Icon(
                                     painter = if (selected) item.selectedIcon ?: item.icon else item.icon,
-                                    contentDescription = if (compactMode) item.label else null,
+                                    contentDescription = item.label,
                                     tint = contentColor,
                                     modifier = Modifier
                                         .size(24.dp)
@@ -186,7 +187,9 @@ fun ExpressiveNavigationBar(
                                     softWrap = false,
                                     overflow = TextOverflow.Ellipsis,
                                     color = contentColor,
-                                    modifier = Modifier.padding(start = 7.dp),
+                                    modifier = Modifier
+                                        .padding(start = 7.dp)
+                                        .clearAndSetSemantics { },
                                     style = MaterialTheme.typography.labelMedium.copy(
                                         fontWeight = FontWeight.SemiBold
                                     )

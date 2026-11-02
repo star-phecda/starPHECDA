@@ -182,32 +182,34 @@ internal fun ChaptersScreenHeader(
             modifier = Modifier
                 .padding(top = paddingValues.calculateTopPadding()),
         ) {
-            Row(
+            val compactLayout =
+                LocalExpressiveWindowSizeClass.current == ExpressiveWindowSizeClass.COMPACT
+            val coverWidth = when (LocalExpressiveWindowSizeClass.current) {
+                ExpressiveWindowSizeClass.COMPACT -> 152.dp
+                ExpressiveWindowSizeClass.MEDIUM -> 184.dp
+                ExpressiveWindowSizeClass.EXPANDED -> 208.dp
+            }
+            FlowRow(
+                modifier = Modifier.fillMaxWidth(),
+                maxItemsInEachRow = if (compactLayout) 1 else 2,
                 horizontalArrangement = Arrangement.spacedBy(ExpressiveTokens.space4),
+                verticalArrangement = Arrangement.spacedBy(ExpressiveTokens.space4),
             ) {
                 var showImageFullScreen by rememberSaveable { mutableStateOf(false) }
-                BookImageButtonView(
+                Box(
+                    modifier = if (compactLayout) Modifier.fillMaxWidth() else Modifier.width(coverWidth),
+                    contentAlignment = Alignment.TopCenter,
+                ) {
+                    BookImageButtonView(
                     title = "",
                     coverImageModel = coverImageModel,
                     referer = coverReferer,
                     onClick = { showImageFullScreen = true },
                     onLongClick = onCoverLongClick,
                     sourceStripPosition = SourceStripPosition.BelowCover,
-                    modifier = if (
-                        LocalExpressiveWindowSizeClass.current == ExpressiveWindowSizeClass.COMPACT
-                    ) {
-                        Modifier.weight(0.85f)
-                    } else {
-                        Modifier.width(
-                            if (LocalExpressiveWindowSizeClass.current == ExpressiveWindowSizeClass.MEDIUM) {
-                                184.dp
-                            } else {
-                                208.dp
-                            }
-                        )
-                    }
-                )
-                if (showImageFullScreen) Dialog(
+                    modifier = Modifier.width(coverWidth),
+                    )
+                    if (showImageFullScreen) Dialog(
                     onDismissRequest = { showImageFullScreen = false },
                     properties = DialogProperties(
                         usePlatformDefaultWidth = false,
@@ -241,17 +243,13 @@ internal fun ChaptersScreenHeader(
                     }
                 }
 
+                }
                 Column(
-                    modifier = Modifier
-                        .padding(top = 16.dp)
-                        .fillMaxHeight()
-                        .weight(
-                            if (LocalExpressiveWindowSizeClass.current == ExpressiveWindowSizeClass.COMPACT) {
-                                1.15f
-                            } else {
-                                1f
-                            }
-                        ),
+                    modifier = if (compactLayout) {
+                        Modifier.fillMaxWidth()
+                    } else {
+                        Modifier.padding(top = ExpressiveTokens.space4).weight(1f)
+                    },
                 ) {
                     SelectionContainer {
                         // Главное название книги: без ограничения строк,

@@ -47,6 +47,8 @@ import my.noveldokusha.core.appPreferences.SourceStripPosition
 import my.noveldokusha.core.domain.LibraryCategory
 import my.noveldokusha.coreui.R
 import my.noveldokusha.coreui.theme.ExpressiveShapes
+import my.noveldokusha.coreui.theme.ExpressiveContentFrame
+import my.noveldokusha.coreui.theme.ExpressiveTokens
 import my.noveldokusha.feature.local_database.BookWithContext
 
 @OptIn(
@@ -85,7 +87,7 @@ internal fun LibraryScreenBody(
         state = pullToRefreshState,
         modifier = Modifier.padding(innerPadding)
     ) {
-        Column {
+        Column(verticalArrangement = Arrangement.spacedBy(ExpressiveTokens.space2)) {
             // Category filter chips (like LanguageFilterChips in Finder)
             if (showCategories) {
                 val selectedCategories by viewModel.selectedCategories.collectAsStateWithLifecycle()
@@ -100,17 +102,18 @@ internal fun LibraryScreenBody(
                 }
                 val totalCount = catCounts.values.sum()
 
-                FlowRow(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                ExpressiveContentFrame(modifier = Modifier.fillMaxWidth()) {
+                    FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(ExpressiveTokens.space2),
+                    verticalArrangement = Arrangement.spacedBy(ExpressiveTokens.space1),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 12.dp, vertical = 8.dp)
+                        .padding(vertical = ExpressiveTokens.space2)
                         .background(
                             color = MaterialTheme.colorScheme.surfaceContainerLow,
                             shape = ExpressiveShapes.container
                         )
-                        .padding(8.dp)
+                        .padding(ExpressiveTokens.space3)
                 ) {
                     // "All" chip
                     FilterChip(
@@ -204,6 +207,7 @@ internal fun LibraryScreenBody(
                             )
                         )
                     }
+                }
                 }
             }
 

@@ -74,16 +74,24 @@ fun ExpressiveContentFrame(
     content: @Composable BoxScope.() -> Unit,
 ) {
     val sizeClass = LocalExpressiveWindowSizeClass.current
+    val gutter = expressiveContentGutter(sizeClass)
+    val maximumContentWidth = expressiveContentMaxWidth(sizeClass)
+
     Box(
         modifier = modifier.fillMaxWidth(),
         contentAlignment = Alignment.TopCenter,
     ) {
         Box(
             modifier = Modifier
-                .widthIn(max = expressiveContentMaxWidth(sizeClass))
-                .fillMaxWidth()
-                .padding(horizontal = expressiveContentGutter(sizeClass)),
-            content = content,
-        )
+                .widthIn(max = maximumContentWidth + gutter * 2f)
+                .fillMaxWidth(),
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = gutter),
+                content = content,
+            )
+        }
     }
 }

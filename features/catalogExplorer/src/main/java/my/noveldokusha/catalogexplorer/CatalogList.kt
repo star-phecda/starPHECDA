@@ -181,7 +181,7 @@ internal fun CatalogList(
                         imageModel = iconResId ?: it.catalog.iconUrl,
                         modifier = Modifier
                             .size(28.dp)
-                            .clip(RoundedCornerShape(4.dp)),
+                            .clip(ExpressiveShapes.compactContainer),
                         error = R.drawable.default_icon
                     )
                 },
@@ -203,7 +203,7 @@ internal fun CatalogList(
                                     confirmButton = {
                                         FilledTonalButton(
                                             onClick = { openConfig = false },
-                                            shape = androidx.compose.foundation.shape.ExpressiveShapes.button,
+                                            shape = ExpressiveShapes.button,
                                             colors = ButtonDefaults.filledTonalButtonColors(
                                                 containerColor = MaterialTheme.colorScheme.secondaryContainer,
                                                 contentColor = MaterialTheme.colorScheme.onSecondaryContainer

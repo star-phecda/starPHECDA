@@ -60,6 +60,10 @@ import my.noveldokusha.mappers.mapToBookMetadata
 import my.noveldokusha.scraper.SearchGenre
 import my.noveldokusha.feature.local_database.BookMetadata
 import my.noveldokusha.coreui.theme.ExpressiveShapes
+import my.noveldokusha.coreui.theme.ExpressiveTokens
+import my.noveldokusha.coreui.theme.ExpressiveWindowSizeClass
+import my.noveldokusha.coreui.theme.LocalExpressiveWindowSizeClass
+import my.noveldokusha.coreui.theme.expressiveContentGutter
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -104,22 +108,39 @@ internal fun DatabaseBookInfoScreenBody(
             Column(
                 Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 8.dp)
+                    .padding(horizontal = expressiveContentGutter(LocalExpressiveWindowSizeClass.current))
                     .padding(top = innerPadding.calculateTopPadding())
             ) {
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(14.dp),
+                    horizontalArrangement = Arrangement.spacedBy(ExpressiveTokens.space4),
                 ) {
                     var showImageFullScreen by rememberSaveable { mutableStateOf(false) }
                     BookImageButtonView(
                         title = "",
                         coverImageModel = coverImg,
                         onClick = { showImageFullScreen = true },
-                        modifier = Modifier
-                            .weight(1f),
+                        modifier = if (
+                            LocalExpressiveWindowSizeClass.current == ExpressiveWindowSizeClass.COMPACT
+                        ) {
+                            Modifier.weight(0.85f)
+                        } else {
+                            Modifier.width(
+                                if (LocalExpressiveWindowSizeClass.current == ExpressiveWindowSizeClass.MEDIUM) {
+                                    184.dp
+                                } else {
+                                    208.dp
+                                }
+                            )
+                        },
                     )
                     SelectionContainer(
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(
+                            if (LocalExpressiveWindowSizeClass.current == ExpressiveWindowSizeClass.COMPACT) {
+                                1.15f
+                            } else {
+                                1f
+                            }
+                        )
                     ) {
                         Text(
                             text = state.book.value.title,
@@ -173,8 +194,10 @@ internal fun DatabaseBookInfoScreenBody(
         }
 
         Column(
-            modifier = Modifier.padding(horizontal = 12.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            modifier = Modifier.padding(
+                horizontal = expressiveContentGutter(LocalExpressiveWindowSizeClass.current)
+            ),
+            verticalArrangement = Arrangement.spacedBy(ExpressiveTokens.space4)
         ) {
             SelectionContainer {
                 ExpandableText(
@@ -206,7 +229,7 @@ internal fun DatabaseBookInfoScreenBody(
                     TextAnimated(text = stringResource(id = R.string.none_found))
                 } else {
                     SelectionContainer {
-                        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        FlowRow(horizontalArrangement = Arrangement.spacedBy(ExpressiveTokens.space2)) {
                             state.book.value.authors.forEach {
                                 Container {
                                     Text(text = it.name, modifier = Modifier.textPadding())

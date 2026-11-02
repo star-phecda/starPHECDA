@@ -4,6 +4,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
+import my.noveldokusha.coreui.components.expressiveNavigationItemWeight
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertSame
 import org.junit.Test
@@ -59,6 +60,21 @@ class ExpressiveShapeTokensTest {
     @Test
     fun imageBorderUsesTheSharedBookCoverShape() {
         assertEquals(ExpressiveShapes.bookCover, ImageBorderShape)
+    }
+
+    @Test
+    fun selectedNavigationItemReceivesAnExpandedShare() {
+        assertEquals(1.85f, expressiveNavigationItemWeight(selected = true, compactMode = false), 0f)
+    }
+
+    @Test
+    fun unselectedNavigationItemKeepsItsCompactShare() {
+        assertEquals(1f, expressiveNavigationItemWeight(selected = false, compactMode = false), 0f)
+    }
+
+    @Test
+    fun compactNavigationKeepsEqualIconTargets() {
+        assertEquals(1f, expressiveNavigationItemWeight(selected = true, compactMode = true), 0f)
     }
 
     private fun assertRoundedCorner(shape: Shape, radius: androidx.compose.ui.unit.Dp) {

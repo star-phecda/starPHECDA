@@ -45,6 +45,7 @@ import my.noveldokusha.core.PagedList
 import my.noveldokusha.core.Response
 import my.noveldokusha.core.appPreferences.ListLayoutMode
 import my.noveldokusha.feature.local_database.BookMetadata
+import my.noveldokusha.coreui.theme.ExpressiveShapes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -98,6 +99,7 @@ internal fun DatabaseSearchScreen(
                     modifier = Modifier.padding(horizontal = 8.dp),
                 ) {
                     FilterChip(
+                        shape = ExpressiveShapes.pill,
                         selected = state.searchMode.value == SearchMode.Catalog,
                         onClick = {
                             onSearchModeChange(SearchMode.Catalog)
@@ -115,6 +117,7 @@ internal fun DatabaseSearchScreen(
                         )
                     )
                     FilterChip(
+                        shape = ExpressiveShapes.pill,
                         selected = state.searchMode.value == SearchMode.BookTitle,
                         onClick = {
                             onSearchModeChange(SearchMode.BookTitle)
@@ -131,6 +134,7 @@ internal fun DatabaseSearchScreen(
                         )
                     )
                     FilterChip(
+                        shape = ExpressiveShapes.pill,
                         selected = state.searchMode.value == SearchMode.BookGenres,
                         onClick = {
                             onSearchModeChange(SearchMode.BookGenres)
@@ -174,6 +178,7 @@ internal fun DatabaseSearchScreen(
         val sheetState = rememberModalBottomSheetState()
         val coroutineScope = rememberCoroutineScope()
         ModalBottomSheet(
+            shape = ExpressiveShapes.sheet,
             onDismissRequest = { showFiltersBottomSheet.value = false },
             sheetState = sheetState,
         ) {

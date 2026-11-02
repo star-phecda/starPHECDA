@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import my.noveldokusha.coreui.components.SlimListItem
 import my.noveldokusha.coreui.theme.colorAccent
 import my.noveldokusha.reader.R
+import my.noveldokusha.coreui.theme.ExpressiveShapes
 
 private val ttsHighlightColors = listOf(
     "FFFF6D00",  // Deep Orange
@@ -62,6 +63,7 @@ internal fun MoreSettingDialog(
     onManualHighlightEnabledChange: (Boolean) -> Unit = {},
 ) {
     ElevatedCard(
+        shape = ExpressiveShapes.dialog,
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 12.dp)
     ) {
         val scrollState = rememberScrollState()

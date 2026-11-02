@@ -59,6 +59,7 @@ import my.noveldokusha.databaseexplorer.R
 import my.noveldokusha.mappers.mapToBookMetadata
 import my.noveldokusha.scraper.SearchGenre
 import my.noveldokusha.feature.local_database.BookMetadata
+import my.noveldokusha.coreui.theme.ExpressiveShapes
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -160,6 +161,7 @@ internal fun DatabaseBookInfoScreenBody(
                         }
                 }
                 FilledTonalButton(
+                    shape = ExpressiveShapes.button,
                     onClick = onSourcesClick,
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
@@ -221,7 +223,7 @@ internal fun DatabaseBookInfoScreenBody(
                     OutlinedCard(
                         onClick = { onGenresClick(state.book.value.genres) },
                         colors = CardDefaults.outlinedCardColors(containerColor = MaterialTheme.colorScheme.primary),
-                        shape = MaterialTheme.shapes.small,
+                        shape = ExpressiveShapes.card,
                     ) {
                         TextAnimated(
                             text = state.book.value.genres.joinToString(" · ") { it.genreName },
@@ -310,7 +312,7 @@ private fun Container(
         modifier = modifier,
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 0.dp),
         colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
-        shape = MaterialTheme.shapes.small,
+        shape = ExpressiveShapes.card,
         content = content,
     )
 }

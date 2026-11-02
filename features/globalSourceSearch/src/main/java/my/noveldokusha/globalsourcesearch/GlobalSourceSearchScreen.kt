@@ -40,6 +40,7 @@ import my.noveldokusha.coreui.components.TopAppBarSearch
 import my.noveldokusha.coreui.theme.InternalTheme
 import my.noveldokusha.feature.local_database.BookMetadata
 import my.noveldokusha.strings.R as StringsR
+import my.noveldokusha.coreui.theme.ExpressiveShapes
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
@@ -132,6 +133,7 @@ internal fun GlobalSourceSearchScreen(
                     )
                     scopeOptions.forEach { (value, label) ->
                         FilterChip(
+                            shape = ExpressiveShapes.pill,
                             selected = selectedScope == value,
                             onClick = { onScopeChange(value) },
                             label = { Text(label) },

@@ -92,6 +92,7 @@ import my.noveldokusha.feature.local_database.ChapterWithContext
 import my.noveldokusha.scraper.Scraper
 import my.noveldokusha.strings.R as StringsR
 import timber.log.Timber
+import my.noveldokusha.coreui.theme.ExpressiveShapes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -260,6 +261,7 @@ internal fun ChaptersScreen(
                                     stringResource(R.string.options_panel)
                                 )
                                 DropdownMenu(
+                                    shape = ExpressiveShapes.dropdown,
                                     expanded = showDropDown,
                                     onDismissRequest = { showDropDown = false }) {
                                     ChaptersDropDown(
@@ -376,7 +378,7 @@ internal fun ChaptersScreen(
                 exit = shrinkVertically(targetHeight = { it / 8 }) + fadeOut(animationSpec = tween(120)),
             ) {
                 BottomAppBar(
-                    modifier = Modifier.clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
+                    modifier = Modifier.clip(ExpressiveShapes.sheet),
                     containerColor = MaterialTheme.colorScheme.primary,
                     contentColor = MaterialTheme.colorScheme.onPrimary,
                 ) {
@@ -504,7 +506,7 @@ internal fun ChaptersScreen(
                         if (isSelected) {
                             FilledTonalButton(
                                 onClick = {},
-                                shape = RoundedCornerShape(8.dp),
+                                shape = ExpressiveShapes.button,
                                 colors = ButtonDefaults.filledTonalButtonColors(
                                     containerColor = MaterialTheme.colorScheme.secondaryContainer,
                                     contentColor = MaterialTheme.colorScheme.onSecondaryContainer
@@ -519,7 +521,7 @@ internal fun ChaptersScreen(
                                     onUpdateCategory(category)
                                     showCategoryPicker = false
                                 },
-                                shape = RoundedCornerShape(8.dp),
+                                shape = ExpressiveShapes.button,
                                 modifier = Modifier.fillMaxWidth()
                             ) {
                                 Text(text = label)
@@ -634,7 +636,7 @@ internal fun ChaptersScreen(
                     ) {
                         FilledTonalButton(
                             onClick = onExportDialogDismiss,
-                            shape = RoundedCornerShape(8.dp),
+                            shape = ExpressiveShapes.button,
                             colors = ButtonDefaults.filledTonalButtonColors(
                                 containerColor = MaterialTheme.colorScheme.secondaryContainer,
                                 contentColor = MaterialTheme.colorScheme.onSecondaryContainer
@@ -654,7 +656,7 @@ internal fun ChaptersScreen(
                                 val target = if (selectedMode == "original") "" else selectedTargetLang
                                 onExportContentChosen(mode, source, target)
                             },
-                            shape = RoundedCornerShape(8.dp),
+                            shape = ExpressiveShapes.button,
                             colors = ButtonDefaults.filledTonalButtonColors(
                                 containerColor = MaterialTheme.colorScheme.secondaryContainer,
                                 contentColor = MaterialTheme.colorScheme.onSecondaryContainer
@@ -702,7 +704,7 @@ private fun ExportContentOption(
     if (selected) {
         FilledTonalButton(
             onClick = onClick,
-            shape = RoundedCornerShape(8.dp),
+            shape = ExpressiveShapes.button,
             colors = ButtonDefaults.filledTonalButtonColors(
                 containerColor = MaterialTheme.colorScheme.secondaryContainer,
                 contentColor = MaterialTheme.colorScheme.onSecondaryContainer
@@ -715,7 +717,7 @@ private fun ExportContentOption(
     } else {
         OutlinedButton(
             onClick = onClick,
-            shape = RoundedCornerShape(8.dp),
+            shape = ExpressiveShapes.button,
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(text = text)

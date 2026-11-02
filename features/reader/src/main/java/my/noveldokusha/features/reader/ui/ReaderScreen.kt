@@ -115,6 +115,7 @@ import my.noveldokusha.features.reader.tools.BackgroundImageLoader
 import my.noveldokusha.text_translator.domain.TranslationModelState
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import my.noveldokusha.coreui.theme.ExpressiveShapes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -397,7 +398,7 @@ internal fun ReaderScreen(
 
                         BottomAppBar(
                             modifier = Modifier
-                                .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
+                                .clip(ExpressiveShapes.sheet)
                                 .animateContentSize(),
                             containerColor = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.90f),
                         ) {
@@ -501,7 +502,7 @@ internal fun ReaderScreen(
                             modifier = Modifier.align(Alignment.TopCenter).offset(y = (-40).dp)
                         ) {
                             Surface(
-                                shape = RoundedCornerShape(16.dp),
+                                shape = ExpressiveShapes.card,
                                 color = MaterialTheme.colorScheme.inverseSurface,
                                 modifier = Modifier.padding(vertical = 4.dp)
                             ) {
@@ -539,13 +540,15 @@ internal fun ReaderScreen(
 
         if (showOverlayPermissionDialog) {
             AlertDialog(
+                shape = ExpressiveShapes.dialog,
                 onDismissRequest = { showOverlayPermissionDialog = false },
                 title = { Text(text = stringResource(R.string.tts_floating_overlay_permission_title)) },
                 text = {
                     Text(text = stringResource(R.string.tts_floating_overlay_permission_message))
                 },
                 confirmButton = {
-                    Button(onClick = {
+                    Button(
+                        shape = ExpressiveShapes.button,onClick = {
                         showOverlayPermissionDialog = false
                         val intent = Intent(
                             Settings.ACTION_MANAGE_OVERLAY_PERMISSION,

@@ -83,6 +83,7 @@ import my.noveldokusha.core.rememberResolvedBookImagePath
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import my.noveldokusha.coreui.theme.ExpressiveShapes
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -354,7 +355,7 @@ internal fun ChaptersScreenHeader(
                             else -> bookCategory
                         }
                         Surface(
-                            shape = RoundedCornerShape(12.dp),
+                            shape = ExpressiveShapes.option,
                             color = MaterialTheme.colorScheme.tertiaryContainer,
                             modifier = Modifier.clickable(
                                 interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() },
@@ -398,7 +399,7 @@ internal fun ChaptersScreenHeader(
                         ) {
                             visibleGenres.forEach { genre ->
                                 Surface(
-                                    shape = RoundedCornerShape(12.dp),
+                                    shape = ExpressiveShapes.option,
                                     color = MaterialTheme.colorScheme.surface,
                                     border = BorderStroke(Dp.Hairline, MaterialTheme.colorScheme.outline),
                                 ) {
@@ -412,7 +413,7 @@ internal fun ChaptersScreenHeader(
                             }
                             if (!genresExpanded && genres.size > genresCollapsedCount) {
                                 Surface(
-                                    shape = RoundedCornerShape(12.dp),
+                                    shape = ExpressiveShapes.option,
                                     color = MaterialTheme.colorScheme.primaryContainer,
                                     border = BorderStroke(Dp.Hairline, MaterialTheme.colorScheme.outline),
                                     modifier = Modifier.clickable(
@@ -460,7 +461,7 @@ internal fun ChaptersScreenHeader(
                 if (onScrollToLastRead != null) {
                     Button(
                         onClick = onScrollToLastRead,
-                        shape = my.noveldokusha.coreui.theme.shapes.large,
+                        shape = ExpressiveShapes.button,
                         colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.primary,
                             contentColor = MaterialTheme.colorScheme.onPrimary,
@@ -498,7 +499,7 @@ internal fun ChaptersScreenHeader(
                                 onTranslateClick()
                             }
                         },
-                        shape = my.noveldokusha.coreui.theme.shapes.large,
+                        shape = ExpressiveShapes.button,
                         colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.primary,
                             contentColor = MaterialTheme.colorScheme.onPrimary,
@@ -525,7 +526,7 @@ internal fun ChaptersScreenHeader(
                 // Кнопка "Перейти к главе"
                 Button(
                     onClick = onScrollToChapter,
-                    shape = my.noveldokusha.coreui.theme.shapes.large,
+                    shape = ExpressiveShapes.button,
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.primary,
                         contentColor = MaterialTheme.colorScheme.onPrimary,

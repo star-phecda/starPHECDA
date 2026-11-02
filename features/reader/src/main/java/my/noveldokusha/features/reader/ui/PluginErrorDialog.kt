@@ -13,6 +13,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import my.noveldokusha.reader.R
+import my.noveldokusha.coreui.theme.ExpressiveShapes
 
 @Composable
 fun PluginErrorDialog(
@@ -24,11 +25,13 @@ fun PluginErrorDialog(
     val context = LocalContext.current
 
     AlertDialog(
+        shape = ExpressiveShapes.dialog,
         onDismissRequest = onDismiss,
         title = { Text(title) },
         text = {
             if (message != null) {
-                ElevatedCard(modifier = Modifier.fillMaxWidth()) {
+                ElevatedCard(
+                    shape = ExpressiveShapes.dialog,modifier = Modifier.fillMaxWidth()) {
                     Text(text = message, modifier = Modifier.padding(16.dp))
                 }
             }

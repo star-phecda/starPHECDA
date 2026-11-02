@@ -17,6 +17,7 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -103,7 +104,7 @@ fun LibraryScreen(
                 Column {
                     TopAppBar(
                         colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = MaterialTheme.colorScheme.surface,
+                            containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
                         ),
                         title = {
                             Text(
@@ -178,18 +179,18 @@ fun LibraryScreen(
                         when (target) {
                             ToolbarMode.MAIN -> TopAppBar(
                                 colors = TopAppBarDefaults.topAppBarColors(
-                                    containerColor = MaterialTheme.colorScheme.surface,
+                                    containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
                                 ),
                                 title = {
                                     Text(
                                         text = "NoveLA",
-                                        style = MaterialTheme.typography.titleLarge,
+                                        style = MaterialTheme.typography.headlineSmall,
                                         color = MaterialTheme.colorScheme.onBackground
                                     )
                                 },
                                 actions = {
                                     if (pageViewModel.isUpdating) {
-                                        IconButton(onClick = { pageViewModel.cancelLibraryUpdates() }) {
+                                        FilledTonalIconButton(onClick = { pageViewModel.cancelLibraryUpdates() }) {
                                             Icon(
                                                 Icons.Filled.Close,
                                                 stringResource(R.string.cancel),
@@ -197,14 +198,14 @@ fun LibraryScreen(
                                             )
                                         }
                                     }
-                                    IconButton(onClick = { libraryModel.setToolbarMode(ToolbarMode.SEARCH) }) {
+                                    FilledTonalIconButton(onClick = { libraryModel.setToolbarMode(ToolbarMode.SEARCH) }) {
                                         Icon(Icons.Filled.Search, stringResource(R.string.search_for_title))
                                     }
-                                    IconButton(onClick = { libraryModel.setShowBottomSheet(true) }) {
+                                    FilledTonalIconButton(onClick = { libraryModel.setShowBottomSheet(true) }) {
                                         Icon(Icons.AutoMirrored.Filled.Sort, stringResource(R.string.filter))
                                     }
                                     // Category toggle button (like language filter in Finder)
-                                    IconButton(
+                                    FilledTonalIconButton(
                                         onClick = { libraryModel.toggleShowCategories() }
                                     ) {
                                         Icon(
@@ -215,7 +216,7 @@ fun LibraryScreen(
                                             else MaterialTheme.colorScheme.onSurface
                                         )
                                     }
-                                    IconButton(onClick = { showDropdownMenu.value = true }) {
+                                    FilledTonalIconButton(onClick = { showDropdownMenu.value = true }) {
                                         Icon(Icons.Filled.MoreVert, stringResource(R.string.options_panel))
                                     }
                                     androidx.compose.material3.DropdownMenu(

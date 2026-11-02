@@ -51,6 +51,7 @@ import my.noveldokusha.coreui.components.SlimListItem
 import my.noveldokusha.coreui.theme.colorAccent
 import my.noveldokusha.coreui.theme.textPadding
 import my.noveldokusha.settings.R
+import my.noveldokusha.coreui.theme.ExpressiveShapes
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -214,6 +215,7 @@ internal fun SettingsGeminiTranslation(
                             }
                             Spacer(Modifier.height(8.dp))
                             OutlinedTextField(
+                                    shape = ExpressiveShapes.input,
                                 value         = paKeysText,
                                 onValueChange = { paKeysText = it; onGooglePaApiKeysChange(it) },
                                 label         = { Text(stringResource(R.string.enter_google_pa_api_keys), color = MaterialTheme.colorScheme.onSurface) },
@@ -261,6 +263,7 @@ internal fun SettingsGeminiTranslation(
                             }
                             Spacer(Modifier.height(8.dp))
                             OutlinedTextField(
+                                    shape = ExpressiveShapes.input,
                                 value         = apiKeyText,
                                 onValueChange = { apiKeyText = it; onGeminiApiKeyChange(it) },
                                 label         = { Text(stringResource(R.string.enter_gemini_api_keys), color = MaterialTheme.colorScheme.onSurface) },
@@ -294,6 +297,7 @@ internal fun SettingsGeminiTranslation(
 
                             // Plain TextField — no ExposedDropdownMenuBox stealing events
                             OutlinedTextField(
+                                    shape = ExpressiveShapes.input,
                                 value         = modelText,
                                 onValueChange = {
                                     modelText = it
@@ -318,6 +322,7 @@ internal fun SettingsGeminiTranslation(
                             ) {
                                 predefinedGeminiModels.forEach { preset ->
                                     FilterChip(
+                                    shape = ExpressiveShapes.pill,
                                         selected = modelText == preset,
                                         onClick  = {
                                             modelText = preset
@@ -515,6 +520,7 @@ internal fun SettingsLlmBatchOptions(
                     )
                     Spacer(Modifier.height(8.dp))
                     OutlinedTextField(
+                                    shape = ExpressiveShapes.input,
                         value         = batchText,
                         onValueChange = { raw ->
                             batchText = raw
@@ -535,6 +541,7 @@ internal fun SettingsLlmBatchOptions(
                     ) {
                         batchPresets.forEach { preset ->
                             FilterChip(
+                                    shape = ExpressiveShapes.pill,
                                 selected = batchText == preset.toString(),
                                 onClick  = { batchText = preset.toString(); onBatchSizeChange(preset); focusManager.clearFocus() },
                                 label    = { Text(preset.toString(), style = MaterialTheme.typography.labelSmall) }
@@ -561,6 +568,7 @@ internal fun SettingsLlmBatchOptions(
                     )
                     Spacer(Modifier.height(8.dp))
                     OutlinedTextField(
+                                    shape = ExpressiveShapes.input,
                         value         = tokensText,
                         onValueChange = { raw ->
                             tokensText = raw
@@ -582,6 +590,7 @@ internal fun SettingsLlmBatchOptions(
                         tokensPresets.forEach { preset ->
                             val label = if (preset == 0) stringResource(R.string.llm_tokens_auto) else preset.toString()
                             FilterChip(
+                                    shape = ExpressiveShapes.pill,
                                 selected = tokensText == preset.toString(),
                                 onClick  = { tokensText = preset.toString(); onMaxTokensChange(preset); focusManager.clearFocus() },
                                 label    = { Text(label, style = MaterialTheme.typography.labelSmall) }

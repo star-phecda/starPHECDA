@@ -30,6 +30,7 @@ import my.noveldokusha.coreui.components.SlimListItem
 import my.noveldokusha.coreui.theme.colorAccent
 import my.noveldokusha.coreui.theme.textPadding
 import my.noveldokusha.settings.R
+import my.noveldokusha.coreui.theme.ExpressiveShapes
 
 @Composable
 internal fun SettingsLanguage(
@@ -58,6 +59,7 @@ internal fun SettingsLanguage(
 
     if (showDialog) {
         AlertDialog(
+            shape = ExpressiveShapes.dialog,
             onDismissRequest = { showDialog = false },
             title = {
                 Text(stringResource(R.string.language))

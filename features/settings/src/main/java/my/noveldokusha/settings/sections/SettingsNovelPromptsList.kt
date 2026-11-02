@@ -38,6 +38,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import my.noveldokusha.core.appPreferences.NovelPromptData
 import my.noveldokusha.settings.R
+import my.noveldokusha.coreui.theme.ExpressiveShapes
 
 @Composable
 internal fun SettingsNovelPromptsDialog(
@@ -57,6 +58,7 @@ internal fun SettingsNovelPromptsDialog(
     }
 
     AlertDialog(
+            shape = ExpressiveShapes.dialog,
         onDismissRequest = onDismiss,
         title = {
             Text(
@@ -68,6 +70,7 @@ internal fun SettingsNovelPromptsDialog(
             Column {
                 if (novelPrompts.isNotEmpty()) {
                     OutlinedTextField(
+                                    shape = ExpressiveShapes.input,
                         value = query.value,
                         onValueChange = { query.value = it },
                         modifier = Modifier.fillMaxWidth(),

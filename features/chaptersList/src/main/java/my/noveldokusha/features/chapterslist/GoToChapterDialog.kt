@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.HorizontalDivider
@@ -30,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import my.noveldokusha.chapterslist.R
+import my.noveldokusha.coreui.theme.ExpressiveShapes
 import my.noveldokusha.feature.local_database.ChapterWithContext
 
 @Composable
@@ -49,7 +49,7 @@ internal fun GoToChapterDialog(
         properties = DialogProperties(usePlatformDefaultWidth = false)
     ) {
         Surface(
-            shape = RoundedCornerShape(16.dp),
+            shape = ExpressiveShapes.dialog,
             color = MaterialTheme.colorScheme.surface,
             modifier = Modifier
                 .fillMaxWidth(0.92f)
@@ -68,6 +68,7 @@ internal fun GoToChapterDialog(
                     placeholder = { Text(stringResource(id = R.string.search_chapter_hint)) },
                     leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null) },
                     singleLine = true,
+                    shape = ExpressiveShapes.input,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp)

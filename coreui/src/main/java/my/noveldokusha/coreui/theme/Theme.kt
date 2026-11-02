@@ -6,17 +6,22 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.TextSelectionColors
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import my.noveldokusha.coreui.AppThemeProvider
 import my.noveldokusha.coreui.theme.colorscheme.BaseColorScheme
@@ -43,6 +48,34 @@ import my.noveldokusha.coreui.theme.colorscheme.YotsubaColorScheme
 
 val LocalAppTheme = staticCompositionLocalOf<AppTheme> { AppTheme.DEFAULT }
 val LocalIsDark = staticCompositionLocalOf<Boolean> { false }
+val LocalIsAmoled = staticCompositionLocalOf<Boolean> { false }
+
+@Immutable
+data class AppThemePalettePreview(
+    val primary: Color,
+    val secondary: Color,
+    val tertiary: Color,
+    val surfaceContainer: Color,
+)
+
+/** Returns swatches from the actual palette in the currently resolved light/dark mode. */
+@Composable
+fun rememberAppThemePalettePreview(theme: AppTheme): AppThemePalettePreview {
+    val context = LocalContext.current
+    val isDark = LocalIsDark.current
+    val isAmoled = LocalIsAmoled.current
+    val scheme = remember(context, theme, isDark, isAmoled) {
+        createAppColorScheme(theme, context, isDark, isAmoled)
+    }
+    return remember(scheme) {
+        AppThemePalettePreview(
+            primary = scheme.primary,
+            secondary = scheme.secondary,
+            tertiary = scheme.tertiary,
+            surfaceContainer = scheme.surfaceContainerLow,
+        )
+    }
+}
 
 @Composable
 fun Theme(
@@ -99,11 +132,7 @@ fun InternalTheme(
     val context = LocalContext.current
 
     val colorScheme = remember(context, appTheme, isDark, isAmoled) {
-        val baseScheme = getBaseColorScheme(appTheme, context)
-        baseScheme.getColorScheme(
-            isDark = isDark,
-            isAmoled = isAmoled,
-        )
+        createAppColorScheme(appTheme, context, isDark, isAmoled)
     }
 
     DisposableEffect(appTheme, isDark) {
@@ -127,21 +156,27 @@ fun InternalTheme(
         )
     }
 
-    Box(Modifier) {
-        CompositionLocalProvider(
-            LocalAppTheme provides appTheme,
-            LocalIsDark provides isDark,
-        ) {
-            MaterialTheme(
-                colorScheme = colorScheme,
-                typography = typography,
-                shapes = shapes,
-            ) {
+    BoxWithConstraints(Modifier.fillMaxSize()) {
+        val sizeClass = expressiveWindowSizeClass(maxWidth)
+        CompositionLocalProvider(LocalExpressiveWindowSizeClass provides sizeClass) {
+            Box(Modifier) {
                 CompositionLocalProvider(
-                    LocalContentColor provides MaterialTheme.colorScheme.onSurface,
-                    LocalTextSelectionColors provides textSelectionColors,
-                    content = content
-                )
+                    LocalAppTheme provides appTheme,
+                    LocalIsDark provides isDark,
+                    LocalIsAmoled provides isAmoled,
+                ) {
+                    MaterialTheme(
+                        colorScheme = colorScheme,
+                        typography = typography,
+                        shapes = shapes,
+                    ) {
+                        CompositionLocalProvider(
+                            LocalContentColor provides MaterialTheme.colorScheme.onSurface,
+                            LocalTextSelectionColors provides textSelectionColors,
+                            content = content
+                        )
+                    }
+                }
             }
         }
     }
@@ -163,6 +198,18 @@ fun InternalTheme(
         isAmoled = darkMode == DarkMode.BLACK,
         content = content,
     )
+}
+
+private fun createAppColorScheme(
+    appTheme: AppTheme,
+    context: Context,
+    isDark: Boolean,
+    isAmoled: Boolean,
+): ColorScheme {
+    return getBaseColorScheme(appTheme, context)
+        .getColorScheme(isDark = isDark, isAmoled = isAmoled)
+        .withExpressiveSurfaceHierarchy(isDark)
+        .withAccessibleContentRoles()
 }
 
 private fun getBaseColorScheme(appTheme: AppTheme, context: Context): BaseColorScheme {
@@ -189,4 +236,3 @@ private fun getBaseColorScheme(appTheme: AppTheme, context: Context): BaseColorS
         AppTheme.SAPPHIRE -> SapphireColorScheme
     }
 }
-

@@ -37,14 +37,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import my.noveldokusha.coreui.components.PosNegCheckbox
 import my.noveldokusha.core.appPreferences.LibrarySortOption
 import my.noveldokusha.core.appPreferences.SortDirection
 import my.noveldokusha.core.appPreferences.SourceStripPosition
 import my.noveldokusha.core.utils.toToggleableState
-
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import my.noveldokusha.coreui.components.PosNegCheckbox
+import my.noveldokusha.coreui.theme.ExpressiveShapes
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
@@ -65,7 +65,7 @@ internal fun LibraryBottomSheet(
     // Читаем текущее значение из общего preference
     val gridColumns = uiState.gridColumns
 
-    ModalBottomSheet(onDismissRequest = onDismiss) {
+    ModalBottomSheet(onDismissRequest = onDismiss, shape = ExpressiveShapes.sheet) {
         Column(
             Modifier
                 .padding(top = 8.dp, bottom = 64.dp)
@@ -167,6 +167,7 @@ internal fun LibraryBottomSheet(
                     .padding(horizontal = 16.dp)
             ) {
                 FilterChip(
+                    shape = ExpressiveShapes.pill,
                     selected = uiState.sourceStripPosition == SourceStripPosition.OnCover,
                     onClick = { model.setSourceStripPosition(SourceStripPosition.OnCover) },
                     label = { Text(stringResource(R.string.source_strip_on_cover)) },
@@ -181,6 +182,7 @@ internal fun LibraryBottomSheet(
                     )
                 )
                 FilterChip(
+                    shape = ExpressiveShapes.pill,
                     selected = uiState.sourceStripPosition == SourceStripPosition.BelowCover,
                     onClick = { model.setSourceStripPosition(SourceStripPosition.BelowCover) },
                     label = { Text(stringResource(R.string.source_strip_below_cover)) },
@@ -195,6 +197,7 @@ internal fun LibraryBottomSheet(
                     )
                 )
                 FilterChip(
+                    shape = ExpressiveShapes.pill,
                     selected = uiState.sourceStripPosition == SourceStripPosition.InfoPanel,
                     onClick = { model.setSourceStripPosition(SourceStripPosition.InfoPanel) },
                     label = { Text(stringResource(R.string.source_strip_info_panel)) },
@@ -226,6 +229,7 @@ internal fun LibraryBottomSheet(
             ) {
                 ContentTypeFilter.entries.forEach { filter ->
                     FilterChip(
+                        shape = ExpressiveShapes.pill,
                         selected = selectedContentType == filter,
                         onClick = { pageModel.setContentTypeFilter(filter) },
                         label = { Text(stringResource(filter.labelRes), style = MaterialTheme.typography.labelMedium) },
@@ -335,6 +339,7 @@ internal fun LibraryBottomSheet(
                         .padding(horizontal = 12.dp)
                 ) {
                     FilterChip(
+                        shape = ExpressiveShapes.pill,
                         selected = selectedGenres.isEmpty(),
                         onClick = { pageModel.clearGenreFilters() },
                         label = { Text(stringResource(R.string.all_genres)) },
@@ -350,6 +355,7 @@ internal fun LibraryBottomSheet(
                     )
                     availableGenres.forEach { genre ->
                         FilterChip(
+                            shape = ExpressiveShapes.pill,
                             selected = genre in selectedGenres,
                             onClick = { pageModel.toggleGenreFilter(genre) },
                             label = { Text(genre, style = MaterialTheme.typography.labelMedium) },
@@ -388,6 +394,7 @@ internal fun LibraryBottomSheet(
                         .padding(horizontal = 12.dp)
                 ) {
                     FilterChip(
+                        shape = ExpressiveShapes.pill,
                         selected = selectedSources.isEmpty(),
                         onClick = { pageModel.clearSourceFilters() },
                         label = { Text(stringResource(R.string.all_sources)) },
@@ -403,6 +410,7 @@ internal fun LibraryBottomSheet(
                     )
                     availableSources.forEach { sourceName ->
                         FilterChip(
+                            shape = ExpressiveShapes.pill,
                             selected = sourceName in selectedSources,
                             onClick = { pageModel.toggleSourceFilter(sourceName) },
                             label = { Text(sourceName, style = MaterialTheme.typography.labelMedium) },

@@ -16,9 +16,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import my.noveldokusha.coreui.components.TernaryStateToggle
-
 import my.noveldokusha.chapterslist.R
+import my.noveldokusha.coreui.components.TernaryStateToggle
+import my.noveldokusha.coreui.theme.ExpressiveShapes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -29,7 +29,7 @@ internal fun ChaptersBottomSheet(
 ) {
     if (!visible) return
 
-    ModalBottomSheet(onDismissRequest = onDismiss) {
+    ModalBottomSheet(onDismissRequest = onDismiss, shape = ExpressiveShapes.sheet) {
         Column(Modifier.padding(top = 16.dp, bottom = 64.dp)) {
             Text(
                 text = stringResource(id = R.string.sort),

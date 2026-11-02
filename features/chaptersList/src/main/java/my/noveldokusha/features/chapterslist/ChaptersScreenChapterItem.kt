@@ -54,6 +54,7 @@ import my.noveldokusha.feature.local_database.tables.Chapter
 import my.noveldokusha.features.reader.video.ChapterDownloadUi
 import my.noveldokusha.features.reader.video.ChapterDownloadUiState
 import kotlin.math.roundToInt
+import my.noveldokusha.coreui.theme.ExpressiveShapes
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalAnimationApi::class)
 @Composable
@@ -103,7 +104,7 @@ internal fun ChaptersScreenChapterItem(
             chapterWithContext.lastReadChapter -> {
                 {
                     Surface(
-                        shape = RoundedCornerShape(4.dp),
+                        shape = ExpressiveShapes.compactContainer,
                         color = MaterialTheme.colorScheme.secondaryContainer,
                     ) {
                         Text(
@@ -118,7 +119,7 @@ internal fun ChaptersScreenChapterItem(
             chapter.read -> {
                 {
                     Surface(
-                        shape = RoundedCornerShape(4.dp),
+                        shape = ExpressiveShapes.compactContainer,
                         color = MaterialTheme.colorScheme.surfaceVariant,
                     ) {
                         Text(
@@ -138,14 +139,14 @@ internal fun ChaptersScreenChapterItem(
     // текстовый бейдж дублировал бы тот же сигнал в строке.
 
     Surface(
-        shape = RoundedCornerShape(8.dp),
+        shape = ExpressiveShapes.option,
         tonalElevation = 0.5.dp,
         color = MaterialTheme.colorScheme.surfaceContainer,
         modifier = modifier.padding(horizontal = 8.dp, vertical = 2.dp),
     ) {
         Box(
             modifier = Modifier
-                .clip(RoundedCornerShape(8.dp))
+                .clip(ExpressiveShapes.option)
                 .background(containerColor)
                 .combinedClickable(
                     onClick = stableOnClick,

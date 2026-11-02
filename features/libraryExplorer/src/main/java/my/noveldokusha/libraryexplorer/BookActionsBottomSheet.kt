@@ -11,8 +11,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.AltRoute
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
@@ -35,14 +36,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.AltRoute
-import my.noveldokusha.coreui.R
-import my.noveldokusha.strings.R as StringsR
-import my.noveldokusha.coreui.components.ImageView
-import my.noveldokusha.coreui.theme.ImageBorderShape
 import my.noveldokusha.core.rememberResolvedBookImagePath
+import my.noveldokusha.coreui.R
+import my.noveldokusha.coreui.components.ImageView
+import my.noveldokusha.coreui.theme.ExpressiveShapes
+import my.noveldokusha.coreui.theme.ImageBorderShape
 import my.noveldokusha.feature.local_database.tables.Book
+import my.noveldokusha.strings.R as StringsR
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -57,11 +57,12 @@ internal fun BookActionsBottomSheet(
     onMigrate: () -> Unit = {},
 ) {
     val buttonTextSize = 12.sp
-    val buttonShape = RoundedCornerShape(8.dp)
+    val buttonShape = ExpressiveShapes.button
     var selectedCategory by remember { mutableStateOf(book.category) }
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
+        shape = ExpressiveShapes.sheet,
         sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
     ) {
         Column(

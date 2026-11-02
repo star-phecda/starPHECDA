@@ -6,22 +6,21 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
@@ -35,18 +34,21 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import my.noveldokusha.core.appPreferences.SourceStripPosition
-import my.noveldokusha.coreui.R
 import my.noveldokusha.core.domain.LibraryCategory
+import my.noveldokusha.coreui.R
+import my.noveldokusha.coreui.theme.ExpressiveShapes
+import my.noveldokusha.coreui.theme.ExpressiveContentFrame
+import my.noveldokusha.coreui.theme.ExpressiveTokens
 import my.noveldokusha.feature.local_database.BookWithContext
 
 @OptIn(
@@ -85,7 +87,7 @@ internal fun LibraryScreenBody(
         state = pullToRefreshState,
         modifier = Modifier.padding(innerPadding)
     ) {
-        Column {
+        Column(verticalArrangement = Arrangement.spacedBy(ExpressiveTokens.space2)) {
             // Category filter chips (like LanguageFilterChips in Finder)
             if (showCategories) {
                 val selectedCategories by viewModel.selectedCategories.collectAsStateWithLifecycle()
@@ -100,20 +102,22 @@ internal fun LibraryScreenBody(
                 }
                 val totalCount = catCounts.values.sum()
 
-                FlowRow(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                ExpressiveContentFrame(modifier = Modifier.fillMaxWidth()) {
+                    FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(ExpressiveTokens.space2),
+                    verticalArrangement = Arrangement.spacedBy(ExpressiveTokens.space1),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 12.dp, vertical = 8.dp)
+                        .padding(vertical = ExpressiveTokens.space2)
                         .background(
                             color = MaterialTheme.colorScheme.surfaceContainerLow,
-                            shape = RoundedCornerShape(12.dp)
+                            shape = ExpressiveShapes.container
                         )
-                        .padding(8.dp)
+                        .padding(ExpressiveTokens.space3)
                 ) {
                     // "All" chip
                     FilterChip(
+                        shape = ExpressiveShapes.pill,
                         selected = selectedCategories.isEmpty(),
                         onClick = { viewModel.clearCategoryFilters() },
                         label = {
@@ -137,6 +141,7 @@ internal fun LibraryScreenBody(
                         val count = catCounts[category] ?: 0
                         val isSelected = category in selectedCategories
                         FilterChip(
+                            shape = ExpressiveShapes.pill,
                             selected = isSelected,
                             onClick = { viewModel.toggleCategory(category) },
                             label = {
@@ -158,6 +163,7 @@ internal fun LibraryScreenBody(
                     }
                     // "+" chip
                     FilterChip(
+                        shape = ExpressiveShapes.pill,
                         selected = false,
                         onClick = onCreateCategory,
                         label = {
@@ -180,6 +186,7 @@ internal fun LibraryScreenBody(
                     // Delete chip (only when custom categories exist)
                     if (customCategories.isNotEmpty()) {
                         FilterChip(
+                            shape = ExpressiveShapes.pill,
                             selected = false,
                             onClick = { showDeleteCategoryPicker = true },
                             label = {
@@ -200,6 +207,7 @@ internal fun LibraryScreenBody(
                             )
                         )
                     }
+                }
                 }
             }
 
@@ -235,6 +243,7 @@ internal fun LibraryScreenBody(
     // Delete category picker dialog (choose which category to delete)
     if (showDeleteCategoryPicker && customCategories.isNotEmpty()) {
         AlertDialog(
+            shape = ExpressiveShapes.dialog,
             onDismissRequest = { showDeleteCategoryPicker = false },
             title = {
                 Text(
@@ -292,6 +301,7 @@ internal fun LibraryScreenBody(
     // Delete category confirmation dialog
     showDeleteCategoryConfirm?.let { category ->
         AlertDialog(
+            shape = ExpressiveShapes.dialog,
             onDismissRequest = { showDeleteCategoryConfirm = null },
             title = {
                 Text(

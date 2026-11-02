@@ -37,6 +37,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import my.noveldokusha.coreui.components.SlimListItem
 import my.noveldokusha.settings.R
+import my.noveldokusha.coreui.theme.ExpressiveShapes
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -101,6 +102,7 @@ internal fun SettingsOpenAITranslation(
                     }
                     Spacer(Modifier.height(8.dp))
                     OutlinedTextField(
+                                    shape = ExpressiveShapes.input,
                         value = baseUrlText,
                         onValueChange = {
                             baseUrlText = it
@@ -150,6 +152,7 @@ internal fun SettingsOpenAITranslation(
                     }
                     Spacer(Modifier.height(8.dp))
                     OutlinedTextField(
+                                    shape = ExpressiveShapes.input,
                         value = apiKeysText,
                         onValueChange = {
                             apiKeysText = it
@@ -189,6 +192,7 @@ internal fun SettingsOpenAITranslation(
 
                     // Plain text field — no dropdown wrapper stealing events
                     OutlinedTextField(
+                                    shape = ExpressiveShapes.input,
                         value = modelText,
                         onValueChange = {
                             modelText = it
@@ -218,6 +222,7 @@ internal fun SettingsOpenAITranslation(
                     ) {
                         predefinedModels.forEach { preset ->
                             FilterChip(
+                                    shape = ExpressiveShapes.pill,
                                 selected = modelText == preset,
                                 onClick = {
                                     modelText = preset

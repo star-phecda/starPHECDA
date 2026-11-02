@@ -29,7 +29,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.NavigateBefore
 import androidx.compose.material.icons.automirrored.rounded.NavigateNext
@@ -81,6 +80,7 @@ import my.noveldokusha.coreui.composableActions.debouncedAction
 import my.noveldokusha.reader.R
 import kotlinx.coroutines.withTimeoutOrNull
 import my.noveldokusha.features.reader.features.TextToSpeechSettingData
+import my.noveldokusha.coreui.theme.ExpressiveShapes
 
 @Composable
 internal fun TtsMiniPlayer(
@@ -176,7 +176,7 @@ private fun MiniPlayerControls(
         }
         if (chaptersCount > 0) {
             Surface(
-                shape = RoundedCornerShape(16.dp),
+                shape = ExpressiveShapes.card,
                 color = MaterialTheme.colorScheme.surfaceVariant,
             ) {
                 Text(
@@ -194,7 +194,7 @@ private fun MiniPlayerControls(
                 .weight(1f)
                 .padding(horizontal = 4.dp)
                 .height(progressHeight)
-                .clip(RoundedCornerShape(4.dp))
+                .clip(ExpressiveShapes.pill)
                 .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f))
         ) {
             Box(
@@ -206,7 +206,7 @@ private fun MiniPlayerControls(
         }
 
         Surface(
-            shape = RoundedCornerShape(16.dp),
+            shape = ExpressiveShapes.card,
             color = MaterialTheme.colorScheme.primaryContainer,
         ) {
             Row(
@@ -389,7 +389,7 @@ private fun FloatingTtsMiniPlayer(
     }
 
     Surface(
-        shape = RoundedCornerShape(16.dp),
+        shape = ExpressiveShapes.card,
         color = if (!menuHidden) MaterialTheme.colorScheme.surfaceContainer.copy(alpha = opacity) else Color.Transparent,
         shadowElevation = 0.dp,
         modifier = Modifier
@@ -531,21 +531,21 @@ private fun FloatingTtsMiniPlayer(
                                             onClick = { onGlowModeChange("auto") },
                                             label = { Text(stringResource(R.string.tts_glow_auto), fontSize = 9.sp) },
                                             modifier = Modifier.height(20.dp),
-                                            shape = RoundedCornerShape(4.dp),
+                                            shape = ExpressiveShapes.pill,
                                         )
                                         FilterChip(
                                             selected = glowMode == "on",
                                             onClick = { onGlowModeChange("on") },
                                             label = { Text(stringResource(R.string.tts_glow_on), fontSize = 9.sp) },
                                             modifier = Modifier.height(20.dp),
-                                            shape = RoundedCornerShape(4.dp),
+                                            shape = ExpressiveShapes.pill,
                                         )
                                         FilterChip(
                                             selected = glowMode == "off",
                                             onClick = { onGlowModeChange("off") },
                                             label = { Text(stringResource(R.string.tts_glow_off), fontSize = 9.sp) },
                                             modifier = Modifier.height(20.dp),
-                                            shape = RoundedCornerShape(4.dp),
+                                            shape = ExpressiveShapes.pill,
                                         )
                                     }
                                 }
@@ -570,21 +570,21 @@ private fun FloatingTtsMiniPlayer(
                                             onClick = { onParagraphModeChange("tts") },
                                             label = { Text(voiceLabel, fontSize = 9.sp) },
                                             modifier = Modifier.height(20.dp),
-                                            shape = RoundedCornerShape(4.dp),
+                                            shape = ExpressiveShapes.pill,
                                         )
                                         FilterChip(
                                             selected = paragraphMode == "both",
                                             onClick = { onParagraphModeChange("both") },
                                             label = { Text(bothLabel, fontSize = 9.sp) },
                                             modifier = Modifier.height(20.dp),
-                                            shape = RoundedCornerShape(4.dp),
+                                            shape = ExpressiveShapes.pill,
                                         )
                                         FilterChip(
                                             selected = paragraphMode == "inverse",
                                             onClick = { onParagraphModeChange("inverse") },
                                             label = { Text(inverseLabel, fontSize = 9.sp) },
                                             modifier = Modifier.height(20.dp),
-                                            shape = RoundedCornerShape(4.dp),
+                                            shape = ExpressiveShapes.pill,
                                         )
                                     }
                                 }
@@ -601,13 +601,13 @@ private fun FloatingTtsMiniPlayer(
                 }
                 Surface(
                     color = MaterialTheme.colorScheme.surfaceContainerHighest.copy(alpha = opacity),
-                    shape = RoundedCornerShape(8.dp),
+                    shape = ExpressiveShapes.option,
                     modifier = Modifier
                         .fillMaxWidth()
                         .then(
                             if (showGlow) {
                                 Modifier
-                                    .border(1.5.dp, glowColor, RoundedCornerShape(8.dp))
+                                    .border(1.5.dp, glowColor, ExpressiveShapes.option)
                             } else {
                                 Modifier
                             }

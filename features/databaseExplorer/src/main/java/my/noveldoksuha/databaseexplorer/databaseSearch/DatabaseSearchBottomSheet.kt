@@ -37,6 +37,7 @@ import my.noveldokusha.coreui.components.next
 import my.noveldokusha.coreui.theme.InternalTheme
 import my.noveldokusha.coreui.theme.PreviewThemes
 import my.noveldokusha.databaseexplorer.R
+import my.noveldokusha.coreui.theme.ExpressiveShapes
 
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -61,7 +62,8 @@ internal fun DatabaseSearchBottomSheet(
                         .weight(1f)
                 )
 
-                FilledTonalButton(onClick = onGenresFiltersSubmit) {
+                FilledTonalButton(
+                    shape = ExpressiveShapes.button,onClick = onGenresFiltersSubmit) {
                     Text(text = stringResource(R.string.search_with_filters))
                 }
 
@@ -93,6 +95,7 @@ internal fun DatabaseSearchBottomSheet(
         ) {
             genresList.forEachIndexed { index, genreItem ->
                 FilterChip(
+                    shape = ExpressiveShapes.pill,
                     selected = genreItem.state != ToggleableState.Off,
                     onClick = {
                         val item = genresList[index]

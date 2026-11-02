@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import my.noveldokusha.coreui.theme.ExpressiveShapes
 
 @Composable
 fun ClickableOption(
@@ -28,6 +29,7 @@ fun ClickableOption(
 ) {
     if (isButton) {
         OutlinedButton(
+            shape = ExpressiveShapes.button,
             onClick = onClick,
             modifier = Modifier
                 .fillMaxWidth()

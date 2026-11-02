@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -16,7 +17,6 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
@@ -40,6 +40,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.material.icons.Icons
+import my.noveldokusha.coreui.theme.ExpressiveShapes
+import my.noveldokusha.coreui.theme.ExpressiveContentFrame
+import my.noveldokusha.coreui.theme.ExpressiveTokens
 
 import my.noveldokusha.coreui.theme.AppTheme
 import my.noveldokusha.coreui.theme.DarkMode
@@ -123,130 +126,146 @@ internal fun SettingsScreenBody(
 
     val showNovelPromptsDialog = remember { mutableStateOf(false) }
 
-    Column(
-        modifier = modifier.verticalScroll(rememberScrollState()),
-    ) {
+    ExpressiveContentFrame(modifier = modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(ExpressiveTokens.space5),
+        ) {
         val currentLanguageObj = remember(state.currentLanguage.value) {
             AppLanguageProvider.fromCode(state.currentLanguage.value)
                 ?: AppLanguageProvider.supportedLanguages.first()
         }
-        SettingsLanguage(
-            currentLanguage = currentLanguageObj,
-            onLanguageChange = onLanguageChange,
-        )
-        HorizontalDivider()
-        SettingsTheme(
-            currentAppTheme = state.currentAppTheme.value,
-            currentDarkMode = state.currentDarkMode.value,
-            onAppThemeChange = onAppThemeSelected,
-            onDarkModeChange = onDarkModeSelected,
-        )
-        HorizontalDivider()
-        SettingsData(
-            databaseSize = state.databaseSize.value,
-            imagesFolderSize = state.imageFolderSize.value,
-            novelCacheSize = state.novelCacheSize.value,
-            mangaCacheSize = state.mangaCacheSize.value,
-            offlineVideoSize = state.offlineVideoSize.value,
-            isCleaningDatabase = state.isCleaningDatabase.value,
-            isCleaningImages = state.isCleaningImages.value,
-            isCleaningNovelCache = state.isCleaningNovelCache.value,
-            isCleaningMangaCache = state.isCleaningMangaCache.value,
-            isCleaningOfflineVideo = state.isCleaningOfflineVideo.value,
-            onRequestCleanDatabase = onRequestCleanDatabase,
-            onRequestCleanImageFolder = onRequestCleanImageFolder,
-            onRequestCleanNovelCache = onRequestCleanNovelCache,
-            onRequestCleanMangaCache = onRequestCleanMangaCache,
-            onRequestCleanOfflineVideo = onRequestCleanOfflineVideo,
-        )
-        HorizontalDivider()
-        val context = LocalContext.current
-        SettingsNetwork(
-            context = context,
-            scraperUserAgent = state.scraperUserAgent,
-            cloudflareBypassEnabled = state.cloudflareBypassEnabled,
-            cloudflareChallengeTimeoutSeconds = state.cloudflareChallengeTimeoutSeconds,
-            massAddDelayMs = state.massAddDelayMs,
-            onMassAddDelayChange = onMassAddDelayChange,
-            downloadDelayMs = state.downloadDelayMs,
-            onDownloadDelayChange = onDownloadDelayChange
-        )
-        HorizontalDivider()
-        SettingsBackup(
-            onBackupData = onBackupData,
-            onRestoreData = onRestoreData,
-            autoBackupEnabled = state.autoBackupEnabled.value,
-            onAutoBackupEnabledChange = onAutoBackupEnabledChange,
-            autoBackupDirectoryUri = state.autoBackupDirectoryUri.value,
-            autoBackupDirectoryDisplayName = state.autoBackupDirectoryDisplayName.value,
-            onAutoBackupSelectDirectory = onAutoBackupSelectDirectory,
-            autoBackupMaxCount = state.autoBackupMaxCount.value,
-            onAutoBackupMaxCountChange = onAutoBackupMaxCountChange,
-            autoBackupIntervalMinutes = state.autoBackupIntervalMinutes.value,
-            onAutoBackupIntervalMinutesChange = onAutoBackupIntervalMinutesChange,
-            autoBackupIncludeImages = state.autoBackupIncludeImages.value,
-            onAutoBackupIncludeImagesChange = onAutoBackupIncludeImagesChange,
-            autoBackupIncludeSettings = state.autoBackupIncludeSettings.value,
-            onAutoBackupIncludeSettingsChange = onAutoBackupIncludeSettingsChange,
-            autoBackupIncludePlugins = state.autoBackupIncludePlugins.value,
-            onAutoBackupIncludePluginsChange = onAutoBackupIncludePluginsChange,
-            autoBackupLastTimestamp = state.autoBackupLastTimestamp.value,
-        )
-        SettingsGeminiTranslation(
-                translationProvider            = state.translationProvider.value,
-                onTranslationProviderChange    = onTranslationProviderChange,
-                translationGlobalMode          = state.translationGlobalMode.value,
-                onTranslationGlobalModeChange  = onTranslationGlobalModeChange,
-                hasGlobalPair                  = state.hasGlobalPair.value,
-                geminiApiKey                   = state.geminiApiKey.value,
-                geminiModel                    = state.geminiModel.value,
-                googlePaApiKeys                = state.googlePaApiKeys.value,
-                openAiBaseUrl                  = state.openAiBaseUrl.value,
-                openAiApiKeys                  = state.openAiApiKeys.value,
-                openAiModel                    = state.openAiModel.value,
-                activeSystemPrompt             = state.activeSystemPrompt.value,
-                promptPresets                  = state.promptPresets.value,
-                promptUseEnglishLocale         = state.promptUseEnglishLocale.value,
-                onGeminiApiKeyChange           = onGeminiApiKeyChange,
-                onGeminiModelChange            = onGeminiModelChange,
-                onGooglePaApiKeysChange        = onGooglePaApiKeysChange,
-                onOpenAiBaseUrlChange          = onOpenAiBaseUrlChange,
-                onOpenAiApiKeysChange          = onOpenAiApiKeysChange,
-                onOpenAiModelChange            = onOpenAiModelChange,
-                onActiveSystemPromptChange     = onActiveSystemPromptChange,
-                onPromptUseEnglishLocaleChange = onPromptUseEnglishLocaleChange,
-                onSavePreset                   = onSavePreset,
-                onDeletePreset                 = onDeletePreset,
-                llmBatchSize                   = state.llmBatchSize.value,
-                llmMaxOutputTokens             = state.llmMaxOutputTokens.value,
-                onLlmBatchSizeChange           = onLlmBatchSizeChange,
-                onLlmMaxOutputTokensChange     = onLlmMaxOutputTokensChange,
-                novelPromptCount               = state.translationNovelPrompts.value.size,
-                onNovelPromptsClick            = { showNovelPromptsDialog.value = true },
+        SettingsGroup {
+            SettingsLanguage(
+                currentLanguage = currentLanguageObj,
+                onLanguageChange = onLanguageChange,
             )
-        SettingsRegexCleanup(
-            onNavigateToRegexCleanup = onNavigateToRegexCleanup
-        )
-        HorizontalDivider()
-        LibraryAutoUpdate(state = state.libraryAutoUpdate)
-        HorizontalDivider()
-        AppUpdates(
-            state = state.updateAppSetting,
-            onCheckForUpdatesManual = onCheckForUpdatesManual
-        )
-        HorizontalDivider()
-        SettingsSupport(
-            onExportLogs = onExportLogs,
-        )
-        HorizontalDivider()
-        SettingsAbout(
-            appVersion = state.appVersion,
-        )
-        Spacer(modifier = Modifier.height(16.dp))
+        }
+        SettingsGroup {
+            SettingsTheme(
+                currentAppTheme = state.currentAppTheme.value,
+                currentDarkMode = state.currentDarkMode.value,
+                onAppThemeChange = onAppThemeSelected,
+                onDarkModeChange = onDarkModeSelected,
+            )
+        }
+        SettingsGroup {
+            SettingsData(
+                databaseSize = state.databaseSize.value,
+                imagesFolderSize = state.imageFolderSize.value,
+                novelCacheSize = state.novelCacheSize.value,
+                mangaCacheSize = state.mangaCacheSize.value,
+                offlineVideoSize = state.offlineVideoSize.value,
+                isCleaningDatabase = state.isCleaningDatabase.value,
+                isCleaningImages = state.isCleaningImages.value,
+                isCleaningNovelCache = state.isCleaningNovelCache.value,
+                isCleaningMangaCache = state.isCleaningMangaCache.value,
+                isCleaningOfflineVideo = state.isCleaningOfflineVideo.value,
+                onRequestCleanDatabase = onRequestCleanDatabase,
+                onRequestCleanImageFolder = onRequestCleanImageFolder,
+                onRequestCleanNovelCache = onRequestCleanNovelCache,
+                onRequestCleanMangaCache = onRequestCleanMangaCache,
+                onRequestCleanOfflineVideo = onRequestCleanOfflineVideo,
+            )
+        }
+        val context = LocalContext.current
+        SettingsGroup {
+            SettingsNetwork(
+                context = context,
+                scraperUserAgent = state.scraperUserAgent,
+                cloudflareBypassEnabled = state.cloudflareBypassEnabled,
+                cloudflareChallengeTimeoutSeconds = state.cloudflareChallengeTimeoutSeconds,
+                massAddDelayMs = state.massAddDelayMs,
+                onMassAddDelayChange = onMassAddDelayChange,
+                downloadDelayMs = state.downloadDelayMs,
+                onDownloadDelayChange = onDownloadDelayChange
+            )
+        }
+        SettingsGroup {
+            SettingsBackup(
+                onBackupData = onBackupData,
+                onRestoreData = onRestoreData,
+                autoBackupEnabled = state.autoBackupEnabled.value,
+                onAutoBackupEnabledChange = onAutoBackupEnabledChange,
+                autoBackupDirectoryUri = state.autoBackupDirectoryUri.value,
+                autoBackupDirectoryDisplayName = state.autoBackupDirectoryDisplayName.value,
+                onAutoBackupSelectDirectory = onAutoBackupSelectDirectory,
+                autoBackupMaxCount = state.autoBackupMaxCount.value,
+                onAutoBackupMaxCountChange = onAutoBackupMaxCountChange,
+                autoBackupIntervalMinutes = state.autoBackupIntervalMinutes.value,
+                onAutoBackupIntervalMinutesChange = onAutoBackupIntervalMinutesChange,
+                autoBackupIncludeImages = state.autoBackupIncludeImages.value,
+                onAutoBackupIncludeImagesChange = onAutoBackupIncludeImagesChange,
+                autoBackupIncludeSettings = state.autoBackupIncludeSettings.value,
+                onAutoBackupIncludeSettingsChange = onAutoBackupIncludeSettingsChange,
+                autoBackupIncludePlugins = state.autoBackupIncludePlugins.value,
+                onAutoBackupIncludePluginsChange = onAutoBackupIncludePluginsChange,
+                autoBackupLastTimestamp = state.autoBackupLastTimestamp.value,
+            )
+        }
+        SettingsGroup {
+            SettingsGeminiTranslation(
+                    translationProvider            = state.translationProvider.value,
+                    onTranslationProviderChange    = onTranslationProviderChange,
+                    translationGlobalMode          = state.translationGlobalMode.value,
+                    onTranslationGlobalModeChange  = onTranslationGlobalModeChange,
+                    hasGlobalPair                  = state.hasGlobalPair.value,
+                    geminiApiKey                   = state.geminiApiKey.value,
+                    geminiModel                    = state.geminiModel.value,
+                    googlePaApiKeys                = state.googlePaApiKeys.value,
+                    openAiBaseUrl                  = state.openAiBaseUrl.value,
+                    openAiApiKeys                  = state.openAiApiKeys.value,
+                    openAiModel                    = state.openAiModel.value,
+                    activeSystemPrompt             = state.activeSystemPrompt.value,
+                    promptPresets                  = state.promptPresets.value,
+                    promptUseEnglishLocale         = state.promptUseEnglishLocale.value,
+                    onGeminiApiKeyChange           = onGeminiApiKeyChange,
+                    onGeminiModelChange            = onGeminiModelChange,
+                    onGooglePaApiKeysChange        = onGooglePaApiKeysChange,
+                    onOpenAiBaseUrlChange          = onOpenAiBaseUrlChange,
+                    onOpenAiApiKeysChange          = onOpenAiApiKeysChange,
+                    onOpenAiModelChange            = onOpenAiModelChange,
+                    onActiveSystemPromptChange     = onActiveSystemPromptChange,
+                    onPromptUseEnglishLocaleChange = onPromptUseEnglishLocaleChange,
+                    onSavePreset                   = onSavePreset,
+                    onDeletePreset                 = onDeletePreset,
+                    llmBatchSize                   = state.llmBatchSize.value,
+                    llmMaxOutputTokens             = state.llmMaxOutputTokens.value,
+                    onLlmBatchSizeChange           = onLlmBatchSizeChange,
+                    onLlmMaxOutputTokensChange     = onLlmMaxOutputTokensChange,
+                    novelPromptCount               = state.translationNovelPrompts.value.size,
+                    onNovelPromptsClick            = { showNovelPromptsDialog.value = true },
+                )
+        }
+        SettingsGroup {
+            SettingsRegexCleanup(
+                onNavigateToRegexCleanup = onNavigateToRegexCleanup
+            )
+        }
+        SettingsGroup {
+            LibraryAutoUpdate(state = state.libraryAutoUpdate)
+        }
+        SettingsGroup {
+            AppUpdates(
+                state = state.updateAppSetting,
+                onCheckForUpdatesManual = onCheckForUpdatesManual
+            )
+        }
+        SettingsGroup {
+            SettingsSupport(
+                onExportLogs = onExportLogs,
+            )
+        }
+        SettingsGroup {
+            SettingsAbout(
+                appVersion = state.appVersion,
+            )
+        }
+        Spacer(modifier = Modifier.height(ExpressiveTokens.space4))
         Text(
             text = "(°.°)",
             modifier = Modifier
-                .padding(20.dp)
+                .padding(ExpressiveTokens.space5)
                 .fillMaxWidth(),
             fontFamily = FontFamily.Monospace,
             fontWeight = FontWeight.Bold,
@@ -254,6 +273,7 @@ internal fun SettingsScreenBody(
             textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(120.dp))
+        }
     }
 
     if (showNovelPromptsDialog.value) {
@@ -281,6 +301,7 @@ internal fun SettingsScreenBody(
             CleanConfirmationType.OFFLINE_VIDEO -> R.string.clean_offline_video_confirmation
         }
         AlertDialog(
+            shape = ExpressiveShapes.dialog,
             onDismissRequest = onDismissClean,
             title = {
                 Text(
@@ -296,6 +317,7 @@ internal fun SettingsScreenBody(
             },
             confirmButton = {
                 OutlinedButton(
+                    shape = ExpressiveShapes.button,
                     onClick = onConfirmClean,
                     colors = ButtonDefaults.outlinedButtonColors(
                         containerColor = MaterialTheme.colorScheme.errorContainer,
@@ -319,6 +341,23 @@ internal fun SettingsScreenBody(
         )
     }
 }
+
+
+@Composable
+private fun SettingsGroup(content: @Composable () -> Unit) {
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = ExpressiveTokens.space1),
+        shape = ExpressiveShapes.container,
+        color = MaterialTheme.colorScheme.surfaceContainerLow,
+    ) {
+        Column(modifier = Modifier.padding(vertical = ExpressiveTokens.space2)) {
+            content()
+        }
+    }
+}
+
 
 
 @PreviewThemes

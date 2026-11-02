@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.selection.SelectionContainer
@@ -59,6 +60,11 @@ import my.noveldokusha.databaseexplorer.R
 import my.noveldokusha.mappers.mapToBookMetadata
 import my.noveldokusha.scraper.SearchGenre
 import my.noveldokusha.feature.local_database.BookMetadata
+import my.noveldokusha.coreui.theme.ExpressiveShapes
+import my.noveldokusha.coreui.theme.ExpressiveTokens
+import my.noveldokusha.coreui.theme.ExpressiveWindowSizeClass
+import my.noveldokusha.coreui.theme.LocalExpressiveWindowSizeClass
+import my.noveldokusha.coreui.theme.expressiveContentGutter
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -103,28 +109,44 @@ internal fun DatabaseBookInfoScreenBody(
             Column(
                 Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 8.dp)
+                    .padding(horizontal = expressiveContentGutter(LocalExpressiveWindowSizeClass.current))
                     .padding(top = innerPadding.calculateTopPadding())
             ) {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(14.dp),
+                val compactLayout =
+                    LocalExpressiveWindowSizeClass.current == ExpressiveWindowSizeClass.COMPACT
+                val coverWidth = when (LocalExpressiveWindowSizeClass.current) {
+                    ExpressiveWindowSizeClass.COMPACT -> 152.dp
+                    ExpressiveWindowSizeClass.MEDIUM -> 184.dp
+                    ExpressiveWindowSizeClass.EXPANDED -> 208.dp
+                }
+                FlowRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    maxItemsInEachRow = if (compactLayout) 1 else 2,
+                    horizontalArrangement = Arrangement.spacedBy(ExpressiveTokens.space4),
+                    verticalArrangement = Arrangement.spacedBy(ExpressiveTokens.space4),
                 ) {
                     var showImageFullScreen by rememberSaveable { mutableStateOf(false) }
-                    BookImageButtonView(
+                    Box(
+                        modifier = if (compactLayout) Modifier.fillMaxWidth() else Modifier.width(coverWidth),
+                        contentAlignment = Alignment.TopCenter,
+                    ) {
+                        BookImageButtonView(
                         title = "",
                         coverImageModel = coverImg,
                         onClick = { showImageFullScreen = true },
-                        modifier = Modifier
-                            .weight(1f),
-                    )
+                        modifier = Modifier.width(coverWidth),
+                        )
+                    }
                     SelectionContainer(
-                        modifier = Modifier.weight(1f)
+                        modifier = if (compactLayout) Modifier.fillMaxWidth() else Modifier.weight(1f)
                     ) {
                         Text(
                             text = state.book.value.title,
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(top = 16.dp)
+                            modifier = Modifier.padding(
+                                top = if (compactLayout) 0.dp else ExpressiveTokens.space4
+                            )
                         )
                     }
                     if (showImageFullScreen) Dialog(
@@ -160,6 +182,7 @@ internal fun DatabaseBookInfoScreenBody(
                         }
                 }
                 FilledTonalButton(
+                    shape = ExpressiveShapes.button,
                     onClick = onSourcesClick,
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
@@ -171,8 +194,10 @@ internal fun DatabaseBookInfoScreenBody(
         }
 
         Column(
-            modifier = Modifier.padding(horizontal = 12.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            modifier = Modifier.padding(
+                horizontal = expressiveContentGutter(LocalExpressiveWindowSizeClass.current)
+            ),
+            verticalArrangement = Arrangement.spacedBy(ExpressiveTokens.space4)
         ) {
             SelectionContainer {
                 ExpandableText(
@@ -204,7 +229,7 @@ internal fun DatabaseBookInfoScreenBody(
                     TextAnimated(text = stringResource(id = R.string.none_found))
                 } else {
                     SelectionContainer {
-                        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        FlowRow(horizontalArrangement = Arrangement.spacedBy(ExpressiveTokens.space2)) {
                             state.book.value.authors.forEach {
                                 Container {
                                     Text(text = it.name, modifier = Modifier.textPadding())
@@ -221,7 +246,7 @@ internal fun DatabaseBookInfoScreenBody(
                     OutlinedCard(
                         onClick = { onGenresClick(state.book.value.genres) },
                         colors = CardDefaults.outlinedCardColors(containerColor = MaterialTheme.colorScheme.primary),
-                        shape = MaterialTheme.shapes.small,
+                        shape = ExpressiveShapes.card,
                     ) {
                         TextAnimated(
                             text = state.book.value.genres.joinToString(" · ") { it.genreName },
@@ -310,7 +335,7 @@ private fun Container(
         modifier = modifier,
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 0.dp),
         colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
-        shape = MaterialTheme.shapes.small,
+        shape = ExpressiveShapes.card,
         content = content,
     )
 }

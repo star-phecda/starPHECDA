@@ -1,5 +1,6 @@
 package my.noveldokusha.features.chapterslist
 
+import android.graphics.Bitmap
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.animation.animateContentSize
@@ -51,6 +52,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -71,10 +73,20 @@ import my.noveldokusha.coreui.components.BookRatingChip
 import my.noveldokusha.core.appPreferences.SourceStripPosition
 import my.noveldokusha.coreui.components.ExpandableText
 import my.noveldokusha.coreui.components.ImageView
+import my.noveldokusha.coreui.theme.ArtworkTheme
 import my.noveldokusha.coreui.theme.ImageBorderShape
+import my.noveldokusha.coreui.theme.cachedArtworkSeedColor
+import my.noveldokusha.coreui.theme.extractAndCacheArtworkSeedColor
 import my.noveldokusha.coreui.theme.clickableNoIndicator
 import my.noveldokusha.chapterslist.R
 import my.noveldokusha.core.rememberResolvedBookImagePath
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import my.noveldokusha.coreui.theme.ExpressiveShapes
+import my.noveldokusha.coreui.theme.ExpressiveTokens
+import my.noveldokusha.coreui.theme.ExpressiveWindowSizeClass
+import my.noveldokusha.coreui.theme.LocalExpressiveWindowSizeClass
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -111,11 +123,44 @@ internal fun ChaptersScreenHeader(
         )
     } ?: R.drawable.ic_baseline_empty_24
 
-    Box(modifier = modifier) {
+    val artworkCacheKey = bookState.coverImageUrl
+        ?.takeIf { it.isNotBlank() }
+        ?.let { bookState.url + "::" + it }
+    val artworkSeedState = remember(artworkCacheKey) {
+        mutableStateOf(artworkCacheKey?.let(::cachedArtworkSeedColor))
+    }
+    val artworkExtractionInProgress = remember(artworkCacheKey) {
+        mutableStateOf(false)
+    }
+    val artworkScope = rememberCoroutineScope()
+    val onArtworkImageSuccess: ((Bitmap) -> Unit)? =
+        remember(artworkCacheKey, artworkScope) {
+            artworkCacheKey?.let { cacheKey ->
+                { bitmap: Bitmap ->
+                    if (artworkSeedState.value == null && !artworkExtractionInProgress.value) {
+                        artworkExtractionInProgress.value = true
+                        artworkScope.launch {
+                            try {
+                                val seed = withContext(Dispatchers.Default) {
+                                    extractAndCacheArtworkSeedColor(cacheKey, bitmap)
+                                }
+                                artworkSeedState.value = seed
+                            } finally {
+                                artworkExtractionInProgress.value = false
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+    ArtworkTheme(seedColor = artworkSeedState.value) {
+        Box(modifier = modifier) {
         Box(Modifier.matchParentSize()) {
             ImageView(
                 imageModel = coverImageModel,
                 referer = coverReferer,
+                onImageSuccess = onArtworkImageSuccess,
                 contentScale = ContentScale.FillWidth,
                 modifier = Modifier
                     .alpha(0.2f)
@@ -135,23 +180,36 @@ internal fun ChaptersScreenHeader(
         }
         Column(
             modifier = Modifier
-                .padding(top = paddingValues.calculateTopPadding())
-                .padding(horizontal = 14.dp),
+                .padding(top = paddingValues.calculateTopPadding()),
         ) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(14.dp),
+            val compactLayout =
+                LocalExpressiveWindowSizeClass.current == ExpressiveWindowSizeClass.COMPACT
+            val coverWidth = when (LocalExpressiveWindowSizeClass.current) {
+                ExpressiveWindowSizeClass.COMPACT -> 152.dp
+                ExpressiveWindowSizeClass.MEDIUM -> 184.dp
+                ExpressiveWindowSizeClass.EXPANDED -> 208.dp
+            }
+            FlowRow(
+                modifier = Modifier.fillMaxWidth(),
+                maxItemsInEachRow = if (compactLayout) 1 else 2,
+                horizontalArrangement = Arrangement.spacedBy(ExpressiveTokens.space4),
+                verticalArrangement = Arrangement.spacedBy(ExpressiveTokens.space4),
             ) {
                 var showImageFullScreen by rememberSaveable { mutableStateOf(false) }
-                BookImageButtonView(
+                Box(
+                    modifier = if (compactLayout) Modifier.fillMaxWidth() else Modifier.width(coverWidth),
+                    contentAlignment = Alignment.TopCenter,
+                ) {
+                    BookImageButtonView(
                     title = "",
                     coverImageModel = coverImageModel,
                     referer = coverReferer,
                     onClick = { showImageFullScreen = true },
                     onLongClick = onCoverLongClick,
                     sourceStripPosition = SourceStripPosition.BelowCover,
-                    modifier = Modifier.weight(1f)
-                )
-                if (showImageFullScreen) Dialog(
+                    modifier = Modifier.width(coverWidth),
+                    )
+                    if (showImageFullScreen) Dialog(
                     onDismissRequest = { showImageFullScreen = false },
                     properties = DialogProperties(
                         usePlatformDefaultWidth = false,
@@ -185,11 +243,13 @@ internal fun ChaptersScreenHeader(
                     }
                 }
 
+                }
                 Column(
-                    modifier = Modifier
-                        .padding(top = 16.dp)
-                        .fillMaxHeight()
-                        .weight(1f),
+                    modifier = if (compactLayout) {
+                        Modifier.fillMaxWidth()
+                    } else {
+                        Modifier.padding(top = ExpressiveTokens.space4).weight(1f)
+                    },
                 ) {
                     SelectionContainer {
                         // Главное название книги: без ограничения строк,
@@ -313,7 +373,7 @@ internal fun ChaptersScreenHeader(
                             else -> bookCategory
                         }
                         Surface(
-                            shape = RoundedCornerShape(12.dp),
+                            shape = ExpressiveShapes.option,
                             color = MaterialTheme.colorScheme.tertiaryContainer,
                             modifier = Modifier.clickable(
                                 interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() },
@@ -357,7 +417,7 @@ internal fun ChaptersScreenHeader(
                         ) {
                             visibleGenres.forEach { genre ->
                                 Surface(
-                                    shape = RoundedCornerShape(12.dp),
+                                    shape = ExpressiveShapes.option,
                                     color = MaterialTheme.colorScheme.surface,
                                     border = BorderStroke(Dp.Hairline, MaterialTheme.colorScheme.outline),
                                 ) {
@@ -371,7 +431,7 @@ internal fun ChaptersScreenHeader(
                             }
                             if (!genresExpanded && genres.size > genresCollapsedCount) {
                                 Surface(
-                                    shape = RoundedCornerShape(12.dp),
+                                    shape = ExpressiveShapes.option,
                                     color = MaterialTheme.colorScheme.primaryContainer,
                                     border = BorderStroke(Dp.Hairline, MaterialTheme.colorScheme.outline),
                                     modifier = Modifier.clickable(
@@ -419,7 +479,7 @@ internal fun ChaptersScreenHeader(
                 if (onScrollToLastRead != null) {
                     Button(
                         onClick = onScrollToLastRead,
-                        shape = my.noveldokusha.coreui.theme.shapes.large,
+                        shape = ExpressiveShapes.button,
                         colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.primary,
                             contentColor = MaterialTheme.colorScheme.onPrimary,
@@ -457,7 +517,7 @@ internal fun ChaptersScreenHeader(
                                 onTranslateClick()
                             }
                         },
-                        shape = my.noveldokusha.coreui.theme.shapes.large,
+                        shape = ExpressiveShapes.button,
                         colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.primary,
                             contentColor = MaterialTheme.colorScheme.onPrimary,
@@ -484,7 +544,7 @@ internal fun ChaptersScreenHeader(
                 // Кнопка "Перейти к главе"
                 Button(
                     onClick = onScrollToChapter,
-                    shape = my.noveldokusha.coreui.theme.shapes.large,
+                    shape = ExpressiveShapes.button,
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.primary,
                         contentColor = MaterialTheme.colorScheme.onPrimary,
@@ -500,5 +560,6 @@ internal fun ChaptersScreenHeader(
                 }
             }
         }
+    }
     }
 }

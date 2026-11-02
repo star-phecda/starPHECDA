@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import my.noveldokusha.coreui.R
+import my.noveldokusha.coreui.theme.ExpressiveShapes
 
 @Composable
 internal fun MoveToCategoryDialog(
@@ -38,6 +39,7 @@ internal fun MoveToCategoryDialog(
     var selectedCategory by remember { mutableStateOf(categories.firstOrNull() ?: "") }
 
     AlertDialog(
+        shape = ExpressiveShapes.dialog,
         onDismissRequest = onDismiss,
         title = {
             Text(

@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import my.noveldokusha.coreui.components.ImageView
 import my.noveldokusha.coreui.components.MyButton
+import my.noveldokusha.coreui.theme.ExpressiveShapes
 import my.noveldokusha.settings.R
 import my.noveldokusha.settings.SettingsScreenState
 
@@ -37,6 +38,7 @@ internal fun NewAppUpdateDialog(
             onDismissRequest = { updateApp.showNewVersionDialog.value = null },
             content = {
                 Card(
+                    shape = ExpressiveShapes.dialog,
                     elevation = CardDefaults.elevatedCardElevation(
                         defaultElevation = 10.dp,
                         pressedElevation = 10.dp,

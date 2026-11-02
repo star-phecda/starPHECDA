@@ -28,6 +28,8 @@ import my.noveldokusha.feature.local_database.tables.Book
 import my.noveldokusha.scraper.SourceInterface
 import my.noveldokusha.scraper.displayName
 import my.noveldokusha.strings.R
+import my.noveldokusha.coreui.theme.ExpressiveShapes
+import my.noveldokusha.coreui.theme.ExpressiveTokens
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -75,12 +77,14 @@ fun MigrationBookPickerScreen(
                     horizontalArrangement = Arrangement.spacedBy(6.dp),
                 ) {
                     FilterChip(
+                        shape = ExpressiveShapes.pill,
                         selected = targetSource == null,
                         onClick = { onSetTargetSource(null) },
                         label = { Text(stringResource(R.string.all_sources), style = MaterialTheme.typography.labelSmall) },
                     )
                     targetSources.forEach { source ->
                         FilterChip(
+                            shape = ExpressiveShapes.pill,
                             selected = targetSource == source,
                             onClick = { onSetTargetSource(source) },
                             label = {
@@ -155,7 +159,7 @@ fun MigrationBookPickerScreen(
                                     modifier = Modifier
                                         .background(
                                             color = MaterialTheme.colorScheme.primary,
-                                            shape = RoundedCornerShape(topStart = 0.dp, bottomEnd = 12.dp),
+                                            shape = RoundedCornerShape(topStart = 0.dp, bottomEnd = ExpressiveTokens.cornerMedium),
                                         )
                                         .padding(horizontal = 6.dp, vertical = 2.dp),
                                     style = MaterialTheme.typography.labelSmall.copy(
@@ -168,7 +172,7 @@ fun MigrationBookPickerScreen(
                         topRightBadge = {
                             if (isSelected) {
                                 Surface(
-                                    shape = RoundedCornerShape(12.dp),
+                                    shape = ExpressiveShapes.pill,
                                     color = MaterialTheme.colorScheme.primary,
                                     modifier = Modifier.padding(4.dp),
                                 ) {

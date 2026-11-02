@@ -31,6 +31,7 @@ import my.noveldokusha.core.domain.RemoteAppVersion
 import my.noveldokusha.settings.R
 import my.noveldokusha.settings.SettingsScreenState
 import my.noveldokusha.settings.views.NewAppUpdateDialog
+import my.noveldokusha.coreui.theme.ExpressiveShapes
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -77,6 +78,7 @@ fun LibraryAutoUpdate(
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     libraryUpdateTimes.forEach {
                         FilterChip(
+                                    shape = ExpressiveShapes.pill,
                             selected = it.intervalHours == state.autoUpdateIntervalHours.value,
                             onClick = { state.autoUpdateIntervalHours.value = it.intervalHours },
                             label = { Text(text = stringResource(id = it.nameRes)) }

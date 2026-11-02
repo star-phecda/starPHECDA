@@ -2,6 +2,9 @@ package my.noveldokusha.coreui.components
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Indication
 import androidx.compose.foundation.LocalIndication
@@ -17,6 +20,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -37,6 +41,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import my.noveldokusha.coreui.theme.DarkMode
+import my.noveldokusha.coreui.theme.ExpressiveTokens
 import my.noveldokusha.coreui.theme.InternalTheme
 import my.noveldokusha.coreui.theme.ifCase
 import my.noveldokusha.coreui.theme.selectableMinHeight
@@ -51,7 +56,7 @@ fun MyButton(
     outerPadding: Dp = 4.dp,
     contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
     minHeight: Dp = selectableMinHeight,
-    shape: Shape = MaterialTheme.shapes.small,
+    shape: Shape? = null,
     borderWidth: Dp = 1.dp,
     borderColor: Color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f),
     backgroundColor: Color = MaterialTheme.colorScheme.primaryContainer,
@@ -80,6 +85,16 @@ fun MyButton(
         )
     }
 ) {
+    val animatedCorner by animateDpAsState(
+        targetValue = if (selected) ExpressiveTokens.cornerExtraLargeIncreased
+        else ExpressiveTokens.cornerLarge,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessMediumLow
+        ),
+        label = "my-button-shape",
+    )
+    val resolvedShape = shape ?: RoundedCornerShape(animatedCorner)
     InternalButton(
         modifier = modifier,
         enabled = enabled,
@@ -87,7 +102,7 @@ fun MyButton(
         outerPadding = outerPadding,
         minHeight = minHeight,
         minWidth = Dp.Unspecified,
-        shape = shape,
+        shape = resolvedShape,
         borderWidth = borderWidth,
         borderColor = borderColor,
         backgroundColor = backgroundColor,

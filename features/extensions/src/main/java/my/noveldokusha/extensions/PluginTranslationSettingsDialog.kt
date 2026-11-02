@@ -46,6 +46,7 @@ import my.noveldokusha.coreui.components.LanguageSearchDialog
 import my.noveldokusha.coreui.theme.colorAccent
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import my.noveldokusha.text_translator.domain.TranslationModelState
+import my.noveldokusha.coreui.theme.ExpressiveShapes
 
 /**
  * Диалог настроек перевода для конкретного плагина (источника).
@@ -109,6 +110,7 @@ fun PluginTranslationSettingsDialog(
     val targetModel = models.firstOrNull { it.language == pair.value.target }
 
     AlertDialog(
+        shape = ExpressiveShapes.dialog,
         onDismissRequest = onDismiss,
         title = {
             Text(extension?.name?.let { "Translation — $it" } ?: stringResource(my.noveldokusha.strings.R.string.plugin_translation_settings_title))
@@ -335,6 +337,7 @@ fun PluginTranslationSettingsDialog(
                         modifier = Modifier.horizontalScroll(rememberScrollState()),
                     ) {
                         FilterChip(
+                            shape = ExpressiveShapes.pill,
                             selected = hideLibrary.value,
                             onClick = {
                                 viewModel.setTranslationHideLibrary(extensionId, !hideLibrary.value)
@@ -343,6 +346,7 @@ fun PluginTranslationSettingsDialog(
                             label = { Text(stringResource(my.noveldokusha.strings.R.string.plugin_translation_hide_library)) },
                         )
                         FilterChip(
+                            shape = ExpressiveShapes.pill,
                             selected = hideHistory.value,
                             onClick = {
                                 viewModel.setTranslationHideHistory(extensionId, !hideHistory.value)
@@ -351,6 +355,7 @@ fun PluginTranslationSettingsDialog(
                             label = { Text(stringResource(my.noveldokusha.strings.R.string.plugin_translation_hide_history)) },
                         )
                         FilterChip(
+                            shape = ExpressiveShapes.pill,
                             selected = hideCatalog.value,
                             onClick = {
                                 viewModel.setTranslationHideCatalog(extensionId, !hideCatalog.value)
@@ -359,6 +364,7 @@ fun PluginTranslationSettingsDialog(
                             label = { Text(stringResource(my.noveldokusha.strings.R.string.plugin_translation_hide_catalog)) },
                         )
                         FilterChip(
+                            shape = ExpressiveShapes.pill,
                             selected = hideSearch.value,
                             onClick = {
                                 viewModel.setTranslationHideSearch(extensionId, !hideSearch.value)
@@ -393,6 +399,7 @@ fun PluginTranslationSettingsDialog(
                     AnimatedVisibility(visible = showPromptEditor) {
                         var promptText by remember(prompt.value) { mutableStateOf(prompt.value) }
                         OutlinedTextField(
+                            shape = ExpressiveShapes.input,
                             value = promptText,
                             onValueChange = { promptText = it },
                             modifier = Modifier.fillMaxWidth(),

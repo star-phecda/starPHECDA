@@ -1,10 +1,12 @@
 package my.noveldokusha.historyexplorer
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,7 +17,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.DeleteSweep
@@ -57,6 +58,10 @@ import my.noveldokusha.feature.local_database.BookMetadata
 import my.noveldokusha.navigation.NavigationRouteViewModel
 import my.noveldokusha.strings.R as StringsR
 import java.util.concurrent.TimeUnit
+import my.noveldokusha.coreui.theme.ExpressiveShapes
+import my.noveldokusha.coreui.theme.ExpressiveContentFrame
+import my.noveldokusha.coreui.theme.ExpressiveTokens
+import androidx.compose.material3.Surface
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -90,6 +95,7 @@ fun HistoryScreen(
                             )
                         }
                         DropdownMenu(
+                            shape = ExpressiveShapes.dropdown,
                             expanded = showMenu,
                             onDismissRequest = { showMenu = false }
                         ) {
@@ -109,11 +115,12 @@ fun HistoryScreen(
             )
         },
         content = { innerPadding ->
-            when (val state = uiState) {
+            ExpressiveContentFrame(
+                modifier = Modifier.fillMaxSize().padding(innerPadding)
+            ) {
+                when (val state = uiState) {
                 is HistoryUiState.Loading -> Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding),
+                    modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
@@ -124,9 +131,7 @@ fun HistoryScreen(
                 }
 
                 is HistoryUiState.Empty -> Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding),
+                    modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -146,10 +151,12 @@ fun HistoryScreen(
                 }
 
                 is HistoryUiState.Content -> LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding),
-                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.spacedBy(ExpressiveTokens.space3),
+                    contentPadding = PaddingValues(
+                        top = ExpressiveTokens.space2,
+                        bottom = 120.dp,
+                    ),
                 ) {
                     items(state.items, key = { it.bookUrl }) { item ->
                         HistoryItemCard(
@@ -172,6 +179,7 @@ fun HistoryScreen(
                         )
                     }
                 }
+                }
             }
         }
     )
@@ -184,97 +192,137 @@ private fun HistoryItemCard(
     onClick: () -> Unit,
     onLongClick: () -> Unit,
 ) {
-    Row(
+    Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .combinedClickable(onClick = onClick, onLongClick = onLongClick)
-            .padding(horizontal = 16.dp, vertical = 8.dp),
-        verticalAlignment = Alignment.Top,
+            .padding(vertical = ExpressiveTokens.space1)
+            .combinedClickable(onClick = onClick, onLongClick = onLongClick),
+        shape = ExpressiveShapes.card,
+        color = MaterialTheme.colorScheme.surfaceContainerLow,
+        border = BorderStroke(
+            1.dp,
+            MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.45f)
+        ),
+        tonalElevation = 1.dp,
     ) {
-        val coverImageModel = rememberResolvedBookImagePath(item.bookUrl, item.bookCoverUrl)
-        val referer = (coverImageModel as? String)?.takeIf { it.startsWith("http://") || it.startsWith("https://") }?.let(::refererFor)
-        AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(coverImageModel)
-                .apply {
-                    if (!referer.isNullOrEmpty()) {
-                        httpHeaders(
-                            NetworkHeaders.Builder()
-                                .set("Referer", referer)
-                                .build()
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = ExpressiveTokens.space5, vertical = ExpressiveTokens.space4),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            val coverImageModel = rememberResolvedBookImagePath(item.bookUrl, item.bookCoverUrl)
+            val referer = (coverImageModel as? String)
+                ?.takeIf { it.startsWith("http://") || it.startsWith("https://") }
+                ?.let(::refererFor)
+
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(coverImageModel)
+                    .apply {
+                        if (!referer.isNullOrEmpty()) {
+                            httpHeaders(
+                                NetworkHeaders.Builder()
+                                    .set("Referer", referer)
+                                    .build()
+                            )
+                        }
+                    }
+                    .build(),
+                contentDescription = item.bookTitle,
+                modifier = Modifier
+                    .size(width = 64.dp, height = 96.dp)
+                    .clip(ExpressiveShapes.bookCover),
+                contentScale = ContentScale.Crop,
+            )
+
+            Spacer(Modifier.width(ExpressiveTokens.space3))
+
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = item.bookTitle,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                )
+
+                Spacer(Modifier.height(ExpressiveTokens.space2))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    if (!item.sourceName.isNullOrBlank()) {
+                        HistoryMetadataPill(
+                            text = item.sourceName,
+                            modifier = Modifier.weight(1f, fill = false),
                         )
                     }
+                    HistoryMetadataPill(
+                        text = relativeTime(item.lastReadEpochTimeMilli),
+                    )
                 }
-                .build(),
-            contentDescription = item.bookTitle,
-            modifier = Modifier
-                .size(width = 48.dp, height = 72.dp)
-                .clip(RoundedCornerShape(4.dp)),
-            contentScale = ContentScale.Crop,
-        )
 
-        Spacer(Modifier.width(12.dp))
+                if (!item.lastReadChapterTitle.isNullOrBlank()) {
+                    Spacer(Modifier.height(ExpressiveTokens.space2))
+                    Text(
+                        text = item.lastReadChapterTitle,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                }
 
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = item.bookTitle,
-                style = MaterialTheme.typography.titleSmall,
-                fontWeight = FontWeight.Medium,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis,
-            )
+                if (item.totalChapters > 0) {
+                    val safeReadChapters = item.readChapters.coerceIn(0, item.totalChapters)
+                    val progress = safeReadChapters.toFloat() / item.totalChapters.toFloat()
 
-            if (!item.sourceName.isNullOrBlank()) {
-                Text(
-                    text = item.sourceName,
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
+                    Spacer(Modifier.height(ExpressiveTokens.space3))
+                    LinearProgressIndicator(
+                        progress = { progress },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(4.dp)
+                            .clip(ExpressiveShapes.pill),
+                        color = MaterialTheme.colorScheme.primary,
+                        trackColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+                        gapSize = 0.dp,
+                        drawStopIndicator = {},
+                    )
+                    Spacer(Modifier.height(ExpressiveTokens.space1))
+                    Text(
+                        text = safeReadChapters.toString() + "/" + item.totalChapters +
+                            " · " + (progress * 100).toInt() + "%",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
             }
-
-            Spacer(Modifier.height(4.dp))
-
-            if (!item.lastReadChapterTitle.isNullOrBlank()) {
-                Text(
-                    text = item.lastReadChapterTitle,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
-                Spacer(Modifier.height(4.dp))
-            }
-
-            if (item.totalChapters > 0) {
-                LinearProgressIndicator(
-                    progress = { item.readChapters.toFloat() / item.totalChapters.toFloat() },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(4.dp)
-                        .clip(RoundedCornerShape(2.dp)),
-                    color = MaterialTheme.colorScheme.primary,
-                    trackColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f),
-                    gapSize = 0.dp,
-                    drawStopIndicator = {},
-                )
-                Spacer(Modifier.height(2.dp))
-                Text(
-                    text = "${item.readChapters}/${item.totalChapters} · ${if (item.totalChapters > 0) item.readChapters * 100 / item.totalChapters else 0}%",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
-
-            Spacer(Modifier.height(2.dp))
-
-            Text(
-                text = relativeTime(item.lastReadEpochTimeMilli),
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
-            )
         }
+    }
+}
+
+@Composable
+private fun HistoryMetadataPill(
+    text: String,
+    modifier: Modifier = Modifier,
+) {
+    Surface(
+        modifier = modifier,
+        shape = ExpressiveShapes.pill,
+        color = MaterialTheme.colorScheme.surfaceContainerHigh,
+    ) {
+        Text(
+            text = text,
+            modifier = Modifier.padding(horizontal = ExpressiveTokens.space2, vertical = ExpressiveTokens.space1),
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
     }
 }
 

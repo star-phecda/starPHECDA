@@ -22,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import my.noveldokusha.strings.R
 import my.noveldokusha.tooling.novel_migration.data.MigrationOptions
+import my.noveldokusha.coreui.theme.ExpressiveShapes
 
 @Composable
 fun MigrationOptionsDialog(
@@ -35,6 +36,7 @@ fun MigrationOptionsDialog(
     var deleteOldBook by remember { mutableStateOf(initialOptions.deleteOldBook) }
 
     AlertDialog(
+        shape = ExpressiveShapes.dialog,
         onDismissRequest = onDismiss,
         title = { Text(stringResource(R.string.migration_title)) },
         text = {

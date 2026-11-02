@@ -5,7 +5,6 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDownward
@@ -23,12 +22,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import my.noveldokusha.coreui.theme.ExpressiveShapes
 import my.noveldokusha.coreui.theme.colorAccent
 import my.noveldokusha.scraper.ActiveFilters
 import my.noveldokusha.scraper.FilterHistoryEntry
 import my.noveldokusha.scraper.FilterPreset
 import my.noveldokusha.scraper.LuaFilter
-
 
 enum class TriStateValue { NEUTRAL, INCLUDED, EXCLUDED }
 
@@ -127,7 +126,7 @@ internal fun FilterBottomSheet(
         )
     }
 
-    ModalBottomSheet(onDismissRequest = onDismiss, sheetState = sheetState, dragHandle = null) {
+    ModalBottomSheet(onDismissRequest = onDismiss, sheetState = sheetState, dragHandle = null, shape = ExpressiveShapes.sheet) {
         Column(modifier = Modifier.fillMaxWidth()) {
             // Header
             Row(
@@ -223,7 +222,7 @@ internal fun FilterBottomSheet(
                     },
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(containerColor = colorAccent()),
-                    shape = RoundedCornerShape(12.dp)
+                    shape = ExpressiveShapes.button
                 ) {
                     Text(stringResource(R.string.filters_apply), style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.SemiBold)
                 }
@@ -294,14 +293,14 @@ private fun SelectSection(filter: LuaFilter.Select, value: String, onChange: (St
             var expanded by remember { mutableStateOf(false) }
             val currentLabel = filter.options.find { it.value == value }?.label ?: value
             Column {
-                OutlinedButton(onClick = { expanded = !expanded }, shape = RoundedCornerShape(10.dp), border = BorderStroke(1.5.dp, colorAccent().copy(alpha = 0.6f)), colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.onSurface), modifier = Modifier.fillMaxWidth()) {
+                OutlinedButton(onClick = { expanded = !expanded }, shape = ExpressiveShapes.button, border = BorderStroke(1.5.dp, colorAccent().copy(alpha = 0.6f)), colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.onSurface), modifier = Modifier.fillMaxWidth()) {
                     Text(currentLabel, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Medium, modifier = Modifier.weight(1f))
                     Icon(if (expanded) Icons.Filled.ArrowUpward else Icons.Filled.ArrowDownward, null, modifier = Modifier.size(18.dp), tint = colorAccent())
                 }
                 if (expanded) {
                     Surface(
                         modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(bottomStart = 10.dp, bottomEnd = 10.dp),
+                        shape = ExpressiveShapes.dropdown,
                         tonalElevation = 3.dp,
                         shadowElevation = 4.dp,
                         border = BorderStroke(1.dp, colorAccent().copy(alpha = 0.3f))
@@ -343,6 +342,7 @@ private fun CheckboxSection(filter: LuaFilter.CheckboxGroup, included: Set<Strin
                 filter.options.sortedBy { it.label.lowercase() }.forEach { opt ->
                     val isIncluded = opt.value in included
                     FilterChip(
+                        shape = ExpressiveShapes.pill,
                         selected = isIncluded,
                         onClick = { onToggle(opt.value) },
                         label = { Text(opt.label) },
@@ -416,7 +416,7 @@ private fun TextSection(
             onValueChange = { onChange(it) },
             singleLine = true,
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(10.dp),
+            shape = ExpressiveShapes.input,
             colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = colorAccent(), focusedLabelColor = colorAccent(), cursorColor = colorAccent()),
             trailingIcon = {
                 if (value.isNotEmpty()) {
@@ -430,7 +430,7 @@ private fun TextSection(
         AnimatedVisibility(visible = showSuggestions && filteredHistory.isNotEmpty()) {
             Surface(
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(8.dp),
+                shape = ExpressiveShapes.compactContainer,
                 border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.3f))
             ) {
                 Column(modifier = Modifier.heightIn(max = 200.dp)) {
@@ -479,6 +479,7 @@ private fun TagInputSection(
                 selectedValues.forEach { value ->
                     val label = filter.options.find { it.value == value }?.label ?: value
                     FilterChip(
+                        shape = ExpressiveShapes.pill,
                         selected = true,
                         onClick = { onToggle(value) },
                         label = { Text(label) },
@@ -501,7 +502,7 @@ private fun TagInputSection(
                 placeholder = { Text("Type to search...") },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(10.dp),
+                shape = ExpressiveShapes.input,
                 colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = colorAccent(), cursorColor = colorAccent()),
                 trailingIcon = {
                     if (text.isNotEmpty()) {
@@ -514,7 +515,7 @@ private fun TagInputSection(
             if (showSuggestions) {
                 Surface(
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(bottomStart = 10.dp, bottomEnd = 10.dp),
+                    shape = ExpressiveShapes.dropdown,
                     tonalElevation = 3.dp,
                     shadowElevation = 4.dp,
                     border = BorderStroke(1.dp, colorAccent().copy(alpha = 0.3f))
@@ -572,13 +573,13 @@ private fun PresetSection(
     ) {
         if (presets.isNotEmpty()) {
             Column {
-                OutlinedButton(onClick = { expanded = !expanded }, shape = RoundedCornerShape(10.dp), border = BorderStroke(1.5.dp, colorAccent().copy(alpha = 0.6f))) {
+                OutlinedButton(onClick = { expanded = !expanded }, shape = ExpressiveShapes.button, border = BorderStroke(1.5.dp, colorAccent().copy(alpha = 0.6f))) {
                     Text("Presets", style = MaterialTheme.typography.bodyMedium)
                 }
                 if (expanded) {
                     Surface(
                         modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(bottomStart = 10.dp, bottomEnd = 10.dp),
+                        shape = ExpressiveShapes.dropdown,
                         tonalElevation = 3.dp,
                         shadowElevation = 4.dp,
                         border = BorderStroke(1.dp, colorAccent().copy(alpha = 0.3f))
@@ -609,13 +610,14 @@ private fun PresetSection(
                 }
             }
         }
-        OutlinedButton(onClick = { showSaveDialog = true }, shape = RoundedCornerShape(10.dp), border = BorderStroke(1.5.dp, colorAccent().copy(alpha = 0.6f))) {
+        OutlinedButton(onClick = { showSaveDialog = true }, shape = ExpressiveShapes.button, border = BorderStroke(1.5.dp, colorAccent().copy(alpha = 0.6f))) {
             Text("Save filters", style = MaterialTheme.typography.bodyMedium)
         }
     }
 
     if (showSaveDialog) {
         AlertDialog(
+            shape = ExpressiveShapes.dialog,
             onDismissRequest = { showSaveDialog = false },
             title = { Text("Save filter preset") },
             text = {
@@ -663,6 +665,7 @@ private fun TriStateChip(label: String, state: TriStateValue, onClick: () -> Uni
     }
 
     FilterChip(
+        shape = ExpressiveShapes.pill,
         selected = state != TriStateValue.NEUTRAL,
         onClick = onClick,
         label = { Text(label, color = labelColor) },
@@ -676,7 +679,7 @@ private fun TriStateChip(label: String, state: TriStateValue, onClick: () -> Uni
 private fun SelectOptionButton(label: String, selected: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
     Surface(
         onClick = onClick,
-        shape = RoundedCornerShape(14.dp),
+        shape = ExpressiveShapes.option,
         color = if (selected) colorAccent().copy(alpha = 0.12f) else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
         border = BorderStroke(width = if (selected) 1.5.dp else 1.dp, color = if (selected) colorAccent() else MaterialTheme.colorScheme.outline.copy(alpha = 0.3f)),
         modifier = modifier

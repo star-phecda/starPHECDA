@@ -23,8 +23,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.selectable
@@ -57,10 +59,16 @@ import androidx.lifecycle.LifecycleEventObserver
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import my.noveldokusha.coreui.BaseActivity
+import my.noveldokusha.coreui.components.ExpressiveNavigationBar
+import my.noveldokusha.coreui.components.ExpressiveNavigationItem
+import my.noveldokusha.coreui.components.ExpressiveNavigationRail
 import my.noveldokusha.tooling.application_workers.setup.PeriodicWorkersInitializer
 import my.noveldokusha.coreui.theme.AppTheme
 import my.noveldokusha.coreui.theme.DarkMode
 import my.noveldokusha.coreui.theme.Theme
+import my.noveldokusha.coreui.theme.ExpressiveWindowSizeClass
+import my.noveldokusha.coreui.theme.LocalExpressiveWindowSizeClass
+import my.noveldokusha.coreui.theme.ExpressiveTokens
 import my.noveldokusha.R
 import my.noveldokusha.catalogexplorer.CatalogExplorerScreen
 import my.noveldokusha.libraryexplorer.LibraryScreen
@@ -128,6 +136,8 @@ open class MainActivity : BaseActivity() {
             }
 
             Theme(themeProvider = themeProvider) {
+                val useNavigationRail =
+                    LocalExpressiveWindowSizeClass.current != ExpressiveWindowSizeClass.COMPACT
                 Box(Modifier.fillMaxSize()) {
                     // All screens live in composition always.
                     // Switching is instant — only alpha changes via graphicsLayer.
@@ -154,6 +164,7 @@ open class MainActivity : BaseActivity() {
                     Box(
                         Modifier
                             .fillMaxSize()
+                            .padding(start = if (useNavigationRail) 92.dp else 0.dp)
                             .background(MaterialTheme.colorScheme.surface)
                     ) {
                         Box(
@@ -218,61 +229,43 @@ open class MainActivity : BaseActivity() {
                         }
                     }
 
-                    // Floating slim icon-only bottom bar
-                    Surface(
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .navigationBarsPadding()
-                            .padding(horizontal = 64.dp, vertical = 16.dp)
-                            .height(52.dp),
-                        shape = RoundedCornerShape(26.dp),
-                        color = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.95f),
-                        shadowElevation = 8.dp,
-                        tonalElevation = 4.dp
-                    ) {
-                        Row(
+                    if (useNavigationRail) {
+                        ExpressiveNavigationRail(
+                            items = pages.map { page ->
+                                ExpressiveNavigationItem(
+                                    label = stringResource(id = page.stringRes),
+                                    icon = painterResource(id = page.iconRes)
+                                )
+                            },
+                            selectedIndex = activePageIndex,
+                            onItemSelected = { activePageIndex = it },
                             modifier = Modifier
-                                .fillMaxSize()
-                                .selectableGroup(),
-                            horizontalArrangement = Arrangement.SpaceEvenly,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            pages.forEachIndexed { pageIndex, page ->
-                                val isSelected = activePageIndex == pageIndex
-                                Box(
-                                    modifier = Modifier
-                                        .weight(1f)
-                                        .fillMaxHeight()
-                                        .selectable(
-                                            selected = isSelected,
-                                            onClick = { activePageIndex = pageIndex },
-                                            role = Role.Tab,
-                                            interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() },
-                                            indication = null // Clean click
-                                        ),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    // Animated background for selection
-                                    Surface(
-                                        modifier = Modifier.size(40.dp),
-                                        shape = CircleShape,
-                                        color = if (isSelected) MaterialTheme.colorScheme.primaryContainer else Color.Transparent
-                                    ) {
-                                        Icon(
-                                            painter = painterResource(id = page.iconRes),
-                                            contentDescription = stringResource(id = page.stringRes),
-                                            modifier = Modifier
-                                                .padding(8.dp)
-                                                .size(24.dp),
-                                            tint = if (isSelected) 
-                                                MaterialTheme.colorScheme.onPrimaryContainer 
-                                            else 
-                                                MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.7f)
-                                        )
-                                    }
-                                }
-                            }
-                        }
+                                .align(Alignment.CenterStart)
+                                .statusBarsPadding()
+                                .navigationBarsPadding()
+                                .padding(
+                                    start = ExpressiveTokens.space2,
+                                    top = ExpressiveTokens.space5,
+                                    bottom = ExpressiveTokens.space5,
+                                )
+                        )
+                    } else {
+                        ExpressiveNavigationBar(
+                            items = pages.map { page ->
+                                ExpressiveNavigationItem(
+                                    label = stringResource(id = page.stringRes),
+                                    icon = painterResource(id = page.iconRes)
+                                )
+                            },
+                            selectedIndex = activePageIndex,
+                            onItemSelected = { activePageIndex = it },
+                            modifier = Modifier
+                                .align(Alignment.BottomCenter)
+                                .navigationBarsPadding()
+                                .padding(horizontal = 24.dp, vertical = 12.dp)
+                                .widthIn(max = 420.dp)
+                                .fillMaxWidth()
+                        )
                     }
                 }
             }

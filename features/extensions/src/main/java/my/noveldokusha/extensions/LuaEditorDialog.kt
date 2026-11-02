@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -36,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogProperties
 import my.noveldokusha.coreui.components.editor.CodeEditorField
+import my.noveldokusha.coreui.theme.ExpressiveShapes
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
@@ -63,7 +63,7 @@ fun LuaEditorDialog(
                 .fillMaxSize()
                 .background(
                     color = MaterialTheme.colorScheme.surfaceContainerHigh,
-                    shape = RoundedCornerShape(12.dp)
+                    shape = ExpressiveShapes.dialog
                 )
                 .padding(4.dp)
         ) {
@@ -82,6 +82,7 @@ fun LuaEditorDialog(
                 val compactBtn = Modifier.height(24.dp)
                 val compactPadding = PaddingValues(horizontal = 4.dp)
                 FilledTonalButton(
+                    shape = ExpressiveShapes.button,
                     onClick = { clipboardManager.setText(AnnotatedString(normalizedCode)) },
                     modifier = compactBtn,
                     contentPadding = compactPadding,
@@ -89,6 +90,7 @@ fun LuaEditorDialog(
                     Text(stringResource(my.noveldokusha.strings.R.string.copy), fontSize = 9.sp)
                 }
                 FilledTonalButton(
+                    shape = ExpressiveShapes.button,
                     onClick = { clipboardManager.getText()?.text?.let(onCodeChange) },
                     modifier = compactBtn,
                     contentPadding = compactPadding,
@@ -96,6 +98,7 @@ fun LuaEditorDialog(
                     Text(stringResource(my.noveldokusha.strings.R.string.paste), fontSize = 9.sp)
                 }
                 FilledTonalButton(
+                    shape = ExpressiveShapes.button,
                     onClick = { onCodeChange("") },
                     modifier = compactBtn,
                     contentPadding = compactPadding,
@@ -103,6 +106,7 @@ fun LuaEditorDialog(
                     Text(stringResource(my.noveldokusha.strings.R.string.clear), fontSize = 9.sp)
                 }
                 FilledTonalButton(
+                    shape = ExpressiveShapes.button,
                     onClick = { wordWrap = !wordWrap },
                     modifier = compactBtn,
                     contentPadding = compactPadding,
@@ -112,7 +116,7 @@ fun LuaEditorDialog(
                 Box(
                     modifier = Modifier
                         .height(24.dp)
-                        .clip(RoundedCornerShape(8.dp))
+                        .clip(ExpressiveShapes.option)
                         .background(
                             color = MaterialTheme.colorScheme.tertiaryContainer,
                         )
@@ -127,7 +131,7 @@ fun LuaEditorDialog(
                     onClick = onDismiss,
                     modifier = compactBtn,
                     contentPadding = compactPadding,
-                    shape = RoundedCornerShape(8.dp),
+                    shape = ExpressiveShapes.button,
                     colors = ButtonDefaults.filledTonalButtonColors(
                         containerColor = MaterialTheme.colorScheme.secondaryContainer,
                         contentColor = MaterialTheme.colorScheme.onSecondaryContainer
@@ -139,7 +143,7 @@ fun LuaEditorDialog(
                     onClick = onSave,
                     modifier = compactBtn,
                     contentPadding = compactPadding,
-                    shape = RoundedCornerShape(8.dp),
+                    shape = ExpressiveShapes.button,
                     colors = ButtonDefaults.filledTonalButtonColors(
                         containerColor = MaterialTheme.colorScheme.secondaryContainer,
                         contentColor = MaterialTheme.colorScheme.onSecondaryContainer
@@ -164,7 +168,7 @@ fun LuaEditorDialog(
                     .weight(1f)
                     .background(
                         color = Color(0xFF1E1E1E),
-                        shape = RoundedCornerShape(8.dp)
+                        shape = ExpressiveShapes.option
                     )
                     .padding(4.dp)
             ) {

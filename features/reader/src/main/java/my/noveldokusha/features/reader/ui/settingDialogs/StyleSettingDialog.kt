@@ -96,6 +96,7 @@ import my.noveldokusha.features.reader.ui.ReaderBackgroundPreset
 import my.noveldokusha.features.reader.ui.ReaderBackgroundPresets
 import my.noveldokusha.features.reader.ui.ReaderScreenState
 import my.noveldokusha.reader.R
+import my.noveldokusha.coreui.theme.ExpressiveShapes
 
 @Composable
 internal fun StyleSettingDialog(
@@ -153,6 +154,7 @@ internal fun StyleSettingDialog(
         }
     }
     ElevatedCard(
+        shape = ExpressiveShapes.dialog,
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 12.dp)
     ) {
         val scrollState = rememberScrollState()
@@ -307,7 +309,7 @@ internal fun StyleSettingDialog(
                     .padding(horizontal = 12.dp, vertical = 4.dp)
                     .fillMaxWidth()
                     .clickable { showFontsDropdown = !showFontsDropdown },
-                shape = RoundedCornerShape(8.dp),
+                shape = ExpressiveShapes.option,
                 color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
             ) {
                 Row(
@@ -363,7 +365,7 @@ internal fun StyleSettingDialog(
                     }
                 ) {
                     Surface(
-                        shape = MenuDefaults.shape,
+                        shape = ExpressiveShapes.dropdown,
                         color = MenuDefaults.containerColor,
                     ) {
                         Column(
@@ -486,6 +488,7 @@ internal fun StyleSettingDialog(
         ) {
             item {
                 FilterChip(
+                    shape = ExpressiveShapes.pill,
                     selected = state.textJustify.value,
                     onClick = { onTextJustifyChange(!state.textJustify.value) },
                     label = { Text(stringResource(R.string.reader_text_justify), maxLines = 1) },
@@ -494,6 +497,7 @@ internal fun StyleSettingDialog(
             }
             item {
                 FilterChip(
+                    shape = ExpressiveShapes.pill,
                     selected = state.textHyphenation.value,
                     onClick = { onTextHyphenationChange(!state.textHyphenation.value) },
                     label = { Text(stringResource(R.string.reader_text_hyphenation), maxLines = 1) },
@@ -519,6 +523,7 @@ internal fun StyleSettingDialog(
         ) {
             item {
                 FilterChip(
+                    shape = ExpressiveShapes.pill,
                     selected = state.paragraphFirstLetterBold.value,
                     onClick = { onParagraphFirstLetterBoldChange(!state.paragraphFirstLetterBold.value) },
                     label = { Text(stringResource(R.string.reader_paragraph_first_letter_bold), maxLines = 1) },
@@ -527,6 +532,7 @@ internal fun StyleSettingDialog(
             }
             item {
                 FilterChip(
+                    shape = ExpressiveShapes.pill,
                     selected = state.paragraphIndent.value,
                     onClick = { onParagraphIndentChange(!state.paragraphIndent.value) },
                     label = { Text(stringResource(R.string.reader_paragraph_indent), maxLines = 1) },
@@ -535,6 +541,7 @@ internal fun StyleSettingDialog(
             }
             item {
                 FilterChip(
+                    shape = ExpressiveShapes.pill,
                     selected = state.sentenceSplitting.value,
                     onClick = { onSentenceSplittingChange(!state.sentenceSplitting.value) },
                     label = { Text(stringResource(R.string.reader_sentence_splitting), maxLines = 1) },
@@ -567,6 +574,7 @@ internal fun StyleSettingDialog(
         ) {
             item {
                 FilterChip(
+                    shape = ExpressiveShapes.pill,
                     selected = state.textBold.value,
                     onClick = { onTextBoldChange(!state.textBold.value) },
                     label = { Text(stringResource(R.string.reader_text_bold), maxLines = 1) },
@@ -575,6 +583,7 @@ internal fun StyleSettingDialog(
             }
             item {
                 FilterChip(
+                    shape = ExpressiveShapes.pill,
                     selected = state.textItalic.value,
                     onClick = { onTextItalicChange(!state.textItalic.value) },
                     label = { Text(stringResource(R.string.reader_text_italic), maxLines = 1) },
@@ -583,6 +592,7 @@ internal fun StyleSettingDialog(
             }
             item {
                 FilterChip(
+                    shape = ExpressiveShapes.pill,
                     selected = state.textUnderline.value,
                     onClick = { onTextUnderlineChange(!state.textUnderline.value) },
                     label = { Text(stringResource(R.string.reader_text_underline), maxLines = 1) },
@@ -591,6 +601,7 @@ internal fun StyleSettingDialog(
             }
             item {
                 FilterChip(
+                    shape = ExpressiveShapes.pill,
                     selected = state.textShadow.value,
                     onClick = { onTextShadowChange(!state.textShadow.value) },
                     label = { Text(stringResource(R.string.reader_text_shadow), maxLines = 1) },
@@ -599,6 +610,7 @@ internal fun StyleSettingDialog(
             }
             item {
                 FilterChip(
+                    shape = ExpressiveShapes.pill,
                     selected = state.textSmooth.value,
                     onClick = { onTextSmoothChange(!state.textSmooth.value) },
                     label = { Text(stringResource(R.string.reader_text_smooth), maxLines = 1) },
@@ -917,6 +929,7 @@ internal fun StyleSettingDialog(
         ) {
             items(DarkMode.entries) { mode ->
                 FilterChip(
+                    shape = ExpressiveShapes.pill,
                     selected = mode == state.currentDarkMode.value,
                     onClick = { onDarkModeChange(mode) },
                     label = { Text(text = stringResource(id = mode.titleRes)) },
@@ -987,7 +1000,7 @@ private fun CompactThemePreviewChip(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
-            .clip(RoundedCornerShape(6.dp))
+            .clip(ExpressiveShapes.compactContainer)
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = ripple(bounded = true),

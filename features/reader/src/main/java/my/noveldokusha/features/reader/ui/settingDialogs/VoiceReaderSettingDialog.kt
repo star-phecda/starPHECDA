@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -101,6 +100,7 @@ import my.noveldokusha.core.appPreferences.VoicePredefineState
 import my.noveldokusha.features.reader.features.TextToSpeechSettingData
 import my.noveldokusha.reader.R
 import my.noveldokusha.text_to_speech.VoiceData
+import my.noveldokusha.coreui.theme.ExpressiveShapes
 
 
 @Composable
@@ -130,6 +130,7 @@ internal fun VoiceReaderSettingDialog(
             }
         }
         ElevatedCard(
+            shape = ExpressiveShapes.dialog,
             elevation = CardDefaults.elevatedCardElevation(defaultElevation = 12.dp)
         ) {
             val scrollState = rememberScrollState()
@@ -172,6 +173,7 @@ internal fun VoiceReaderSettingDialog(
                     modifier = Modifier.horizontalScroll(rememberScrollState()),
                 ) {
                     AssistChip(
+                        shape = ExpressiveShapes.pill,
                         label = { Text(text = stringResource(id = R.string.start_here)) },
                         onClick = debouncedAction { state.playFirstVisibleItem() },
                         leadingIcon = { Icon(Icons.Filled.CenterFocusWeak, null, Modifier.size(14.dp)) },
@@ -182,6 +184,7 @@ internal fun VoiceReaderSettingDialog(
                         ),
                     )
                     AssistChip(
+                        shape = ExpressiveShapes.pill,
                         label = { Text(text = stringResource(id = R.string.focus)) },
                         onClick = debouncedAction { state.scrollToActiveItem() },
                         leadingIcon = { Icon(Icons.Filled.CenterFocusStrong, null, Modifier.size(14.dp)) },
@@ -192,6 +195,7 @@ internal fun VoiceReaderSettingDialog(
                         ),
                     )
                     AssistChip(
+                        shape = ExpressiveShapes.pill,
                         label = { Text(text = stringResource(id = R.string.voices)) },
                         onClick = { openVoicesDialog = !openVoicesDialog },
                         leadingIcon = { Icon(Icons.Filled.RecordVoiceOver, null, Modifier.size(14.dp)) },
@@ -204,6 +208,7 @@ internal fun VoiceReaderSettingDialog(
                     )
                     if (parallelEnabled?.value == true) {
                         AssistChip(
+                            shape = ExpressiveShapes.pill,
                             label = { Text(text = stringResource(R.string.original_voice)) },
                             onClick = { openOriginalVoiceDialog = !openOriginalVoiceDialog },
                             leadingIcon = { Icon(Icons.Filled.RecordVoiceOver, null, Modifier.size(14.dp)) },
@@ -216,6 +221,7 @@ internal fun VoiceReaderSettingDialog(
                         )
                     }
                     AssistChip(
+                        shape = ExpressiveShapes.pill,
                         label = { Text(text = stringResource(R.string.saved_voices)) },
                         onClick = {
                             dropdownCustomSavedVoicesExpanded.let {
@@ -392,7 +398,7 @@ private fun FloatingTtsToggleCard(
     Surface(
         onClick = onToggle,
         enabled = enabled,
-        shape = RoundedCornerShape(50),
+        shape = ExpressiveShapes.pill,
         color = if (checked) {
             MaterialTheme.colorScheme.primaryContainer
         } else {
@@ -498,8 +504,8 @@ private fun VoiceSelectorDialog(
         LazyColumn(
             state = listState,
             modifier = Modifier
-                .shadow(10.dp, MaterialTheme.shapes.large)
-                .background(MaterialTheme.colorScheme.surfaceContainerHigh, MaterialTheme.shapes.large)
+                .shadow(10.dp, ExpressiveShapes.container)
+                .background(MaterialTheme.colorScheme.surfaceContainerHigh, ExpressiveShapes.container)
         ) {
             stickyHeader {
                 Surface(color = MaterialTheme.colorScheme.surfaceContainerHigh) {
@@ -576,7 +582,7 @@ private fun VoiceSelectorDialog(
                             color = MaterialTheme.colorScheme.onPrimary,
                             modifier = Modifier
                                 .background(
-                                    MaterialTheme.colorScheme.primary, MaterialTheme.shapes.medium
+                                    MaterialTheme.colorScheme.primary, ExpressiveShapes.option
                                 )
                                 .padding(horizontal = 4.dp, vertical = 2.dp),
                             fontWeight = FontWeight.Bold,
@@ -590,7 +596,7 @@ private fun VoiceSelectorDialog(
                                 modifier = Modifier
                                     .background(
                                         MaterialTheme.colorScheme.primary,
-                                        MaterialTheme.shapes.medium
+                                        ExpressiveShapes.option
                                     )
                                     .padding(horizontal = 4.dp, vertical = 2.dp),
                                 fontSize = 10.sp,
@@ -617,6 +623,7 @@ private fun DropdownCustomSavedVoices(
 ) {
     var expandedAddNextEntry by rememberMutableStateOf(false)
     DropdownMenu(
+        shape = ExpressiveShapes.dropdown,
         expanded = expanded.value,
         onDismissRequest = { expanded.value = !expanded.value },
     ) {
@@ -650,6 +657,7 @@ private fun DropdownCustomSavedVoices(
                 )
             )
             if (deleteEntryExpand) AlertDialog(
+                shape = ExpressiveShapes.dialog,
                 onDismissRequest = { deleteEntryExpand = false },
                 title = { Text(text = stringResource(R.string.delete_voice)) },
                 text = {
@@ -660,7 +668,9 @@ private fun DropdownCustomSavedVoices(
                     )
                 },
                 confirmButton = {
-                    FilledTonalButton(onClick = {
+                    FilledTonalButton(
+                        shape = ExpressiveShapes.button,
+                        onClick = {
                         deleteEntryExpand = false
                         setCustomSavedVoices(
                             list.toMutableList().also { it.removeAt(index) }
@@ -670,7 +680,9 @@ private fun DropdownCustomSavedVoices(
                     }
                 },
                 dismissButton = {
-                    Button(onClick = { deleteEntryExpand = false }) {
+                    Button(
+                        shape = ExpressiveShapes.button,
+                        onClick = { deleteEntryExpand = false }) {
                         Text(text = stringResource(R.string.cancel))
                     }
                 },
@@ -686,6 +698,7 @@ private fun DropdownCustomSavedVoices(
             focusRequester.requestFocus()
         }
         AlertDialog(
+            shape = ExpressiveShapes.dialog,
             tonalElevation = 24.dp,
             onDismissRequest = { expandedAddNextEntry = false },
             title = { Text(text = stringResource(R.string.save_current_voice_parameters)) },
@@ -698,7 +711,9 @@ private fun DropdownCustomSavedVoices(
                 )
             },
             confirmButton = {
-                FilledTonalButton(onClick = onClick@{
+                FilledTonalButton(
+                    shape = ExpressiveShapes.button,
+                        onClick = onClick@{
                     val voice = currentVoice ?: return@onClick
                     val state = VoicePredefineState(
                         savedName = name,
@@ -713,7 +728,9 @@ private fun DropdownCustomSavedVoices(
                 }
             },
             dismissButton = {
-                Button(onClick = { expandedAddNextEntry = false }) {
+                Button(
+                    shape = ExpressiveShapes.button,
+                        onClick = { expandedAddNextEntry = false }) {
                     Text(text = stringResource(R.string.cancel))
                 }
             },

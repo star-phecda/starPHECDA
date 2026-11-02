@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
@@ -51,6 +52,9 @@ import my.noveldokusha.features.reader.manga.setting.MangaReadingMode
 import my.noveldokusha.reader.R
 import kotlinx.coroutines.launch
 import my.noveldokusha.coreui.theme.ExpressiveShapes
+import my.noveldokusha.coreui.theme.ExpressiveTokens
+import my.noveldokusha.coreui.theme.ExpressiveWindowSizeClass
+import my.noveldokusha.coreui.theme.LocalExpressiveWindowSizeClass
 
 /** Режимы цветового фильтра: значение -> label (tachiyomisy ColorFilterMode). */
 private val colorFilterModes = listOf(
@@ -89,6 +93,13 @@ internal fun MangaReaderSettingsSheet(
             shape = ExpressiveShapes.dialog,
             modifier = Modifier
                 .fillMaxWidth()
+                .widthIn(
+                    max = if (LocalExpressiveWindowSizeClass.current == ExpressiveWindowSizeClass.COMPACT) {
+                        560.dp
+                    } else {
+                        760.dp
+                    }
+                )
                 .heightIn(max = 900.dp)
                 .fillMaxHeight(0.75f)
                 // Буг2: контент не перекрывается нав-баром в edge-to-edge режиме.
@@ -100,7 +111,7 @@ internal fun MangaReaderSettingsSheet(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = 20.dp, end = 4.dp, top = 8.dp),
+                        .padding(start = ExpressiveTokens.space5, end = ExpressiveTokens.space1, top = ExpressiveTokens.space2),
                 ) {
                     Text(
                         text = stringResource(R.string.manga_reader_settings),
@@ -388,7 +399,7 @@ private fun SettingChipRow(
             modifier = modifier
                 .padding(horizontal = 16.dp, vertical = 4.dp)
                 .horizontalScroll(rememberScrollState()),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(ExpressiveTokens.space2),
         ) {
             chips.forEach { option ->
                 FilterChip(
@@ -402,8 +413,8 @@ private fun SettingChipRow(
     } else {
         FlowRow(
             modifier = modifier.padding(horizontal = 16.dp, vertical = 4.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(ExpressiveTokens.space2),
+            verticalArrangement = Arrangement.spacedBy(ExpressiveTokens.space2),
         ) {
             chips.forEach { option ->
                 FilterChip(

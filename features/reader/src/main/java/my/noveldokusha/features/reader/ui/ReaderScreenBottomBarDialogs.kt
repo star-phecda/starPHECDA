@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import kotlin.math.roundToInt
 import my.noveldokusha.coreui.theme.AppTheme
 import my.noveldokusha.coreui.theme.DarkMode
+import my.noveldokusha.coreui.theme.ExpressiveTokens
 import my.noveldokusha.features.reader.ui.settingDialogs.MoreSettingDialog
 import my.noveldokusha.features.reader.ui.settingDialogs.StyleSettingDialog
 import my.noveldokusha.features.reader.ui.settingDialogs.TranslatorSettingDialog
@@ -60,13 +61,13 @@ internal fun ReaderScreenBottomBarDialogs(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(12.dp),
+        verticalArrangement = Arrangement.spacedBy(ExpressiveTokens.space3),
         modifier = modifier.fillMaxWidth()
     ) {
         val maxDialogHeight = (LocalConfiguration.current.screenHeightDp * 0.6f).roundToInt().dp
         Box(
             Modifier
-                .padding(horizontal = 24.dp)
+                .padding(horizontal = ExpressiveTokens.space6)
                 .heightIn(max = maxDialogHeight)
         ) {
             AnimatedContent(targetState = settings.selectedSetting.value, label = "") { target ->

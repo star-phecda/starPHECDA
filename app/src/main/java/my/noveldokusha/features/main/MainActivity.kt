@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.selectable
@@ -60,10 +61,14 @@ import javax.inject.Inject
 import my.noveldokusha.coreui.BaseActivity
 import my.noveldokusha.coreui.components.ExpressiveNavigationBar
 import my.noveldokusha.coreui.components.ExpressiveNavigationItem
+import my.noveldokusha.coreui.components.ExpressiveNavigationRail
 import my.noveldokusha.tooling.application_workers.setup.PeriodicWorkersInitializer
 import my.noveldokusha.coreui.theme.AppTheme
 import my.noveldokusha.coreui.theme.DarkMode
 import my.noveldokusha.coreui.theme.Theme
+import my.noveldokusha.coreui.theme.ExpressiveWindowSizeClass
+import my.noveldokusha.coreui.theme.LocalExpressiveWindowSizeClass
+import my.noveldokusha.coreui.theme.ExpressiveTokens
 import my.noveldokusha.R
 import my.noveldokusha.catalogexplorer.CatalogExplorerScreen
 import my.noveldokusha.libraryexplorer.LibraryScreen
@@ -131,6 +136,8 @@ open class MainActivity : BaseActivity() {
             }
 
             Theme(themeProvider = themeProvider) {
+                val useNavigationRail =
+                    LocalExpressiveWindowSizeClass.current != ExpressiveWindowSizeClass.COMPACT
                 Box(Modifier.fillMaxSize()) {
                     // All screens live in composition always.
                     // Switching is instant — only alpha changes via graphicsLayer.
@@ -157,6 +164,7 @@ open class MainActivity : BaseActivity() {
                     Box(
                         Modifier
                             .fillMaxSize()
+                            .padding(start = if (useNavigationRail) 92.dp else 0.dp)
                             .background(MaterialTheme.colorScheme.surface)
                     ) {
                         Box(
@@ -221,22 +229,44 @@ open class MainActivity : BaseActivity() {
                         }
                     }
 
-                    ExpressiveNavigationBar(
-                        items = pages.map { page ->
-                            ExpressiveNavigationItem(
-                                label = stringResource(id = page.stringRes),
-                                icon = painterResource(id = page.iconRes)
-                            )
-                        },
-                        selectedIndex = activePageIndex,
-                        onItemSelected = { activePageIndex = it },
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .navigationBarsPadding()
-                            .padding(horizontal = 24.dp, vertical = 12.dp)
-                            .widthIn(max = 420.dp)
-                            .fillMaxWidth()
-                    )
+                    if (useNavigationRail) {
+                        ExpressiveNavigationRail(
+                            items = pages.map { page ->
+                                ExpressiveNavigationItem(
+                                    label = stringResource(id = page.stringRes),
+                                    icon = painterResource(id = page.iconRes)
+                                )
+                            },
+                            selectedIndex = activePageIndex,
+                            onItemSelected = { activePageIndex = it },
+                            modifier = Modifier
+                                .align(Alignment.CenterStart)
+                                .statusBarsPadding()
+                                .navigationBarsPadding()
+                                .padding(
+                                    start = ExpressiveTokens.space2,
+                                    top = ExpressiveTokens.space5,
+                                    bottom = ExpressiveTokens.space5,
+                                )
+                        )
+                    } else {
+                        ExpressiveNavigationBar(
+                            items = pages.map { page ->
+                                ExpressiveNavigationItem(
+                                    label = stringResource(id = page.stringRes),
+                                    icon = painterResource(id = page.iconRes)
+                                )
+                            },
+                            selectedIndex = activePageIndex,
+                            onItemSelected = { activePageIndex = it },
+                            modifier = Modifier
+                                .align(Alignment.BottomCenter)
+                                .navigationBarsPadding()
+                                .padding(horizontal = 24.dp, vertical = 12.dp)
+                                .widthIn(max = 420.dp)
+                                .fillMaxWidth()
+                        )
+                    }
                 }
             }
         }

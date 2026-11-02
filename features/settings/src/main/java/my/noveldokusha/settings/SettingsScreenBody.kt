@@ -145,7 +145,6 @@ internal fun SettingsScreenBody(
                 onDarkModeChange = onDarkModeSelected,
             )
         }
-        HorizontalDivider()
         SettingsGroup {
             SettingsData(
                 databaseSize = state.databaseSize.value,
@@ -165,7 +164,6 @@ internal fun SettingsScreenBody(
                 onRequestCleanOfflineVideo = onRequestCleanOfflineVideo,
             )
         }
-        HorizontalDivider()
         val context = LocalContext.current
         SettingsGroup {
             SettingsNetwork(
@@ -179,7 +177,6 @@ internal fun SettingsScreenBody(
                 onDownloadDelayChange = onDownloadDelayChange
             )
         }
-        HorizontalDivider()
         SettingsGroup {
             SettingsBackup(
                 onBackupData = onBackupData,
@@ -241,24 +238,20 @@ internal fun SettingsScreenBody(
                 onNavigateToRegexCleanup = onNavigateToRegexCleanup
             )
         }
-        HorizontalDivider()
         SettingsGroup {
             LibraryAutoUpdate(state = state.libraryAutoUpdate)
         }
-        HorizontalDivider()
         SettingsGroup {
             AppUpdates(
                 state = state.updateAppSetting,
                 onCheckForUpdatesManual = onCheckForUpdatesManual
             )
         }
-        HorizontalDivider()
         SettingsGroup {
             SettingsSupport(
                 onExportLogs = onExportLogs,
             )
         }
-        HorizontalDivider()
         SettingsGroup {
             SettingsAbout(
                 appVersion = state.appVersion,

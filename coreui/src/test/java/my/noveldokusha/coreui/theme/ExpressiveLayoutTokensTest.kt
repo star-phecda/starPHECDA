@@ -52,7 +52,7 @@ class ExpressiveLayoutTokensTest {
             ),
         )
         assertEquals(
-            5,
+            4,
             adaptiveGridColumnCount(
                 availableWidth = 640.dp,
                 preferredColumns = 3,
@@ -94,6 +94,28 @@ class ExpressiveLayoutTokensTest {
                 preferredColumns = 2,
                 minCellWidth = 128.dp,
                 maxColumns = 4,
+            ),
+        )
+    }
+
+    @Test
+    fun gridColumnCalculationIncludesInterItemSpacing() {
+        assertEquals(
+            4,
+            adaptiveGridColumnCount(
+                availableWidth = 640.dp,
+                preferredColumns = 2,
+                minCellWidth = 128.dp,
+                cellSpacing = 12.dp,
+            ),
+        )
+        assertEquals(
+            5,
+            adaptiveGridColumnCount(
+                availableWidth = 700.dp,
+                preferredColumns = 2,
+                minCellWidth = 128.dp,
+                cellSpacing = 12.dp,
             ),
         )
     }

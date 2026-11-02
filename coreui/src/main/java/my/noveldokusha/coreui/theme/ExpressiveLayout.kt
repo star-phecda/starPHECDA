@@ -52,12 +52,17 @@ fun adaptiveGridColumnCount(
     availableWidth: Dp,
     preferredColumns: Int,
     minCellWidth: Dp = ExpressiveTokens.minimumBookGridCellWidth,
+    cellSpacing: Dp = ExpressiveTokens.space3,
     maxColumns: Int = ExpressiveTokens.maximumBookGridColumns,
 ): Int {
     val columnLimit = maxColumns.coerceIn(2, ExpressiveTokens.maximumBookGridColumns)
     val preferred = preferredColumns.coerceIn(2, columnLimit)
     val safeMinimumCellWidth = minCellWidth.takeIf { it > 0.dp } ?: 1.dp
-    val widthBasedColumns = floor(availableWidth.value / safeMinimumCellWidth.value)
+    val safeCellSpacing = cellSpacing.value.coerceAtLeast(0f)
+    val widthBasedColumns = floor(
+        (availableWidth.value + safeCellSpacing) /
+            (safeMinimumCellWidth.value + safeCellSpacing)
+    )
         .toInt()
         .coerceIn(2, columnLimit)
     return maxOf(preferred, widthBasedColumns)

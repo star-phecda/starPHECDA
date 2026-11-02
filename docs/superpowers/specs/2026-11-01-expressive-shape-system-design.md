@@ -9,7 +9,7 @@ Give starPHECDA one coherent Material 3 Expressive shape language. The geometry 
 - Replace overlapping shape scales with one canonical token scale.
 - Assign geometry by component role: media, cards, grouped containers, pills, buttons, sheets, dialogs, and text fields.
 - Make Material 3 components inherit the shared scale wherever their defaults are appropriate.
-- Remove local corner literals from the high-impact components included in this milestone.
+- Remove local corner literals from high-impact components across primary and secondary app destinations, including novel details, search results, reader modes and overlays, migration tools, extension tools and web utilities.
 - Preserve existing layout, behavior, color roles, typography, reader settings, and navigation motion.
 - Add tests that lock the token values and component-to-token mapping.
 
@@ -58,7 +58,7 @@ Map MaterialTheme.shapes to extraSmall=4dp, small=8dp, medium=12dp, large=20dp, 
 
 - `coreui/theme/ExpressiveTokens.kt` owns the canonical dp dimensions alongside existing navigation and motion tokens.
 - `coreui/theme/Shape.kt` maps Material shape roles and exposes named component shapes.
-- Shared controls and the existing library, chapter, source-filter and settings surfaces consume those shapes.
+- Shared controls and every user-facing feature flow consume those shapes: library/history, Finder and source/database search, novel/chapter details, text/manga/video reader controls, extension/settings dialogs, migration tools and WebView controls.
 - `docs/EXPRESSIVE_DESIGN_SYSTEM.md` records the final system.
 - Unit tests verify the token values and key shape mappings.
 

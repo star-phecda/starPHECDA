@@ -51,11 +51,13 @@ The corner scale is 4 / 8 / 12 / 20 / 28 / 36dp. Material shape roles map to 4 /
 
 ## Shape coverage
 
-The shape system is applied across all four primary destinations, not only the Library.
+The shape system covers primary navigation destinations and the secondary feature flows reached from them.
 
-- **Library:** book cards, category filters, category dialogs, action sheets, and library controls.
-- **Finder:** capsule tab selection and content filters, compact catalog icons, capsule content-type badges, and rounded configuration dialogs.
-- **History:** individual rounded history surfaces, rounded book covers, capsule reading-progress indicators, and shaped overflow menus.
-- **Settings:** rounded group containers for each major settings section, capsule selection chips, shaped text fields, buttons, menus, and dialogs.
+- **Library and History:** book covers, rounded history entries, category filters, book actions, progress indicators, menus, and dialogs.
+- **Finder and discovery:** capsule tabs and filters, catalog/source rows, global search results, database search modes, result filters, and source filter sheets.
+- **Novel and chapter details:** the chapter/novel information header, genre and category chips, chapter rows, selection bars, export/category dialogs, database novel information cards, and related-book actions.
+- **Reader:** the reading screen chrome, chapter progress surfaces, reader-style and translation settings, voice controls, manga-reader settings, TTS mini-player, manual-highlight controls, and video settings panels. The text and manga image canvases remain content surfaces rather than being wrapped in decorative cards.
+- **Settings and extensions:** grouped settings sections, theme/language choices, text fields, buttons, menus, extension cards, repository/editor dialogs, and regex-cleanup tools.
+- **Migration and web tools:** migration tabs, source/book pickers, result cards, options/history dialogs, and the WebView URL field.
 
-Shared list rows, option controls, section cards, and outlined text fields consume the named shape roles so new screens inherit the same geometry instead of introducing local corner values.
+Shared buttons, list rows, book-image components, options, filters, inputs, sheets, and dialogs consume named roles from ExpressiveShapes. New screens should use these roles instead of adding local corner literals.

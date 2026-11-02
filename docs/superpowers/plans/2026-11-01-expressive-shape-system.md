@@ -79,7 +79,23 @@
 - [x] **Step 2: Run coreui tests and the app compile task** to verify all feature modules compile against the shared API.
 - [x] **Step 3: Commit the surface migration.**
 
-### Task 4: Update the system documentation and verify the final build
+### Task 4: Apply the shape system across secondary feature screens
+
+**Files:**
+- Modify: `features/catalogExplorer/` and `features/globalSourceSearch/`
+- Modify: `features/databaseExplorer/` and `features/chaptersList/`
+- Modify: `features/reader/` text, manga, video, TTS and settings surfaces
+- Modify: `features/extensions/` and `features/webview/`
+- Modify: `features/historyExplorer/` and `tooling/novel_migration/`
+- Modify: `features/settings/` dialogs and grouped sections
+
+- [x] **Step 1: Migrate Finder, search, source and database result controls** to pill, card, input and sheet roles.
+- [x] **Step 2: Migrate novel/chapter information, chapter rows, badges and related actions** to the shared roles.
+- [x] **Step 3: Migrate reader chrome, translation/voice settings, manga settings, TTS overlays, highlight controls and video settings panels.**
+- [x] **Step 4: Migrate extension, regex-cleanup, migration and WebView surfaces.**
+- [ ] **Step 5: Verify the complete feature graph with unit tests, app debug assembly and an uploaded APK.**
+
+### Task 5: Update the system documentation and verify the final build
 
 **Files:**
 - Modify: `docs/EXPRESSIVE_DESIGN_SYSTEM.md`
@@ -93,8 +109,7 @@
 
 ## Verification record
 
-- Implementation commit: `f128401094b0b3a96ae8212705a9613f061a466b`.
-- Push workflow run: [41351243994](https://github.com/star-phecda/starPHECDA/actions/runs/41351243994), successful. The core UI unit-test task and app debug assembly both passed.
-- Pull-request workflow run: [41351248009](https://github.com/star-phecda/starPHECDA/actions/runs/41351248009), successful.
-- Uploaded artifact: `starPHECDA-debug-apk`, artifact ID `13100893162`, containing `NoveLA_v1.6.2-debug.apk`.
-- The downloaded APK archive contains a 40,960,620-byte APK. The artifact expires on 2026-11-15.
+- The initial shape-token foundation passed focused core UI tests and a debug build before the secondary-screen rollout.
+- The first Finder/History/Settings correction exposed unresolved shape references in CatalogList.kt. The failed runs were [41394068607](https://github.com/star-phecda/starPHECDA/actions/runs/41394068607) and [41394075427](https://github.com/star-phecda/starPHECDA/actions/runs/41394075427).
+- The CatalogList compile references were corrected in commit `e95c692514bda2507ab444e3cd058e39b4b12204`; both workflows passed that targeted correction.
+- The expanded all-feature migration is on the same branch. Its exact final-commit CI result and APK upload remain the release gate and must be recorded only after they succeed.

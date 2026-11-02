@@ -6,6 +6,7 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -58,6 +59,8 @@ import my.noveldokusha.navigation.NavigationRouteViewModel
 import my.noveldokusha.strings.R as StringsR
 import java.util.concurrent.TimeUnit
 import my.noveldokusha.coreui.theme.ExpressiveShapes
+import my.noveldokusha.coreui.theme.ExpressiveContentFrame
+import my.noveldokusha.coreui.theme.ExpressiveTokens
 import androidx.compose.material3.Surface
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -112,11 +115,12 @@ fun HistoryScreen(
             )
         },
         content = { innerPadding ->
-            when (val state = uiState) {
+            ExpressiveContentFrame(
+                modifier = Modifier.fillMaxSize().padding(innerPadding)
+            ) {
+                when (val state = uiState) {
                 is HistoryUiState.Loading -> Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding),
+                    modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
@@ -127,9 +131,7 @@ fun HistoryScreen(
                 }
 
                 is HistoryUiState.Empty -> Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding),
+                    modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -149,10 +151,12 @@ fun HistoryScreen(
                 }
 
                 is HistoryUiState.Content -> LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.spacedBy(ExpressiveTokens.space3),
+                    contentPadding = PaddingValues(
+                        top = ExpressiveTokens.space2,
+                        bottom = 120.dp,
+                    ),
                 ) {
                     items(state.items, key = { it.bookUrl }) { item ->
                         HistoryItemCard(
@@ -175,6 +179,7 @@ fun HistoryScreen(
                         )
                     }
                 }
+                }
             }
         }
     )
@@ -190,7 +195,7 @@ private fun HistoryItemCard(
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 12.dp, vertical = 3.dp)
+            .padding(vertical = ExpressiveTokens.space1)
             .combinedClickable(onClick = onClick, onLongClick = onLongClick),
         shape = ExpressiveShapes.card,
         color = MaterialTheme.colorScheme.surfaceContainerLow,
@@ -203,7 +208,7 @@ private fun HistoryItemCard(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 14.dp, vertical = 12.dp),
+                .padding(horizontal = ExpressiveTokens.space5, vertical = ExpressiveTokens.space4),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             val coverImageModel = rememberResolvedBookImagePath(item.bookUrl, item.bookCoverUrl)
@@ -231,7 +236,7 @@ private fun HistoryItemCard(
                 contentScale = ContentScale.Crop,
             )
 
-            Spacer(Modifier.width(14.dp))
+            Spacer(Modifier.width(ExpressiveTokens.space3))
 
             Column(modifier = Modifier.weight(1f)) {
                 Text(
@@ -242,7 +247,7 @@ private fun HistoryItemCard(
                     overflow = TextOverflow.Ellipsis,
                 )
 
-                Spacer(Modifier.height(7.dp))
+                Spacer(Modifier.height(ExpressiveTokens.space2))
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -261,7 +266,7 @@ private fun HistoryItemCard(
                 }
 
                 if (!item.lastReadChapterTitle.isNullOrBlank()) {
-                    Spacer(Modifier.height(8.dp))
+                    Spacer(Modifier.height(ExpressiveTokens.space2))
                     Text(
                         text = item.lastReadChapterTitle,
                         style = MaterialTheme.typography.bodySmall,
@@ -275,7 +280,7 @@ private fun HistoryItemCard(
                     val safeReadChapters = item.readChapters.coerceIn(0, item.totalChapters)
                     val progress = safeReadChapters.toFloat() / item.totalChapters.toFloat()
 
-                    Spacer(Modifier.height(10.dp))
+                    Spacer(Modifier.height(ExpressiveTokens.space3))
                     LinearProgressIndicator(
                         progress = { progress },
                         modifier = Modifier
@@ -287,7 +292,7 @@ private fun HistoryItemCard(
                         gapSize = 0.dp,
                         drawStopIndicator = {},
                     )
-                    Spacer(Modifier.height(5.dp))
+                    Spacer(Modifier.height(ExpressiveTokens.space1))
                     Text(
                         text = safeReadChapters.toString() + "/" + item.totalChapters +
                             " · " + (progress * 100).toInt() + "%",
@@ -312,7 +317,7 @@ private fun HistoryMetadataPill(
     ) {
         Text(
             text = text,
-            modifier = Modifier.padding(horizontal = 9.dp, vertical = 5.dp),
+            modifier = Modifier.padding(horizontal = ExpressiveTokens.space2, vertical = ExpressiveTokens.space1),
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             maxLines = 1,

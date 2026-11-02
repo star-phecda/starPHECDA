@@ -2,8 +2,9 @@ package my.noveldokusha.coreui.components
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Indication
 import androidx.compose.foundation.LocalIndication
@@ -87,7 +88,10 @@ fun MyButton(
     val animatedCorner by animateDpAsState(
         targetValue = if (selected) ExpressiveTokens.cornerExtraLargeIncreased
         else ExpressiveTokens.cornerLarge,
-        animationSpec = tween(ExpressiveTokens.motionStandardMillis),
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessMediumLow
+        ),
         label = "my-button-shape",
     )
     val resolvedShape = shape ?: RoundedCornerShape(animatedCorner)

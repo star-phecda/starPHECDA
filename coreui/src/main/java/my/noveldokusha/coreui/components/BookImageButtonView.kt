@@ -1,11 +1,16 @@
 package my.noveldokusha.coreui.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Indication
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -29,8 +34,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.StrokeJoin
-import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.Role
@@ -46,6 +52,7 @@ import my.noveldokusha.core.appPreferences.SourceStripPosition
 import my.noveldokusha.coreui.AppTestTags
 import my.noveldokusha.coreui.R
 import my.noveldokusha.coreui.theme.ExpressiveShapes
+import my.noveldokusha.coreui.theme.ExpressiveTokens
 import my.noveldokusha.coreui.theme.ImageBorderShape
 import my.noveldokusha.coreui.theme.InternalTheme
 import my.noveldokusha.coreui.theme.PreviewThemes
@@ -72,6 +79,15 @@ fun BookImageButtonView(
 ) {
     val rememberedInteractionSource = remember { MutableInteractionSource() }
     val effectiveInteractionSource = interactionSource ?: rememberedInteractionSource
+    val isPressed by effectiveInteractionSource.collectIsPressedAsState()
+    val coverScale by animateFloatAsState(
+        targetValue = if (isPressed) ExpressiveTokens.bookCoverPressedScale else 1f,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessMedium
+        ),
+        label = "book-cover-press-scale"
+    )
     val stripUnreadCount = sourceStripUnreadCount
     val stripSourceName = sourceStripSourceName
     val showStrip = stripUnreadCount != null || stripSourceName != null
@@ -83,7 +99,16 @@ fun BookImageButtonView(
         Box(
             Modifier
                 .padding(2.dp)
+                .graphicsLayer {
+                    scaleX = coverScale
+                    scaleY = coverScale
+                }
                 .clip(ImageBorderShape)
+                .border(
+                    width = 1.dp,
+                    color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.42f),
+                    shape = ImageBorderShape
+                )
                 .fillMaxWidth()
                 .aspectRatio(1 / 1.45f)
         ) {
@@ -118,44 +143,33 @@ fun BookImageButtonView(
                 Box(modifier = Modifier.align(Alignment.TopEnd)) { it() }
             }
 
-            // Gradient title overlay — always show unless InfoPanel
+            // One high-contrast title overlay avoids the heavy outlined double-text treatment.
             if (!isInfoPanel) {
                 Text(
                     text = title,
                     textAlign = TextAlign.Center,
+                    maxLines = 3,
+                    overflow = TextOverflow.Ellipsis,
                     modifier = Modifier
                         .fillMaxWidth()
                         .align(Alignment.BottomCenter)
                         .background(
                             Brush.verticalGradient(
-                                0f to MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.0f),
-                                0.4f to MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.2f),
-                                1f to MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.4f),
+                                0f to Color.Transparent,
+                                0.42f to Color.Black.copy(alpha = 0.12f),
+                                1f to Color.Black.copy(alpha = 0.72f),
                             )
                         )
-                        .padding(top = 30.dp, bottom = titleBottomPadding)
+                        .padding(top = 34.dp, bottom = titleBottomPadding)
                         .padding(horizontal = 8.dp),
-                    style = MaterialTheme.typography.bodySmall.copy(
-                        fontWeight = FontWeight.ExtraBold,
-                        color = MaterialTheme.colorScheme.inverseSurface,
-                        drawStyle = Stroke(
-                            miter = 4f,
-                            width = 4f,
-                            join = StrokeJoin.Miter
+                    style = MaterialTheme.typography.labelLarge.copy(
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White,
+                        shadow = Shadow(
+                            color = Color.Black.copy(alpha = 0.55f),
+                            offset = Offset(0f, 2f),
+                            blurRadius = 4f
                         )
-                    )
-                )
-                Text(
-                    text = title,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.BottomCenter)
-                        .padding(top = 30.dp, bottom = titleBottomPadding)
-                        .padding(horizontal = 8.dp),
-                    style = MaterialTheme.typography.bodySmall.copy(
-                        fontWeight = FontWeight.ExtraBold,
-                        color = MaterialTheme.colorScheme.inverseOnSurface,
                     )
                 )
             }
@@ -169,6 +183,8 @@ fun BookImageButtonView(
                     modifier = Modifier
                         .fillMaxWidth()
                         .align(Alignment.BottomCenter)
+                        .padding(horizontal = 8.dp, vertical = 8.dp)
+                        .clip(ExpressiveShapes.pill)
                 )
             }
         }
@@ -182,7 +198,7 @@ fun BookImageButtonView(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 2.dp)
-                    .clip(ExpressiveShapes.compactContainer)
+                    .clip(ExpressiveShapes.pill)
             )
         }
 
@@ -285,7 +301,7 @@ private fun SourceStrip(
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
-            .height(20.dp)
+            .height(22.dp)
             .background(stripBackground)
             .padding(horizontal = 6.dp)
     ) {

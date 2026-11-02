@@ -1,16 +1,21 @@
 package my.noveldokusha.coreui.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandHorizontally
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkHorizontally
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -26,12 +31,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import my.noveldokusha.coreui.theme.ExpressiveShapes
 import my.noveldokusha.coreui.theme.ExpressiveTokens
 
@@ -41,11 +48,15 @@ data class ExpressiveNavigationItem(
     val selectedIcon: Painter? = null
 )
 
+/** Width share for one item in the floating navigation row. */
+internal fun expressiveNavigationItemWeight(selected: Boolean, compactMode: Boolean): Float =
+    if (selected && !compactMode) ExpressiveTokens.navigationSelectedItemWeight else 1f
+
 /**
- * A floating, labelled navigation pill with a tonal selection indicator and spring motion.
+ * Floating navigation with a spring-expanded active destination.
  *
- * Keep this component in coreui so the app shell and future feature shells share the same
- * selection geometry, colour roles and interaction behaviour.
+ * Inactive destinations stay icon-first; the selected destination grows to make room
+ * for its label. Compact mode keeps every destination equally sized and icon-only.
  */
 @Composable
 fun ExpressiveNavigationBar(
@@ -62,35 +73,32 @@ fun ExpressiveNavigationBar(
     Surface(
         modifier = modifier,
         shape = ExpressiveShapes.pill,
-        color = colors.surfaceContainerHigh.copy(alpha = 0.96f),
-        shadowElevation = 6.dp,
+        color = colors.surfaceContainerLow.copy(alpha = 0.98f),
+        contentColor = colors.onSurface,
+        border = BorderStroke(1.dp, colors.outlineVariant.copy(alpha = 0.55f)),
+        shadowElevation = 8.dp,
         tonalElevation = 3.dp
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(
-                    if (compactMode) {
-                        ExpressiveTokens.compactNavigationHeight
-                    } else {
-                        ExpressiveTokens.navigationHeight
-                    }
+                    if (compactMode) ExpressiveTokens.compactNavigationHeight
+                    else ExpressiveTokens.navigationHeight
                 )
-                .padding(horizontal = 8.dp, vertical = 6.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly,
+                .padding(horizontal = 6.dp, vertical = 4.dp),
+            horizontalArrangement = Arrangement.spacedBy(2.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             items.forEachIndexed { index, item ->
                 val selected = selectedIndex == index
-                val iconColor by animateColorAsState(
-                    targetValue = if (selected) colors.primary else colors.onSurfaceVariant,
-                    animationSpec = tween(ExpressiveTokens.motionQuickMillis),
-                    label = "navigation-icon-color"
-                )
-                val labelColor by animateColorAsState(
-                    targetValue = if (selected) colors.primary else colors.onSurfaceVariant,
-                    animationSpec = tween(ExpressiveTokens.motionQuickMillis),
-                    label = "navigation-label-color"
+                val itemWeight by animateFloatAsState(
+                    targetValue = expressiveNavigationItemWeight(selected, compactMode),
+                    animationSpec = spring(
+                        dampingRatio = Spring.DampingRatioMediumBouncy,
+                        stiffness = Spring.StiffnessMediumLow
+                    ),
+                    label = "navigation-item-weight"
                 )
                 val iconScale by animateFloatAsState(
                     targetValue = if (selected) 1.08f else 1f,
@@ -100,20 +108,23 @@ fun ExpressiveNavigationBar(
                     ),
                     label = "navigation-icon-scale"
                 )
-                val indicatorScale by animateFloatAsState(
-                    targetValue = if (selected) 1f else 0f,
-                    animationSpec = spring(
-                        dampingRatio = Spring.DampingRatioMediumBouncy,
-                        stiffness = Spring.StiffnessLow
-                    ),
-                    label = "navigation-indicator-scale"
+                val itemColor by animateColorAsState(
+                    targetValue = if (selected) colors.secondaryContainer else Color.Transparent,
+                    animationSpec = tween(ExpressiveTokens.motionStandardMillis),
+                    label = "navigation-item-container"
                 )
-                val interactionSource = remember { MutableInteractionSource() }
+                val contentColor by animateColorAsState(
+                    targetValue = if (selected) colors.onSecondaryContainer else colors.onSurfaceVariant,
+                    animationSpec = tween(ExpressiveTokens.motionQuickMillis),
+                    label = "navigation-content-color"
+                )
+                val interactionSource = remember(item.label) { MutableInteractionSource() }
 
                 Column(
                     modifier = Modifier
-                        .weight(1f)
+                        .weight(itemWeight)
                         .fillMaxHeight()
+                        .clip(ExpressiveShapes.pill)
                         .selectable(
                             selected = selected,
                             onClick = { onItemSelected(index) },
@@ -124,59 +135,64 @@ fun ExpressiveNavigationBar(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
-                    Box(
+                    Surface(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(36.dp),
-                        contentAlignment = Alignment.Center
+                            .height(ExpressiveTokens.navigationItemHeight),
+                        shape = ExpressiveShapes.pill,
+                        color = itemColor
                     ) {
-                        Surface(
+                        Row(
                             modifier = Modifier
-                                .size(
-                                    ExpressiveTokens.navigationIndicatorWidth,
-                                    ExpressiveTokens.navigationIndicatorHeight
-                                )
-                                .graphicsLayer {
-                                    alpha = indicatorScale
-                                    scaleX = indicatorScale
-                                    scaleY = indicatorScale
-                                },
-                            shape = ExpressiveShapes.pill,
-                            color = colors.secondaryContainer
-                        ) {}
-
-                        Box(
-                            modifier = Modifier
-                                .size(
-                                    ExpressiveTokens.navigationIconContainerWidth,
-                                    ExpressiveTokens.navigationIconContainerHeight
-                                )
-                                .graphicsLayer {
-                                    scaleX = iconScale
-                                    scaleY = iconScale
-                                },
-                            contentAlignment = Alignment.Center
+                                .fillMaxWidth()
+                                .padding(horizontal = if (selected && !compactMode) 10.dp else 0.dp),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Icon(
-                                painter = item.selectedIcon ?: item.icon,
-                                contentDescription = item.label,
-                                tint = iconColor,
-                                modifier = Modifier.size(ExpressiveTokens.navigationIconSize)
-                            )
-                        }
-                    }
+                            Box(
+                                modifier = Modifier.size(28.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    painter = if (selected) item.selectedIcon ?: item.icon else item.icon,
+                                    contentDescription = if (compactMode) item.label else null,
+                                    tint = contentColor,
+                                    modifier = Modifier
+                                        .size(24.dp)
+                                        .graphicsLayer {
+                                            scaleX = iconScale
+                                            scaleY = iconScale
+                                        }
+                                )
+                            }
 
-                    if (!compactMode) {
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            text = item.label,
-                            maxLines = 1,
-                            color = labelColor,
-                            style = MaterialTheme.typography.labelMedium.copy(
-                                fontSize = 12.sp,
-                                fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal
-                            )
-                        )
+                            AnimatedVisibility(
+                                visible = selected && !compactMode,
+                                enter = fadeIn(tween(120)) + expandHorizontally(
+                                    animationSpec = spring(
+                                        dampingRatio = Spring.DampingRatioMediumBouncy,
+                                        stiffness = Spring.StiffnessMediumLow
+                                    ),
+                                    expandFrom = Alignment.Start
+                                ),
+                                exit = fadeOut(tween(90)) + shrinkHorizontally(
+                                    animationSpec = tween(120),
+                                    shrinkTowards = Alignment.Start
+                                )
+                            ) {
+                                Text(
+                                    text = item.label,
+                                    maxLines = 1,
+                                    softWrap = false,
+                                    overflow = TextOverflow.Ellipsis,
+                                    color = contentColor,
+                                    modifier = Modifier.padding(start = 7.dp),
+                                    style = MaterialTheme.typography.labelMedium.copy(
+                                        fontWeight = FontWeight.SemiBold
+                                    )
+                                )
+                            }
+                        }
                     }
                 }
             }

@@ -19,6 +19,10 @@ class ExpressiveShapeTokensTest {
         assertEquals(28.dp, ExpressiveTokens.cornerExtraLarge)
         assertEquals(36.dp, ExpressiveTokens.cornerExtraLargeIncreased)
         assertEquals(36.dp, ExpressiveTokens.pillCorner)
+        assertEquals(68.dp, ExpressiveTokens.navigationHeight)
+        assertEquals(56.dp, ExpressiveTokens.compactNavigationHeight)
+        assertEquals(48.dp, ExpressiveTokens.navigationItemHeight)
+        assertEquals(0.985f, ExpressiveTokens.bookCoverPressedScale, 0f)
     }
 
     @Test

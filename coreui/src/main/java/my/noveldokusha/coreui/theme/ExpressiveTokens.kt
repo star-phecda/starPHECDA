@@ -17,13 +17,12 @@ object ExpressiveTokens {
     // Kept as a compatibility alias. Capsule components use CircleShape instead.
     val pillCorner = cornerExtraLargeIncreased
 
-    val navigationHeight = 76.dp
-    val compactNavigationHeight = 64.dp
-    val navigationIndicatorWidth = 64.dp
-    val navigationIndicatorHeight = 32.dp
-    val navigationIconContainerWidth = 48.dp
-    val navigationIconContainerHeight = 28.dp
-    val navigationIconSize = 24.dp
+    val navigationHeight = 68.dp
+    val compactNavigationHeight = 56.dp
+    val navigationItemHeight = 48.dp
+
+    const val navigationSelectedItemWeight = 1.85f
+    const val bookCoverPressedScale = 0.985f
 
     const val motionQuickMillis = 150
     const val motionStandardMillis = 250

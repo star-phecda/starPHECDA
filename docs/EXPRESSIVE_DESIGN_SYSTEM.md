@@ -61,3 +61,14 @@ The shape system covers primary navigation destinations and the secondary featur
 - **Migration and web tools:** migration tabs, source/book pickers, result cards, options/history dialogs, and the WebView URL field.
 
 Shared buttons, list rows, book-image components, options, filters, inputs, sheets, and dialogs consume named roles from ExpressiveShapes. New screens should use these roles instead of adding local corner literals.
+
+
+## Expressive refinement
+
+The app shell navigation uses a spring-expanded active capsule: the selected destination receives a wider share and reveals its label, while inactive destinations remain compact icon targets. Compact mode keeps all destinations equal and icon-only. This preserves a floating navigation silhouette without squeezing the feature labels.
+
+Book covers behave as media surfaces rather than static thumbnails. They have a restrained outline, a high-contrast gradient-backed title, a subtle pressed scale, and inset capsule metadata when the source strip overlays the cover. The existing image loader, crop, caching, long-click and navigation behavior remain unchanged.
+
+History entries use a larger cover, a thin tonal outline, compact source/time pills, chapter context, and a capsule progress track. Incomplete or missing chapter metadata is omitted rather than represented by empty decoration, and displayed progress is clamped to a valid range.
+
+Search fields use the full capsule shape and their menus use the shared dropdown role. The shared button's selected geometry uses a spring response, while explicit shape overrides remain respected. These patterns are shared across feature flows rather than recreated independently on every page.

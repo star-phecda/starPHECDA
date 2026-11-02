@@ -1,6 +1,7 @@
 package my.noveldokusha.historyexplorer
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -189,103 +190,134 @@ private fun HistoryItemCard(
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 12.dp, vertical = 4.dp)
-            .clip(ExpressiveShapes.card)
+            .padding(horizontal = 12.dp, vertical = 3.dp)
             .combinedClickable(onClick = onClick, onLongClick = onLongClick),
         shape = ExpressiveShapes.card,
         color = MaterialTheme.colorScheme.surfaceContainerLow,
+        border = BorderStroke(
+            1.dp,
+            MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.45f)
+        ),
+        tonalElevation = 1.dp,
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 12.dp, vertical = 10.dp),
-            verticalAlignment = Alignment.Top,
+                .padding(horizontal = 14.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-        val coverImageModel = rememberResolvedBookImagePath(item.bookUrl, item.bookCoverUrl)
-        val referer = (coverImageModel as? String)?.takeIf { it.startsWith("http://") || it.startsWith("https://") }?.let(::refererFor)
-        AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(coverImageModel)
-                .apply {
-                    if (!referer.isNullOrEmpty()) {
-                        httpHeaders(
-                            NetworkHeaders.Builder()
-                                .set("Referer", referer)
-                                .build()
+            val coverImageModel = rememberResolvedBookImagePath(item.bookUrl, item.bookCoverUrl)
+            val referer = (coverImageModel as? String)
+                ?.takeIf { it.startsWith("http://") || it.startsWith("https://") }
+                ?.let(::refererFor)
+
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(coverImageModel)
+                    .apply {
+                        if (!referer.isNullOrEmpty()) {
+                            httpHeaders(
+                                NetworkHeaders.Builder()
+                                    .set("Referer", referer)
+                                    .build()
+                            )
+                        }
+                    }
+                    .build(),
+                contentDescription = item.bookTitle,
+                modifier = Modifier
+                    .size(width = 64.dp, height = 96.dp)
+                    .clip(ExpressiveShapes.bookCover),
+                contentScale = ContentScale.Crop,
+            )
+
+            Spacer(Modifier.width(14.dp))
+
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = item.bookTitle,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                )
+
+                Spacer(Modifier.height(7.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    if (!item.sourceName.isNullOrBlank()) {
+                        HistoryMetadataPill(
+                            text = item.sourceName,
+                            modifier = Modifier.weight(1f, fill = false),
                         )
                     }
+                    HistoryMetadataPill(
+                        text = relativeTime(item.lastReadEpochTimeMilli),
+                    )
                 }
-                .build(),
-            contentDescription = item.bookTitle,
-            modifier = Modifier
-                .size(width = 48.dp, height = 72.dp)
-                .clip(ExpressiveShapes.bookCover),
-            contentScale = ContentScale.Crop,
+
+                if (!item.lastReadChapterTitle.isNullOrBlank()) {
+                    Spacer(Modifier.height(8.dp))
+                    Text(
+                        text = item.lastReadChapterTitle,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                }
+
+                if (item.totalChapters > 0) {
+                    val safeReadChapters = item.readChapters.coerceIn(0, item.totalChapters)
+                    val progress = safeReadChapters.toFloat() / item.totalChapters.toFloat()
+
+                    Spacer(Modifier.height(10.dp))
+                    LinearProgressIndicator(
+                        progress = { progress },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(4.dp)
+                            .clip(ExpressiveShapes.pill),
+                        color = MaterialTheme.colorScheme.primary,
+                        trackColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+                        gapSize = 0.dp,
+                        drawStopIndicator = {},
+                    )
+                    Spacer(Modifier.height(5.dp))
+                    Text(
+                        text = safeReadChapters.toString() + "/" + item.totalChapters +
+                            " · " + (progress * 100).toInt() + "%",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun HistoryMetadataPill(
+    text: String,
+    modifier: Modifier = Modifier,
+) {
+    Surface(
+        modifier = modifier,
+        shape = ExpressiveShapes.pill,
+        color = MaterialTheme.colorScheme.surfaceContainerHigh,
+    ) {
+        Text(
+            text = text,
+            modifier = Modifier.padding(horizontal = 9.dp, vertical = 5.dp),
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
         )
-
-        Spacer(Modifier.width(12.dp))
-
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = item.bookTitle,
-                style = MaterialTheme.typography.titleSmall,
-                fontWeight = FontWeight.Medium,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis,
-            )
-
-            if (!item.sourceName.isNullOrBlank()) {
-                Text(
-                    text = item.sourceName,
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
-            }
-
-            Spacer(Modifier.height(4.dp))
-
-            if (!item.lastReadChapterTitle.isNullOrBlank()) {
-                Text(
-                    text = item.lastReadChapterTitle,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
-                Spacer(Modifier.height(4.dp))
-            }
-
-            if (item.totalChapters > 0) {
-                LinearProgressIndicator(
-                    progress = { item.readChapters.toFloat() / item.totalChapters.toFloat() },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(4.dp)
-                        .clip(ExpressiveShapes.pill),
-                    color = MaterialTheme.colorScheme.primary,
-                    trackColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f),
-                    gapSize = 0.dp,
-                    drawStopIndicator = {},
-                )
-                Spacer(Modifier.height(2.dp))
-                Text(
-                    text = "${item.readChapters}/${item.totalChapters} · ${if (item.totalChapters > 0) item.readChapters * 100 / item.totalChapters else 0}%",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
-
-            Spacer(Modifier.height(2.dp))
-
-            Text(
-                text = relativeTime(item.lastReadEpochTimeMilli),
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
-            )
-        }
-        }
     }
 }
 

@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.remember
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.icons.Icons
@@ -44,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.material3.DropdownMenu
 import my.noveldokusha.coreui.R
 import my.noveldokusha.coreui.theme.clickableNoIndicator
+import my.noveldokusha.coreui.theme.ExpressiveShapes
 
 enum class ToolbarMode { MAIN, SEARCH }
 
@@ -116,7 +116,7 @@ fun TopAppBarSearch(
                     focusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
                     unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
                 ),
-                shape = RoundedCornerShape(16.dp),
+                shape = ExpressiveShapes.pill,
                 label = labelText?.let {
                     { Text(text = it) }
                 },
@@ -171,6 +171,7 @@ fun TopAppBarSearch(
                                 )
                             }
                             DropdownMenu(
+                                shape = ExpressiveShapes.dropdown,
                                 expanded = dropdownExpanded,
                                 onDismissRequest = { dropdownExpanded = false }
                             ) {

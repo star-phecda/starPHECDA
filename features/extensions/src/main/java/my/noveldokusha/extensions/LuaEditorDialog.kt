@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -64,7 +63,7 @@ fun LuaEditorDialog(
                 .fillMaxSize()
                 .background(
                     color = MaterialTheme.colorScheme.surfaceContainerHigh,
-                    shape = ExpressiveShapes.button
+                    shape = ExpressiveShapes.dialog
                 )
                 .padding(4.dp)
         ) {
@@ -144,7 +143,7 @@ fun LuaEditorDialog(
                     onClick = onSave,
                     modifier = compactBtn,
                     contentPadding = compactPadding,
-                    shape = ExpressiveShapes.option,
+                    shape = ExpressiveShapes.button,
                     colors = ButtonDefaults.filledTonalButtonColors(
                         containerColor = MaterialTheme.colorScheme.secondaryContainer,
                         contentColor = MaterialTheme.colorScheme.onSecondaryContainer

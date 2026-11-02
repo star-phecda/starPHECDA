@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -670,7 +669,8 @@ private fun DropdownCustomSavedVoices(
                 },
                 confirmButton = {
                     FilledTonalButton(
-                        shape = ExpressiveShapes.button,onClick = {
+                        shape = ExpressiveShapes.button,
+                        onClick = {
                         deleteEntryExpand = false
                         setCustomSavedVoices(
                             list.toMutableList().also { it.removeAt(index) }
@@ -681,7 +681,8 @@ private fun DropdownCustomSavedVoices(
                 },
                 dismissButton = {
                     Button(
-                        shape = ExpressiveShapes.button,onClick = { deleteEntryExpand = false }) {
+                        shape = ExpressiveShapes.button,
+                        onClick = { deleteEntryExpand = false }) {
                         Text(text = stringResource(R.string.cancel))
                     }
                 },
@@ -711,7 +712,8 @@ private fun DropdownCustomSavedVoices(
             },
             confirmButton = {
                 FilledTonalButton(
-                    shape = ExpressiveShapes.button,onClick = onClick@{
+                    shape = ExpressiveShapes.button,
+                        onClick = onClick@{
                     val voice = currentVoice ?: return@onClick
                     val state = VoicePredefineState(
                         savedName = name,
@@ -727,7 +729,8 @@ private fun DropdownCustomSavedVoices(
             },
             dismissButton = {
                 Button(
-                    shape = ExpressiveShapes.button,onClick = { expandedAddNextEntry = false }) {
+                    shape = ExpressiveShapes.button,
+                        onClick = { expandedAddNextEntry = false }) {
                     Text(text = stringResource(R.string.cancel))
                 }
             },

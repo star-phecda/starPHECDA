@@ -144,12 +144,12 @@ fun MigrationTabContent(
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier
                                     .size(28.dp)
-                                    .clip(RoundedCornerShape(4.dp)),
+                                    .clip(ExpressiveShapes.compactContainer),
                             )
                         },
                         trailingContent = {
                             Surface(
-                                shape = RoundedCornerShape(12.dp),
+                                shape = ExpressiveShapes.pill,
                                 color = MaterialTheme.colorScheme.primaryContainer,
                             ) {
                                 Text(

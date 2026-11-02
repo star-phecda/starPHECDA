@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
@@ -430,7 +429,7 @@ private fun RepositoryUrlDialog(
                     onClick = {
                         viewModel.onEvent(ExtensionsScreenEvent.OnHideRepositoryDialog)
                     },
-                    shape = androidx.compose.foundation.shape.ExpressiveShapes.option,
+                    shape = ExpressiveShapes.button,
                     colors = ButtonDefaults.filledTonalButtonColors(
                         containerColor = MaterialTheme.colorScheme.secondaryContainer,
                         contentColor = MaterialTheme.colorScheme.onSecondaryContainer
@@ -447,7 +446,7 @@ private fun RepositoryUrlDialog(
                     onClick = {
                         viewModel.onEvent(ExtensionsScreenEvent.OnUpdateRepositoryUrl(tempUrl))
                     },
-                    shape = androidx.compose.foundation.shape.ExpressiveShapes.option,
+                    shape = ExpressiveShapes.button,
                     colors = ButtonDefaults.filledTonalButtonColors(
                         containerColor = MaterialTheme.colorScheme.secondaryContainer,
                         contentColor = MaterialTheme.colorScheme.onSecondaryContainer

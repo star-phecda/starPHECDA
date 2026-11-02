@@ -45,12 +45,12 @@ import my.noveldokusha.scraper.fixtures.fixturesCatalogList
 import my.noveldokusha.scraper.fixtures.fixturesDatabaseList
 import my.noveldokusha.core.getLanguageDisplayName
 import androidx.compose.ui.draw.clip
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.ui.Alignment
 import my.noveldokusha.coreui.theme.colorAccent
 import my.noveldokusha.strings.R as StringsR
+import my.noveldokusha.coreui.theme.ExpressiveShapes
 
 @OptIn(ExperimentalAnimationApi::class, ExperimentalFoundationApi::class)
 @Composable
@@ -103,7 +103,7 @@ internal fun CatalogList(
                         imageModel = it.iconUrl,
                         modifier = Modifier
                             .size(28.dp)
-                            .clip(RoundedCornerShape(4.dp)),
+                            .clip(ExpressiveShapes.compactContainer),
                         error = R.drawable.default_icon
                     )
                 }
@@ -163,7 +163,7 @@ internal fun CatalogList(
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
                             modifier = Modifier
-                                .background(bgColor, RoundedCornerShape(4.dp))
+                                .background(bgColor, ExpressiveShapes.pill)
                                 .padding(horizontal = 4.dp, vertical = 1.dp),
                         )
                     }
@@ -198,11 +198,12 @@ internal fun CatalogList(
                             }
                             if (openConfig) {
                                 AlertDialog(
+                                    shape = ExpressiveShapes.dialog,
                                     onDismissRequest = { openConfig = false },
                                     confirmButton = {
                                         FilledTonalButton(
                                             onClick = { openConfig = false },
-                                            shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp),
+                                            shape = androidx.compose.foundation.shape.ExpressiveShapes.button,
                                             colors = ButtonDefaults.filledTonalButtonColors(
                                                 containerColor = MaterialTheme.colorScheme.secondaryContainer,
                                                 contentColor = MaterialTheme.colorScheme.onSecondaryContainer

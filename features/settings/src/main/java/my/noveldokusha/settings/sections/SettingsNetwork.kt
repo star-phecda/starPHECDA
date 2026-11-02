@@ -39,6 +39,7 @@ import my.noveldokusha.coreui.theme.colorAccent
 import my.noveldokusha.coreui.theme.textPadding
 import my.noveldokusha.network.interceptors.UAPresets
 import my.noveldokusha.settings.R
+import my.noveldokusha.coreui.theme.ExpressiveShapes
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -83,7 +84,7 @@ internal fun SettingsNetwork(
             var tempUserAgent by remember { mutableStateOf(scraperUserAgent.value) }
             val hasInvalidChars = tempUserAgent.isNotBlank() && tempUserAgent.any { it.code > 127 }
             Dialog(onDismissRequest = { showUserAgentDialog = false }) {
-                androidx.compose.material3.Card {
+                androidx.compose.material3.Card(shape = ExpressiveShapes.dialog) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text(
                             text = stringResource(R.string.scraper_user_agent),
@@ -99,12 +100,14 @@ internal fun SettingsNetwork(
                             horizontalArrangement = Arrangement.spacedBy(8.dp),
                         ) {
                             FilterChip(
+                                    shape = ExpressiveShapes.pill,
                                 selected = tempUserAgent.isBlank(),
                                 onClick = { tempUserAgent = "" },
                                 label = { Text(text = stringResource(R.string.default_user_agent)) }
                             )
                             presetEntries.forEach { (name, ua) ->
                                 FilterChip(
+                                    shape = ExpressiveShapes.pill,
                                     selected = tempUserAgent == ua,
                                     onClick = { tempUserAgent = ua },
                                     label = { Text(text = name) }
@@ -113,6 +116,7 @@ internal fun SettingsNetwork(
                         }
 
                         OutlinedTextField(
+                                    shape = ExpressiveShapes.input,
                             value = tempUserAgent,
                             onValueChange = { tempUserAgent = it },
                             label = { Text(stringResource(R.string.user_agent), color = MaterialTheme.colorScheme.onSurface) },

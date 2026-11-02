@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import my.noveldokusha.coreui.theme.ExpressiveShapes
 
 
 @Composable
@@ -18,7 +19,7 @@ fun Section(
     title: String? = null,
     content: @Composable ColumnScope.() -> Unit
 ) {
-    Card(modifier = modifier) {
+    Card(shape = ExpressiveShapes.container, modifier = modifier) {
         if (title != null) {
             Text(
                 text = title,

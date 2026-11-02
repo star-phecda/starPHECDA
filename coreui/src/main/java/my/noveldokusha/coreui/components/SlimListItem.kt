@@ -19,6 +19,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import my.noveldokusha.coreui.theme.InternalTheme
 import my.noveldokusha.coreui.theme.PreviewThemes
+import my.noveldokusha.coreui.theme.ExpressiveShapes
 
 /**
  * A compact list item component inspired by Momogram/Telegram.
@@ -37,7 +38,7 @@ fun SlimListItem(
         modifier = modifier
             .fillMaxWidth()
             .then(
-                if (onClick != null) Modifier.clip(MaterialTheme.shapes.medium).clickable(onClick = onClick) else Modifier
+                if (onClick != null) Modifier.clip(ExpressiveShapes.option).clickable(onClick = onClick) else Modifier
             )
             .padding(horizontal = 16.dp, vertical = 6.dp),
         verticalAlignment = Alignment.CenterVertically

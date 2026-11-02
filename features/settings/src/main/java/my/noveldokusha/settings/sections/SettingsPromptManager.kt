@@ -43,6 +43,7 @@ import my.noveldokusha.coreui.theme.colorAccent
 import my.noveldokusha.coreui.theme.textPadding
 import my.noveldokusha.settings.R
 import my.noveldokusha.text_translator.BUILT_IN_PROMPTS
+import my.noveldokusha.coreui.theme.ExpressiveShapes
 
 /**
  * Единый менеджер промптов для LLM-провайдеров (Gemini и OpenAI-compatible).
@@ -104,6 +105,7 @@ internal fun SettingsPromptManager(
                 }
                 Spacer(Modifier.height(8.dp))
                 OutlinedTextField(
+                                    shape = ExpressiveShapes.input,
                     value         = promptText,
                     onValueChange = { promptText = it; onActiveSystemPromptChange(it) },
                     modifier      = Modifier.fillMaxWidth(),
@@ -142,6 +144,7 @@ internal fun SettingsPromptManager(
                         if (isBuiltIn) {
                             // Встроенный пресет — простой клик без меню
                             FilterChip(
+                                    shape = ExpressiveShapes.pill,
                                 selected = isSelected,
                                 onClick  = {
                                     promptText = presetPrompt
@@ -154,11 +157,13 @@ internal fun SettingsPromptManager(
                             // (и применить, и удалить — без конфликта касания)
                             Column {
                                 FilterChip(
+                                    shape = ExpressiveShapes.pill,
                                     selected = isSelected,
                                     onClick  = { showChipMenu = true },
                                     label    = { Text(presetName) },
                                 )
                                 DropdownMenu(
+                                    shape = ExpressiveShapes.dropdown,
                                     expanded        = showChipMenu,
                                     onDismissRequest = { showChipMenu = false },
                                 ) {
@@ -192,6 +197,7 @@ internal fun SettingsPromptManager(
 
                 // ── Save preset button ────────────────────────────────────────
                 OutlinedButton(
+                    shape = ExpressiveShapes.button,
                     onClick  = {
                         presetNameInput = ""
                         showSavePresetDialog = true
@@ -268,6 +274,7 @@ internal fun SettingsPromptManager(
     // ── Save preset dialog ────────────────────────────────────────────────────
     if (showSavePresetDialog) {
         AlertDialog(
+            shape = ExpressiveShapes.dialog,
             onDismissRequest = { showSavePresetDialog = false },
             title            = {
                 Text(
@@ -277,6 +284,7 @@ internal fun SettingsPromptManager(
             },
             text             = {
                 OutlinedTextField(
+                                    shape = ExpressiveShapes.input,
                     value         = presetNameInput,
                     onValueChange = { presetNameInput = it },
                     label         = {

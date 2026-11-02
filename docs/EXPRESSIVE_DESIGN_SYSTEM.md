@@ -48,3 +48,14 @@ The corner scale is 4 / 8 / 12 / 20 / 28 / 36dp. Material shape roles map to 4 /
 - The shared app button uses 20dp at rest and animates to a 36dp corner when selected. Explicit caller-supplied shapes remain unchanged.
 - Modal sheets use 36dp top corners. Dialogs use 28dp corners.
 - Grouped surfaces use tonal hierarchy and spacing. Avoid wrapping every row in a card or nesting decorative cards inside cards.
+
+## Shape coverage
+
+The shape system is applied across all four primary destinations, not only the Library.
+
+- **Library:** book cards, category filters, category dialogs, action sheets, and library controls.
+- **Finder:** capsule tab selection and content filters, compact catalog icons, capsule content-type badges, and rounded configuration dialogs.
+- **History:** individual rounded history surfaces, rounded book covers, capsule reading-progress indicators, and shaped overflow menus.
+- **Settings:** rounded group containers for each major settings section, capsule selection chips, shaped text fields, buttons, menus, and dialogs.
+
+Shared list rows, option controls, section cards, and outlined text fields consume the named shape roles so new screens inherit the same geometry instead of introducing local corner values.

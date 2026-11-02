@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.Alignment
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.AltRoute
 import androidx.compose.material.icons.automirrored.outlined.AltRoute
@@ -66,6 +65,7 @@ import my.noveldokusha.extensions.ExtensionsScreenEvent
 import my.noveldokusha.extensions.PluginTranslationSettingsDialog
 import my.noveldokusha.tooling.novel_migration.ui.MigrationTabContent
 import androidx.compose.material3.FilterChip
+import my.noveldokusha.coreui.theme.ExpressiveShapes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -213,7 +213,7 @@ fun CatalogExplorerScreen(
                                 .padding(4.dp)
                                 .background(
                                     MaterialTheme.colorScheme.surfaceContainerHigh,
-                                    RoundedCornerShape(4.dp)
+                                    ExpressiveShapes.pill
                                 )
                                 .zIndex(-1f)
                         )
@@ -223,7 +223,7 @@ fun CatalogExplorerScreen(
                     tabTitles.forEachIndexed { index, (titleRes, icon) ->
                         Tab(
                             selected = uiState.selectedTabIndex == index,
-                            modifier = Modifier.clip(RoundedCornerShape(8.dp)),
+                            modifier = Modifier.clip(ExpressiveShapes.pill),
                             onClick = { viewModel.setTabIndex(index) },
                         ) {
                             Row(
@@ -271,6 +271,7 @@ fun CatalogExplorerScreen(
                             )
                             contentTypeOptions.forEach { (value, label) ->
                                 FilterChip(
+                                    shape = ExpressiveShapes.pill,
                                     selected = uiState.selectedContentType == value,
                                     onClick = { viewModel.toggleContentType(value) },
                                     label = { Text(label) },

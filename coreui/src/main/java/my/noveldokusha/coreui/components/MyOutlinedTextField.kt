@@ -14,6 +14,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import my.noveldokusha.coreui.theme.InternalTheme
+import my.noveldokusha.coreui.theme.ExpressiveShapes
 
 @Composable
 fun MyOutlinedTextField(
@@ -36,7 +37,7 @@ fun MyOutlinedTextField(
         modifier = modifier
             .heightIn(min = 42.dp)
             .fillMaxWidth(),
-        shape = MaterialTheme.shapes.large,
+        shape = ExpressiveShapes.input,
         colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = MaterialTheme.colorScheme.onPrimary,
         ),

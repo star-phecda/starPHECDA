@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.DeleteSweep
@@ -57,6 +56,8 @@ import my.noveldokusha.feature.local_database.BookMetadata
 import my.noveldokusha.navigation.NavigationRouteViewModel
 import my.noveldokusha.strings.R as StringsR
 import java.util.concurrent.TimeUnit
+import my.noveldokusha.coreui.theme.ExpressiveShapes
+import androidx.compose.material3.Surface
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -90,6 +91,7 @@ fun HistoryScreen(
                             )
                         }
                         DropdownMenu(
+                            shape = ExpressiveShapes.dropdown,
                             expanded = showMenu,
                             onDismissRequest = { showMenu = false }
                         ) {
@@ -149,7 +151,7 @@ fun HistoryScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(innerPadding),
-                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     items(state.items, key = { it.bookUrl }) { item ->
                         HistoryItemCard(
@@ -184,13 +186,21 @@ private fun HistoryItemCard(
     onClick: () -> Unit,
     onLongClick: () -> Unit,
 ) {
-    Row(
+    Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .combinedClickable(onClick = onClick, onLongClick = onLongClick)
-            .padding(horizontal = 16.dp, vertical = 8.dp),
-        verticalAlignment = Alignment.Top,
+            .padding(horizontal = 12.dp, vertical = 4.dp)
+            .clip(ExpressiveShapes.card)
+            .combinedClickable(onClick = onClick, onLongClick = onLongClick),
+        shape = ExpressiveShapes.card,
+        color = MaterialTheme.colorScheme.surfaceContainerLow,
     ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 12.dp, vertical = 10.dp),
+            verticalAlignment = Alignment.Top,
+        ) {
         val coverImageModel = rememberResolvedBookImagePath(item.bookUrl, item.bookCoverUrl)
         val referer = (coverImageModel as? String)?.takeIf { it.startsWith("http://") || it.startsWith("https://") }?.let(::refererFor)
         AsyncImage(
@@ -209,7 +219,7 @@ private fun HistoryItemCard(
             contentDescription = item.bookTitle,
             modifier = Modifier
                 .size(width = 48.dp, height = 72.dp)
-                .clip(RoundedCornerShape(4.dp)),
+                .clip(ExpressiveShapes.bookCover),
             contentScale = ContentScale.Crop,
         )
 
@@ -253,7 +263,7 @@ private fun HistoryItemCard(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(4.dp)
-                        .clip(RoundedCornerShape(2.dp)),
+                        .clip(ExpressiveShapes.pill),
                     color = MaterialTheme.colorScheme.primary,
                     trackColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f),
                     gapSize = 0.dp,
@@ -274,6 +284,7 @@ private fun HistoryItemCard(
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
             )
+        }
         }
     }
 }

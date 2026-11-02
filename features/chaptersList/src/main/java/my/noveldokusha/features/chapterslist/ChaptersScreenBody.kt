@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -35,6 +36,8 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import my.noveldokusha.coreui.components.ErrorView
+import my.noveldokusha.coreui.theme.ExpressiveContentFrame
+import my.noveldokusha.coreui.theme.ExpressiveTokens
 import my.noveldokusha.chapterslist.R
 import my.noveldokusha.feature.local_database.ChapterWithContext
 import my.noveldokusha.scraper.Scraper
@@ -137,15 +140,19 @@ internal fun ChaptersScreenBody(
         )
     }
 
-    PullToRefreshBox(
-        modifier = modifier,
+    ExpressiveContentFrame(modifier = modifier) {
+        PullToRefreshBox(
+            modifier = Modifier.fillMaxSize(),
         isRefreshing = isRefreshingDelayed,
         onRefresh = onPullRefresh,
         state = pullToRefreshState,
     ) {
         LazyColumn(
             state = lazyListState,
-            contentPadding = PaddingValues(bottom = 300.dp),
+            contentPadding = PaddingValues(
+                top = ExpressiveTokens.space2,
+                bottom = 300.dp,
+            ),
         ) {
             item(
                 key = "header",
@@ -222,6 +229,7 @@ internal fun ChaptersScreenBody(
             ) {
                 ErrorView(error = state.error.value)
             }
+        }
         }
     }
 }

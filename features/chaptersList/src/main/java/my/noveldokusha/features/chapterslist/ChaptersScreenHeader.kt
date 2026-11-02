@@ -87,7 +87,6 @@ import my.noveldokusha.coreui.theme.ExpressiveShapes
 import my.noveldokusha.coreui.theme.ExpressiveTokens
 import my.noveldokusha.coreui.theme.ExpressiveWindowSizeClass
 import my.noveldokusha.coreui.theme.LocalExpressiveWindowSizeClass
-import my.noveldokusha.coreui.theme.expressiveContentGutter
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -181,8 +180,7 @@ internal fun ChaptersScreenHeader(
         }
         Column(
             modifier = Modifier
-                .padding(top = paddingValues.calculateTopPadding())
-                .padding(horizontal = expressiveContentGutter(LocalExpressiveWindowSizeClass.current)),
+                .padding(top = paddingValues.calculateTopPadding()),
         ) {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(ExpressiveTokens.space4),

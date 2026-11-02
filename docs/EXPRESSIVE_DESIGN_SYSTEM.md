@@ -80,9 +80,9 @@ Search fields use the full capsule shape and their menus use the shared dropdown
 
 `LocalExpressiveWindowSizeClass` is resolved from the actual Compose window constraints. Compact is below 600dp, medium is 600–839dp, and expanded is 840dp or wider. This supports rotation, split-screen, resizable windows and foldable postures without relying on device model checks.
 
-`ExpressiveContentFrame` centers and gutters content while keeping page composition screen-specific. Shared book grids preserve the user's saved 2–6 column preference on compact layouts and add columns as more width becomes available, up to six. Cover images retain their portrait aspect ratio.
+`ExpressiveContentFrame` centers and gutters content while keeping page composition screen-specific. Shared book grids preserve the user's saved 2–6 column preference on compact layouts and add columns as more width becomes available, up to six. Minimum cell sizing includes the 12dp inter-card gap so the column calculation reflects the actual grid geometry. Cover images retain their portrait aspect ratio.
 
-The main app uses the floating bottom navigation on compact windows and an expressive labelled rail on medium and expanded windows. Novel detail headers use shared page gutters and keep the artwork at a deliberate portrait width on wider layouts, giving descriptive metadata the remaining space.
+The main app uses the floating bottom navigation on compact windows and an expressive labelled rail on medium and expanded windows. Novel detail headers use shared page gutters and keep the artwork at a deliberate portrait width on wider layouts, giving descriptive metadata the remaining space. Compact windows stack the cover above the metadata; medium and expanded windows place them side by side. The chapter header, chapter list, and database-backed novel detail use the same composition.
 
 The Settings and History pages, Library category filters, shared catalogue grid, and Library grid now use the common spacing rhythm. Future screens should consume these tokens and width classes instead of introducing local page gutters or device-specific widths.
 

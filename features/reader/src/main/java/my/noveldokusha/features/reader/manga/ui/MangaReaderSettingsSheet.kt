@@ -50,6 +50,7 @@ import my.noveldokusha.features.reader.manga.setting.MangaNavigationMode
 import my.noveldokusha.features.reader.manga.setting.MangaReadingMode
 import my.noveldokusha.reader.R
 import kotlinx.coroutines.launch
+import my.noveldokusha.coreui.theme.ExpressiveShapes
 
 /** Режимы цветового фильтра: значение -> label (tachiyomisy ColorFilterMode). */
 private val colorFilterModes = listOf(
@@ -85,6 +86,7 @@ internal fun MangaReaderSettingsSheet(
 
     BasicAlertDialog(onDismissRequest = onClose) {
         ElevatedCard(
+            shape = ExpressiveShapes.dialog,
             modifier = Modifier
                 .fillMaxWidth()
                 .heightIn(max = 900.dp)
@@ -390,6 +392,7 @@ private fun SettingChipRow(
         ) {
             chips.forEach { option ->
                 FilterChip(
+                    shape = ExpressiveShapes.pill,
                     selected = option.selected,
                     onClick = option.onClick,
                     label = option.label,
@@ -404,6 +407,7 @@ private fun SettingChipRow(
         ) {
             chips.forEach { option ->
                 FilterChip(
+                    shape = ExpressiveShapes.pill,
                     selected = option.selected,
                     onClick = option.onClick,
                     label = option.label,

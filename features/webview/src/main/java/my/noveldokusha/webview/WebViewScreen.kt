@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import my.noveldokusha.coreui.theme.ExpressiveShapes
 
 @Composable
 private fun LabeledIconButton(
@@ -112,6 +113,7 @@ internal fun <T : View> WebViewScreen(
                             Text("Close", style = MaterialTheme.typography.labelMedium)
                         }
                         OutlinedTextField(
+                            shape = ExpressiveShapes.input,
                             value = editingUrl,
                             onValueChange = { editingUrl = it },
                             singleLine = true,
@@ -148,6 +150,7 @@ internal fun <T : View> WebViewScreen(
                     ) {
                         if (isReady) {
                             Button(
+                                shape = ExpressiveShapes.button,
                                 onClick = onDoneClicked,
                                 modifier = Modifier
                                     .padding(start = 8.dp, end = 4.dp)

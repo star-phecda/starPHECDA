@@ -78,6 +78,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import my.noveldokusha.coreui.R
 import my.noveldokusha.strings.R as StringsR
+import my.noveldokusha.coreui.theme.ExpressiveShapes
 
 
 @Composable
@@ -212,6 +213,7 @@ private fun UnifiedExtensionsScreen(
                             textAlign = TextAlign.Center
                         )
                         FilledTonalButton(
+                            shape = ExpressiveShapes.button,
                             onClick = onImportLua,
                             modifier = Modifier.fillMaxWidth()
                         ) {
@@ -220,6 +222,7 @@ private fun UnifiedExtensionsScreen(
                             Text(stringResource(my.noveldokusha.strings.R.string.import_lua))
                         }
                         FilledTonalButton(
+                            shape = ExpressiveShapes.button,
                             onClick = { viewModel.onEvent(ExtensionsScreenEvent.OnRefresh) },
                             modifier = Modifier.fillMaxWidth()
                         ) {
@@ -231,6 +234,7 @@ private fun UnifiedExtensionsScreen(
                     var searchQuery by rememberSaveable { mutableStateOf("") }
 
                     OutlinedTextField(
+                        shape = ExpressiveShapes.input,
                         value = searchQuery,
                         onValueChange = { searchQuery = it },
                         modifier = Modifier
@@ -263,6 +267,7 @@ private fun UnifiedExtensionsScreen(
                         )
                         contentTypeOptions.forEach { (value, label) ->
                             FilterChip(
+                                shape = ExpressiveShapes.pill,
                                 selected = state.selectedContentType == value,
                                 onClick = { viewModel.onEvent(ExtensionsScreenEvent.OnContentTypeFilterToggle(value)) },
                                 label = { Text(label) },
@@ -389,6 +394,7 @@ private fun RepositoryUrlDialog(
     var tempUrl by remember { mutableStateOf(state.repositoryUrl) }
 
     AlertDialog(
+        shape = ExpressiveShapes.dialog,
         onDismissRequest = {
             viewModel.onEvent(ExtensionsScreenEvent.OnHideRepositoryDialog)
         },
@@ -397,6 +403,7 @@ private fun RepositoryUrlDialog(
         },
         text = {
             OutlinedTextField(
+                shape = ExpressiveShapes.input,
                 value = tempUrl,
                 onValueChange = { tempUrl = it },
                 label = { Text("Extensions Repository URL") },
@@ -423,7 +430,7 @@ private fun RepositoryUrlDialog(
                     onClick = {
                         viewModel.onEvent(ExtensionsScreenEvent.OnHideRepositoryDialog)
                     },
-                    shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp),
+                    shape = androidx.compose.foundation.shape.ExpressiveShapes.option,
                     colors = ButtonDefaults.filledTonalButtonColors(
                         containerColor = MaterialTheme.colorScheme.secondaryContainer,
                         contentColor = MaterialTheme.colorScheme.onSecondaryContainer
@@ -440,7 +447,7 @@ private fun RepositoryUrlDialog(
                     onClick = {
                         viewModel.onEvent(ExtensionsScreenEvent.OnUpdateRepositoryUrl(tempUrl))
                     },
-                    shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp),
+                    shape = androidx.compose.foundation.shape.ExpressiveShapes.option,
                     colors = ButtonDefaults.filledTonalButtonColors(
                         containerColor = MaterialTheme.colorScheme.secondaryContainer,
                         contentColor = MaterialTheme.colorScheme.onSecondaryContainer
@@ -475,7 +482,7 @@ private fun ContentTypeBadge(contentType: String) {
         overflow = TextOverflow.Ellipsis,
         modifier = Modifier
             .padding(start = 6.dp)
-            .background(color.copy(alpha = 0.12f), RoundedCornerShape(4.dp))
+            .background(color.copy(alpha = 0.12f), ExpressiveShapes.compactContainer)
             .padding(horizontal = 6.dp, vertical = 2.dp)
     )
 }
@@ -546,7 +553,7 @@ private fun ExtensionListItem(
             Box(
                 modifier = Modifier
                     .size(28.dp)
-                    .clip(RoundedCornerShape(4.dp))
+                    .clip(ExpressiveShapes.compactContainer)
             ) {
                 if (extension.iconUrl.isNotBlank()) {
                     val iconUrlWithCacheBuster = Uri.parse(extension.iconUrl)
@@ -576,6 +583,7 @@ private fun ExtensionListItem(
             when {
                 extension.isInstalling -> {
                     FilledTonalButton(
+                        shape = ExpressiveShapes.button,
                         onClick = {},
                         enabled = false,
                         modifier = Modifier.height(40.dp)
@@ -591,6 +599,7 @@ private fun ExtensionListItem(
                 }
                 extension.isUpdateAvailable -> {
                     FilledTonalButton(
+                        shape = ExpressiveShapes.button,
                         onClick = {
                             viewModel.onEvent(ExtensionsScreenEvent.OnExtensionInstall(extension.id))
                         },
@@ -643,6 +652,7 @@ private fun ExtensionListItem(
                 }
                 else -> {
                     FilledTonalButton(
+                        shape = ExpressiveShapes.button,
                         onClick = {
                             viewModel.onEvent(ExtensionsScreenEvent.OnExtensionInstall(extension.id))
                         },

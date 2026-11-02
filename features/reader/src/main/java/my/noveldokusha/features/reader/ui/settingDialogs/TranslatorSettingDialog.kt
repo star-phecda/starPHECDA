@@ -65,12 +65,14 @@ import my.noveldokusha.coreui.components.LanguageSearchDialog
 import my.noveldokusha.coreui.theme.colorAccent
 import my.noveldokusha.features.reader.features.LiveTranslationSettingData
 import my.noveldokusha.reader.R
+import my.noveldokusha.coreui.theme.ExpressiveShapes
 
 @Composable
 internal fun TranslatorSettingDialog(
     state: LiveTranslationSettingData
 ) {
     ElevatedCard(
+        shape = ExpressiveShapes.dialog,
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 12.dp)
     ) {
         val scrollState = rememberScrollState()
@@ -127,7 +129,7 @@ internal fun TranslatorSettingDialog(
             val level = state.activeTranslatorLevel.value
             val levelActive = level != ActiveTranslatorLevel.NONE
             Surface(
-                shape = RoundedCornerShape(10.dp),
+                shape = ExpressiveShapes.option,
                 color = if (levelActive) colorAccent().copy(alpha = 0.12f)
                 else MaterialTheme.colorScheme.surfaceVariant,
                 modifier = Modifier.fillMaxWidth(),
@@ -233,6 +235,7 @@ private fun ModeChip(
     onClick: () -> Unit,
 ) {
     FilterChip(
+        shape = ExpressiveShapes.pill,
         selected = selected,
         onClick = onClick,
         label = {
@@ -509,6 +512,7 @@ private fun NovelPromptSection(state: LiveTranslationSettingData, isScrolling: B
                 }
 
                 OutlinedTextField(
+                    shape = ExpressiveShapes.input,
                     value = promptText,
                     onValueChange = { promptText = it },
                     modifier = Modifier.fillMaxWidth(),
@@ -532,6 +536,7 @@ private fun NovelPromptSection(state: LiveTranslationSettingData, isScrolling: B
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Button(
+                        shape = ExpressiveShapes.button,
                         onClick = {
                             state.onNovelPromptChange(promptText)
                             showEditor = false

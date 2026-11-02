@@ -20,6 +20,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import my.noveldokusha.coreui.components.MyButton
 import my.noveldokusha.strings.R
+import my.noveldokusha.coreui.theme.ExpressiveShapes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -84,7 +85,8 @@ fun MigrationResultsScreen(
                     modifier = Modifier.fillMaxSize().padding(32.dp),
                     contentAlignment = Alignment.Center,
                 ) {
-                    Card(modifier = Modifier.fillMaxWidth()) {
+                    Card(
+                        shape = ExpressiveShapes.card,modifier = Modifier.fillMaxWidth()) {
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -187,7 +189,8 @@ private fun MigrationResultItem(
     val context = LocalContext.current
     var showMenu by remember { mutableStateOf(false) }
 
-    Card(onClick = onClick ?: {}) {
+    Card(
+        shape = ExpressiveShapes.card,onClick = onClick ?: {}) {
         Row(
             modifier = Modifier.fillMaxWidth().padding(12.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -243,7 +246,8 @@ private fun MigrationResultItem(
                     IconButton(onClick = { showMenu = true }) {
                         Icon(Icons.Default.MoreVert, contentDescription = null)
                     }
-                    DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
+                    DropdownMenu(
+                        shape = ExpressiveShapes.dropdown,expanded = showMenu, onDismissRequest = { showMenu = false }) {
                         DropdownMenuItem(
                             text = { Text(stringResource(R.string.migration_skip)) },
                             onClick = { showMenu = false; onSkip() },

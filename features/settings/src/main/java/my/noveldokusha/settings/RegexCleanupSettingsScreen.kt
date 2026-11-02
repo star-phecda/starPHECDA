@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.BorderStroke
 import my.noveldokusha.core.models.RegexRule
+import my.noveldokusha.coreui.theme.ExpressiveShapes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -113,7 +114,7 @@ fun RegexCleanupSettingsScreen(
 
             Surface(
                 onClick = { viewModel.onAddRule() },
-                shape = RoundedCornerShape(10.dp),
+                shape = ExpressiveShapes.button,
                 color = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary,
                 modifier = Modifier.heightIn(min = 28.dp)
@@ -162,7 +163,7 @@ fun RegexCleanupSettingsScreen(
             ) {
                 OutlinedButton(
                     onClick = { viewModel.onMoveRulesToGlobal() },
-                    shape = RoundedCornerShape(10.dp),
+                    shape = ExpressiveShapes.option,
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = MaterialTheme.colorScheme.primary
                     ),
@@ -177,7 +178,7 @@ fun RegexCleanupSettingsScreen(
                 }
                 OutlinedButton(
                     onClick = { viewModel.onRemoveNovelRules() },
-                    shape = RoundedCornerShape(10.dp),
+                    shape = ExpressiveShapes.option,
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = MaterialTheme.colorScheme.error
                     ),
@@ -213,7 +214,7 @@ fun RegexCleanupSettingsScreen(
                 )
             },
             singleLine = true,
-            shape = RoundedCornerShape(10.dp),
+            shape = ExpressiveShapes.input,
             colors = OutlinedTextFieldDefaults.colors(
                 unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
                 focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
@@ -286,7 +287,7 @@ fun RegexCleanupSettingsScreen(
             ModalBottomSheet(
                 onDismissRequest = { viewModel.onDismissBottomSheet() },
                 containerColor = MaterialTheme.colorScheme.surface,
-                shape = RoundedCornerShape(topStart = 22.dp, topEnd = 22.dp),
+                shape = ExpressiveShapes.sheet,
                 modifier = Modifier.navigationBarsPadding()
             ) {
                 RegexRuleBottomSheetContent(
@@ -310,6 +311,7 @@ fun RegexCleanupSettingsScreen(
         // ── Delete Confirmation Dialog ─────────────────────────────────────
         if (state.deleteConfirmationPattern != null) {
             AlertDialog(
+                shape = ExpressiveShapes.dialog,
                 onDismissRequest = { viewModel.onDismissDelete() },
                 title = {
                     Text(
@@ -328,6 +330,7 @@ fun RegexCleanupSettingsScreen(
                 },
                 confirmButton = {
                     OutlinedButton(
+                        shape = ExpressiveShapes.button,
                         onClick = { viewModel.onConfirmDelete() },
                         colors = ButtonDefaults.outlinedButtonColors(
                             containerColor = MaterialTheme.colorScheme.errorContainer,
@@ -340,6 +343,7 @@ fun RegexCleanupSettingsScreen(
                 },
                 dismissButton = {
                     OutlinedButton(
+                        shape = ExpressiveShapes.button,
                         onClick = { viewModel.onDismissDelete() },
                         colors = ButtonDefaults.outlinedButtonColors(
                             contentColor = MaterialTheme.colorScheme.onSurfaceVariant
@@ -389,7 +393,7 @@ private fun RegexRuleRow(
 
         // Enabled/Disabled badge
         Surface(
-            shape = RoundedCornerShape(8.dp),
+            shape = ExpressiveShapes.option,
             color = if (rule.isEnabled) MaterialTheme.colorScheme.primaryContainer
                     else MaterialTheme.colorScheme.surfaceVariant,
             contentColor = if (rule.isEnabled) MaterialTheme.colorScheme.onPrimaryContainer
@@ -510,7 +514,7 @@ private fun RegexRuleBottomSheetContent(
                 .width(36.dp)
                 .height(4.dp)
                 .align(Alignment.CenterHorizontally),
-            shape = RoundedCornerShape(2.dp),
+            shape = ExpressiveShapes.pill,
             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f)
         ) {}
 
@@ -548,7 +552,7 @@ private fun RegexRuleBottomSheetContent(
             },
             isError = showError && pattern.isNotEmpty() && !isPatternValid,
             singleLine = true,
-            shape = RoundedCornerShape(8.dp),
+            shape = ExpressiveShapes.input,
             colors = OutlinedTextFieldDefaults.colors(
                 unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
                 focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
@@ -599,7 +603,7 @@ private fun RegexRuleBottomSheetContent(
                 )
             },
             singleLine = true,
-            shape = RoundedCornerShape(8.dp),
+            shape = ExpressiveShapes.input,
             colors = OutlinedTextFieldDefaults.colors(
                 unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
                 focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
@@ -634,7 +638,7 @@ private fun RegexRuleBottomSheetContent(
                 )
             },
             singleLine = true,
-            shape = RoundedCornerShape(8.dp),
+            shape = ExpressiveShapes.input,
             colors = OutlinedTextFieldDefaults.colors(
                 unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
                 focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
@@ -713,7 +717,7 @@ private fun RegexRuleBottomSheetContent(
                 onPreviewChange(it)
             },
             singleLine = true,
-            shape = RoundedCornerShape(8.dp),
+            shape = ExpressiveShapes.input,
             colors = OutlinedTextFieldDefaults.colors(
                 unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
                 focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
@@ -729,7 +733,7 @@ private fun RegexRuleBottomSheetContent(
 
         // Preview result card
         Card(
-            shape = RoundedCornerShape(7.dp),
+            shape = ExpressiveShapes.compactContainer,
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.surfaceVariant
             ),
@@ -772,7 +776,7 @@ private fun RegexRuleBottomSheetContent(
             OutlinedButton(
                 onClick = onDismiss,
                 modifier = Modifier.weight(1f),
-                shape = RoundedCornerShape(8.dp),
+                shape = ExpressiveShapes.option,
                 colors = ButtonDefaults.outlinedButtonColors(
                     contentColor = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -792,7 +796,7 @@ private fun RegexRuleBottomSheetContent(
                     }
                 },
                 modifier = Modifier.weight(2f),
-                shape = RoundedCornerShape(8.dp),
+                shape = ExpressiveShapes.option,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     contentColor = MaterialTheme.colorScheme.onPrimary
